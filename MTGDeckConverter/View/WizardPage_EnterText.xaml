@@ -1,0 +1,63 @@
+﻿<UserControl x:Class="MTGDeckConverter.View.WizardPage_EnterText"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             mc:Ignorable="d" 
+             d:DesignHeight="600" d:DesignWidth="800">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+
+        <Border
+            Grid.Row="0"
+            Margin="50"
+            Background="#F2F2F8"
+            Padding="25"
+            >
+            <TextBlock
+                TextWrapping="Wrap"
+                FontSize="18px"
+                Text="OCTGN Deck Converter (ODC) can attempt to import decks from text pasted from your clipboard.  &#x0a;
+&#x0a;
+Highlight all the cards in the Main Deck and paste it below, then do the same for the Sideboard.  Don't worry if you copy some extra lines that aren't cards; if they are not in the right format, they will be ignored."
+            />
+        </Border>
+
+        <UniformGrid
+            Grid.Row="1"
+            Rows="1"
+            Margin="10"
+            >
+            <GroupBox 
+                Header="Main Deck"
+                Margin="10"
+                >
+                <TextBox 
+                    VerticalAlignment="Stretch"
+                    AcceptsReturn="True"
+                    AcceptsTab="True"
+                    Margin="10"
+                    FontFamily="Courier New"
+                    Text="{Binding Path=MainDeckText, UpdateSourceTrigger=PropertyChanged}" 
+                    />
+            </GroupBox>
+            <GroupBox 
+                Header="Sideboard"
+                    Margin="10"
+                >
+                <TextBox 
+                    VerticalAlignment="Stretch"
+                    AcceptsReturn="True"
+                    AcceptsTab="True"
+                    Margin="10"
+                    FontFamily="Courier New"
+                    Text="{Binding Path=SideBoardText, UpdateSourceTrigger=PropertyChanged}" 
+                    />
+            </GroupBox>
+        </UniformGrid>
+        
+    </Grid>
+</UserControl>

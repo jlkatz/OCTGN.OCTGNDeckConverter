@@ -1,0 +1,182 @@
+﻿Try these live at: http://gskinner.com/RegExr/
+
+To Check:
+http://ccgdecks.com/deck_view.php?id=614809
+http://www.deckcheck.de/deck.php?id=25366
+http://www.essentialmagic.com/Decks/View.asp?ID=950025
+NO http://www.magicdeckvortex.com/DDB/miracle_infect.htm
+NO http://www.moxdiamond.com/Magic-The-Gathering/Deck/7121/Contagion.html
+NO http://www.mtgcity.com/deck.asp?DeckId=35168
+NO http://www.mtgdeckbuilder.net/Decks/ViewDeck/292439
+Almost http://www.mtgdecks.net/decks/view/38600
+NO, multiple on a thread http://forums.mtgsalvation.com/showthread.php?t=450017
+Almost http://www.mtgtop8.com/event?e=3520
+no http://www.mtgvault.com/ViewDeck.aspx?DeckID=135287
+no http://pdcmagic.com/gatherling/deck.php?mode=view&id=21366
+http://sales.starcitygames.com//deckdatabase/displaydeck.php?DeckID=48733
+http://magic.tcgplayer.com/db/deck.asp?deck_id=1048475
+http://tappedout.net/mtg-decks/ethereal-stalker/
+no http://www.wizards.com/Magic/Magazine/Events.aspx?x=mtgevent/ptla05/t8decks
+http://www.decklists.net/index.php?option=com_ohmydeckdb&controller=deck&view=deck&deckId=14813
+NO, multiple on a thread http://www.magic-league.com/deck/78636/standard_t2.html#GWb Midrange92434
+
+
+
+==================================================================
+General Format (# Name): ^\s*(\d+)\s*[xX]?(?!\s+\[)\s+([a-zA-Z].+)
+Group [1]: Quantity
+Group [2]: Card Name
+(Applies to Apprentice's Main Deck, MTGO, some websites)
+Note: \s*[xX]? looks for 'x' after the quantity, which may or may not be there
+Note: (?!\s+\[) tells it to ignore mwBase style set brackets  '   ['
+==================================================================
+[Matches]
+34 Card Name
+    34 Card Name                                             
+34   X Card Name
+34   x card Name
+  34	X	Card Name with Tab and Leading Space
+34x Card Name
+34X     card Name
+  34X	Card Name with Tab and Leading Space
+34 Xenograph
+34 X Ray might be the card name, so this fails
+
+[Non-Matches]
+34 - Card Name
+32: Card Name
+==================================================================
+
+
+==================================================================
+General Sideboard: ^\s*[sS][bB][:]\s+(\d+)\s*[xX]?(?!\s+\[)\s+([a-zA-Z].+)
+Group [1]: Quantity
+Group [2]: Card Name
+(Applies to Apprentice)
+Note: \s*[xX]? looks for 'x' after the quantity, which may or may not be there
+Note: (?!\s+\[) tells it to ignore mwBase style set brackets  '   ['
+==================================================================
+[Matches]
+SB:   5  Card Name
+sb: 3 Card Name
+  sb:  3    Card Name
+SB: 4x Card Name
+  sB:   4 xy   Card Name
+SB: 34 Card Name
+SB:     34 Card Name                                             
+SB: 34   X Card Name
+SB: 34   x card Name
+SB:   34	X	Card Name with Tab and Leading Space
+SB: 34x Card Name
+SB: 34X     card Name
+SB:   34X	Card Name with Tab and Leading Space
+SB: 34 Xenograph
+SB: 34 X Ray might be the card name, so this fails
+
+[Non-Matches]
+SB 4 Card Name
+SB : 4 Card Name
+==================================================================
+
+
+==================================================================
+MWS Main Deck: ^\s*(\d)+\s+\[(.*?)\]\s+(.+)
+Group [1]: Quantity
+Group [2]: Set
+Group [3]: Card Name
+==================================================================
+[Matches]
+34 [ALA]    Card Name
+43 [] Hi Bob
+   34	[ALA]    Card Name with Tab and Leading Space
+
+[Non-Matches]
+==================================================================
+
+
+==================================================================
+MWS Sideboard: ^\s*[sS][bB][:]\s+(\d)+\s+\[(.*?)\]\s+(.+)
+Group [1]: Quantity
+Group [2]: Set
+Group [3]: Card Name
+==================================================================
+[Matches]
+SB: 5 [ALA] Card Name
+    SB:    5   [ALA]   Card Name
+
+[Non-Matches]
+SB:   5  Card Name
+sb: 3 Card Name
+34 [ALA]    Card Name
+43 [] Hi Bob
+==================================================================
+
+
+==================================================================
+Comment Line: ^\s*[/][/](.+)
+Group [1]: Comment
+(Applies to MWS, Apprentice)
+==================================================================
+[Matches]
+//Comment line
+     // Comment line with leading space
+
+[Non-Matches]
+Another line with // comment not at start (Should NOT match)
+==================================================================
+
+
+==================================================================
+Deck Name Line: ^\s*[/][/]\s*[nN][aA][mM][eE][:]\s*(.+)
+Group [1]: Deck Name
+(Applies to MWS, Apprentice)
+==================================================================
+[Matches]
+// Name: Deck Name
+//Name: Deck Name
+// Name:Deck Name
+//Name:DeckName
+
+[Non-Matches]
+Another line with // comment not at start (Should NOT match)
+//Comment line
+     // Comment line with leading space
+==================================================================
+
+
+==================================================================
+Starts with Sideboard: ^\s*[sS][iI][dD][eE][bB][oO][aA][rR][dD]
+(Applies to MTGO, some websites)
+==================================================================
+[Matches]
+Sideboard (Should match)
+SidEBoArD and extra text (Should match)
+   Sideboard leading space and trailing    (Should match)   
+
+[Non-Matches]
+34 Card Name With Word Sideboard
+==================================================================
+
+
+==================================================================
+Remove Name Extra Garbage: \s*(.+)\s\((|\d+|Cost:|\(/\)\(/\))\)
+Group [1]: Name
+Group [2]: Extra garbage
+(Applies to http://ccgdecks.com which has '(X)' or similar)  
+==================================================================
+[Matches]
+Sundering Growth ((/)(/))
+Survey the Wreckage (4)
+Tavern Swindler (1)
+Temple Garden (Cost:)
+Tenement Crasher (25)
+Trained Caracal ()
+   Space In Front (1)
+Normal Name
+
+[Non-Matches]
+Normal Name
+Trained Caracal (a)
+Erase (Not the Urza's Legacy One)
+Survey the Wreckage(4)
+==================================================================

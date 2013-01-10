@@ -1,0 +1,65 @@
+﻿<UserControl 
+    x:Class="MTGDeckConverter.View.WizardPage_SelectFile"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+    mc:Ignorable="d" 
+    d:DesignHeight="600" d:DesignWidth="800"
+    >
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*" />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+
+        <Border
+            Grid.Row="0"
+            Margin="50"
+            Background="#F2F2F8"
+            Padding="25"
+            >
+            <TextBlock
+                TextWrapping="Wrap"
+                FontSize="18px"
+                Text="OCTGN Deck Converter (ODC) can convert decks from several common formats, listed below.  If your deck is in a different format, give it a try anyway, because ODC will attempt to read the card names and quantities anyways.&#x0a;
+&#x0a;
+The currently supported file types to convert are:&#x0a;
+                &#x0a;
+Apprentice (.dec)&#x0a;
+Magic Workstation (.mwDeck)&#x0a;
+Cockatrice (.cod)&#x0a;
+MTGO (.txt)&#x0a;
+OCTGN 2 (.o8d)"
+            />
+        </Border>
+        
+        <GroupBox 
+            Grid.Row="1"
+            Header="Select File"
+            Padding="10"
+            Margin="10"
+            >
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width=".75*" />
+                    <ColumnDefinition Width=".25*" />
+                </Grid.ColumnDefinitions>
+                <TextBox 
+                    Grid.Column="0"
+                    IsReadOnly="True" 
+                    Margin="0,0,10,0"
+                    VerticalAlignment="Center"
+                    Text="{Binding Path=ImportDeckWizardVM.Converter.DeckFullPathName, Mode=OneWay}" 
+                    />
+                <Button 
+                    Grid.Column="1"
+                    VerticalAlignment="Center"
+                    Command="{Binding Path=SelectDeckCommand.Command}" 
+                    Content="Browse..." 
+                    />
+            </Grid>
+        </GroupBox>
+
+    </Grid>
+</UserControl>
