@@ -1,4 +1,10 @@
-﻿using System;
+﻿// -----------------------------------------------------------------------
+// <copyright file="InlineDialogPage_MessageView.xaml.cs" company="TODO">
+// TODO: Update copyright text.
+// </copyright>
+// -----------------------------------------------------------------------
+
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -19,9 +25,12 @@ namespace MTGDeckConverter.View
     /// </summary>
     public partial class InlineDialogPage_MessageView : UserControl
     {
+        /// <summary>
+        /// Initializes a new instance of the InlineDialogPage_MessageView class.
+        /// </summary>
         public InlineDialogPage_MessageView()
         {
-            InitializeComponent();
+            this.InitializeComponent();
         }
     }
 }

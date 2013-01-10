@@ -1,21 +1,35 @@
-﻿namespace MTGDeckConverter.Model
+﻿// -----------------------------------------------------------------------
+// <copyright file="ConverterDatabase.cs" company="TODO">
+// TODO: Update copyright text.
+// </copyright>
+// -----------------------------------------------------------------------
+
+namespace MTGDeckConverter.Model
 {
     using System;
     using System.Collections.Generic;
+    using System.ComponentModel;
+    using System.Diagnostics.CodeAnalysis;
     using System.Linq;
     using System.Text;
     using System.Threading.Tasks;
-    using System.ComponentModel;
 
     /// <summary>
-    /// TODO: Update summary.
+    /// Singleton object which contains the Octgn.Data.Game definition for MTG, a Dictionary of all the Sets
+    /// available with the corresponding ConverterSet.  When first instantiated, it asynchronously fetches
+    /// all the sets via the Octgn API.  This will take a few seconds, and the IsInitialized property of this
+    /// object will be set to true when it is ready.
     /// </summary>
-    public class ConverterDatabase : INotifyPropertyChanged
+    public class ConverterDatabase : INotifyPropertyChangedBase
     {
-        private static AggregateException _BuildCardDatabaseExceptions;
-        private static Task _BuildCardDatabaseTask;
+        /// <summary>
+        /// When first instantiated, an asynchronous Task is executed which accesses the OCTGN database
+        /// and builds up the Dictionary of ConverterSets.  This references that Task.
+        /// </summary>
+        private Task _BuildCardDatabaseTask;
 
         /// <summary>
+        /// Prevents a default instance of the <see cref="ConverterDatabase"/> class from being created.
         /// The database of all OCTGN card Name, Guid, Set, and MultiverseID info needs to be read in.
         /// It only needs to be done once, which is why this is a Singleton.  
         /// When this is instantiated, the database is read on a worker thread so the user can
@@ -27,24 +41,34 @@
 
             if (this.GameDefinition != null)
             {
-                _BuildCardDatabaseTask = Task.Factory.StartNew(() =>
+                this._BuildCardDatabaseTask = Task.Factory.StartNew(() =>
                 {
                     this.Sets = ConverterDatabase.BuildCardDatabase(this.GameDefinition);
-//System.Threading.Thread.Sleep(999999);  //Pretend OCTGN takes forever getting all cards
                     this.IsInitialized = true;
                 });
 
-                //Continue with this if building the database threw an unexpected exception
-                _BuildCardDatabaseTask.ContinueWith((t) =>
-                {
-                    _BuildCardDatabaseExceptions = t.Exception;
-                }, System.Threading.Tasks.TaskContinuationOptions.OnlyOnFaulted);
+                // Continue with this if building the database threw an unexpected exception
+                this._BuildCardDatabaseTask.ContinueWith
+                (
+                    (t) =>
+                    {
+                        this.BuildCardDatabaseExceptions = t.Exception;
+                    }, 
+                    System.Threading.Tasks.TaskContinuationOptions.OnlyOnFaulted
+                );
             }
         }
 
         #region Singleton
 
+        /// <summary>
+        /// The private backing field for SingletonInstance
+        /// </summary>
         private static ConverterDatabase _SingletonInstance;
+
+        /// <summary>
+        /// Gets the Singleton instance of this class.  This is the only way to access this class.
+        /// </summary>
         public static ConverterDatabase SingletonInstance
         {
             get
@@ -53,6 +77,7 @@
                 {
                     _SingletonInstance = new ConverterDatabase();
                 }
+
                 return _SingletonInstance;
             }
         }
@@ -61,20 +86,48 @@
 
         #region Public Properties
 
+        /// <summary>
+        /// Gets the OCTGN GameDefinition for MTG
+        /// </summary>
         public Octgn.Data.Game GameDefinition
         {
             get;
             private set;
         }
 
-        private const string IsInitializedPropertyName = "IsInitialized";
-        private bool _IsInitialized = false;
-        public bool IsInitialized
+        [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1600:ElementsMustBeDocumented", Justification = "Property name constant")]
+        private const string BuildCardDatabaseExceptionsPropertyName = "BuildCardDatabaseExceptions";
+
+        [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1600:ElementsMustBeDocumented", Justification = "Private backing field")]
+        private AggregateException _BuildCardDatabaseExceptions;
+        
+        /// <summary>
+        /// Gets or sets the exceptions that were caught while building the OCTGN database
+        /// </summary>
+        public AggregateException BuildCardDatabaseExceptions
         {
-            get { return _IsInitialized; }
-            set { SetValue(ref _IsInitialized, value, IsInitializedPropertyName); }
+            get { return this._BuildCardDatabaseExceptions; }
+            set { this.SetValue(ref this._BuildCardDatabaseExceptions, value, BuildCardDatabaseExceptionsPropertyName); }
         }
 
+        [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1600:ElementsMustBeDocumented", Justification = "Property name constant")]
+        private const string IsInitializedPropertyName = "IsInitialized";
+
+        [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1600:ElementsMustBeDocumented", Justification = "Private backing field")]
+        private bool _IsInitialized = false;
+
+        /// <summary>
+        /// Gets or sets a value indicating whether the ConverterDatabase Singleton instance has finished initializing or not.
+        /// </summary>
+        public bool IsInitialized
+        {
+            get { return this._IsInitialized; }
+            set { this.SetValue(ref this._IsInitialized, value, IsInitializedPropertyName); }
+        }
+        
+        /// <summary>
+        /// Gets the Dictionary of all Set Guids (as defined by the OCTGN MTG team) and corresponding ConverterSet object.
+        /// </summary>
         public Dictionary<Guid, ConverterSet> Sets
         {
             get;
@@ -85,6 +138,10 @@
 
         #region Public Methods
 
+        /// <summary>
+        /// Returns a list of Guids which are the IDs of the Octgn Sets that are to be EXCLUDED from card searches
+        /// </summary>
+        /// <returns>A collection of Guids which represent Octgn Sets to be excluded.</returns>
         public IEnumerable<Guid> GetSetsExcludedFromSearches()
         {
             return
@@ -97,17 +154,17 @@
         /// Returns True if ConverterDatabase is already initialized, or it finished initializing before timing out.  
         /// Returns False if timed out without completing initialization.
         /// </summary>
-        /// <param name="timeout"></param>
-        /// <returns></returns>
+        /// <param name="timeout">The amount of time to allow for initialization before a timeout failure</param>
+        /// <returns>True if already initialized or finished initializing before timeout; false if timed out without completing initialization.</returns>
         public bool WaitForInitializationToComplete(TimeSpan timeout)
         {
-            if (!this.IsInitialized && _BuildCardDatabaseTask.Status == TaskStatus.Running)
+            if (!this.IsInitialized && this._BuildCardDatabaseTask.Status == TaskStatus.Running)
             {
-                //If still building the card database, wait up to timeout
-                _BuildCardDatabaseTask.Wait(timeout);
+                // If still building the card database, wait up to timeout
+                this._BuildCardDatabaseTask.Wait(timeout);
 
-                //If still building the card database after timeout, give up
-                return _BuildCardDatabaseTask.Status != TaskStatus.Running;
+                // If still building the card database after timeout, give up
+                return this._BuildCardDatabaseTask.Status != TaskStatus.Running;
             }
             else
             {
@@ -119,20 +176,30 @@
 
         #region Static Helpers
 
+        /// <summary>
+        /// Attempts to retrieve and return a reference to the MTG Game Definition.
+        /// </summary>
+        /// <returns>Octgn.Data.Game object for MTG if installed, null otherwise.</returns>
         private static Octgn.Data.Game GetGameDefinition()
         {
             Octgn.Data.GamesRepository repo = new Octgn.Data.GamesRepository();
             return repo.Games.FirstOrDefault(g => g.Id == Guid.Parse("A6C8D2E8-7CD8-11DD-8F94-E62B56D89593"));
         }
 
+        /// <summary>
+        /// Returns a Dictionary who's keys are Guids which represent Octgn Sets, and who's values are corresponding
+        /// ConverterSet objects.  
+        /// </summary>
+        /// <param name="gameDefinition">The MTG Game Definition object to use to read sets from</param>
+        /// <returns>A Dictionary of Octgn Set Guids and corresponding ConverterSet objects</returns>
         private static Dictionary<Guid, ConverterSet> BuildCardDatabase(Octgn.Data.Game gameDefinition)
         {
             if (gameDefinition == null)
-            { throw new ArgumentNullException(); }
+            {
+                throw new ArgumentNullException(); 
+            }
 
             Dictionary<Guid, ConverterSet> sets = new Dictionary<Guid, ConverterSet>();
-
-            var sw = System.Diagnostics.Stopwatch.StartNew();
 
             foreach (Octgn.Data.Set octgnSet in gameDefinition.Sets)
             {
@@ -160,54 +227,27 @@
                 );
             }
 
-            foreach(KeyValuePair<Guid, ConverterSet> kvp in sets)
+            foreach (KeyValuePair<Guid, ConverterSet> kvp in sets)
             {
                 kvp.Value.SortConverterCards();
 
                 if (SettingsManager.SingletonInstance.SetsExcludedFromSearches.Contains(kvp.Key))
-                { kvp.Value.IncludeInSearches = false; }
+                { 
+                    kvp.Value.IncludeInSearches = false; 
+                }
             }
-
-            sw.Stop();
-            Console.WriteLine("Building Card Database took " + sw.Elapsed);
 
             return sets;
         }
 
         #endregion Static Helpers
 
-        #region INotifyPropertyChanged Members
-
-        public event PropertyChangedEventHandler PropertyChanged;
-
-        protected void OnPropertyChanged(string name)
-        {
-            PropertyChangedEventHandler handler = PropertyChanged;
-            if (handler != null)
-            {
-                handler(this, new PropertyChangedEventArgs(name));
-            }
-        }
-
-        //http://www.pochet.net/blog/2010/06/25/inotifypropertychanged-implementations-an-overview/
-        protected bool SetValue<T>(ref T property, T value, string propertyName)
-        {
-            if (Object.Equals(property, value))
-            {
-                return false;
-            }
-            property = value;
-
-            this.OnPropertyChanged(propertyName);
-
-            return true;
-        }
-
-        #endregion
-
+        /// <summary>
+        /// Performs necessary actions before this object is terminated; typically when the program exits.
+        /// </summary>
         public void Cleanup()
         {
-            //Update the list of excluded sets before exiting
+            // Update the list of excluded sets before exiting
             SettingsManager.SingletonInstance.SetsExcludedFromSearches.Clear();
             SettingsManager.SingletonInstance.SetsExcludedFromSearches.AddRange(this.GetSetsExcludedFromSearches());
         }

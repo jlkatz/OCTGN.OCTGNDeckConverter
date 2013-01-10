@@ -1,58 +1,85 @@
-﻿using System;
+﻿// -----------------------------------------------------------------------
+// <copyright file="InlineDialogVM.cs" company="TODO">
+// TODO: Update copyright text.
+// </copyright>
+// -----------------------------------------------------------------------
+
+using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Text;
-using GalaSoft.MvvmLight;
 using GalaSoft.MvvmLight.Command;
 
 namespace MTGDeckConverter.ViewModel
 {
-    public class InlineDialogVM : ViewModelBase
+    /// <summary>
+    /// A class to represent a dialog to be displayed by a View 
+    /// </summary>
+    public class InlineDialogVM : PropertyChangedViewModelBase
     {
         #region Constructor
 
+        /// <summary>
+        /// Initializes a new instance of the InlineDialogVM class.
+        /// </summary>
+        /// <param name="inlineDialogPageVM">The content to be shown by the View inside this Dialog</param>
         public InlineDialogVM(InlineDialogPageVM inlineDialogPageVM)
         {
             if (inlineDialogPageVM == null)
-            { throw new ArgumentNullException(); }
+            { 
+                throw new ArgumentNullException(); 
+            }
 
             this.InlineDialogPage = inlineDialogPageVM;
         }
 
-        #endregion // Constructor
+        #endregion Constructor
 
         #region Public Properties
 
-        public CallWhenCompleted CallWhenCompletedMethod
+        /// <summary>
+        /// Gets or sets the delegate that will be executed when the Inline Dialog is closed.
+        /// </summary>
+        public CompletedCallback CallWhenCompletedMethod
         {
             get;
             set;
         }
-        
+
+        [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1600:ElementsMustBeDocumented", Justification = "Property name constant")]
         internal const string CompletedPropertyName = "Completed";
+
+        [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1600:ElementsMustBeDocumented", Justification = "Private backing field")]
         private bool _Completed = false;
+
+        /// <summary>
+        /// Gets or sets a value indicating whether the user has clicked a command to close the Inline Dialog or not.  (Such as Ok, Cancel, etc)
+        /// </summary>
         public bool Completed
         {
-            get { return _Completed; }
-            protected set 
-            { 
-                _Completed = value;
-                RaisePropertyChanged(CompletedPropertyName); 
-            } 
+            get { return this._Completed; }
+            protected set { this.SetValue(ref this._Completed, value, CompletedPropertyName); }
         }
 
-        internal const string CompletedSuccessfullyPropertyName = "CompletedSuccessfully";
-        private bool _CompletedSuccessfully = false;
-        public bool CompletedSuccessfully
+        [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1600:ElementsMustBeDocumented", Justification = "Property name constant")]
+        internal const string WasNotCancelledPropertyName = "WasNotCancelled";
+
+        [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1600:ElementsMustBeDocumented", Justification = "Private backing field")]
+        private bool _WasNotCancelled = false;
+
+        /// <summary>
+        /// Gets or sets a value indicating whether the user cancelled the Inline Dialog when closing it or not.
+        /// </summary>
+        public bool WasNotCancelled
         {
-            get { return _CompletedSuccessfully; }
-            protected set
-            {
-                _CompletedSuccessfully = value;
-                RaisePropertyChanged(CompletedSuccessfullyPropertyName);
-            }
+            get { return this._WasNotCancelled; }
+            protected set { this.SetValue(ref this._WasNotCancelled, value, WasNotCancelledPropertyName); }
         }
 
+        /// <summary>
+        /// Gets the Page that contains the content to be displayed by a View 
+        /// </summary>
         public InlineDialogPageVM InlineDialogPage
         {
             get;
@@ -63,45 +90,57 @@ namespace MTGDeckConverter.ViewModel
 
         #region Commands
 
+        [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1600:ElementsMustBeDocumented", Justification = "Private backing field")]
         private CommandViewModel _CancelButtonCommand;
+
+        /// <summary>
+        /// Gets the Command which instructs the Inline Dialog to close by cancellation 
+        /// </summary>
         public CommandViewModel CancelButtonCommand
         {
             get
             {
-                if (_CancelButtonCommand == null)
+                if (this._CancelButtonCommand == null)
                 {
-                    _CancelButtonCommand = new CommandViewModel
+                    this._CancelButtonCommand = new CommandViewModel
                     (
                         this.InlineDialogPage.CancelButtonText,
                         new RelayCommand
                         (
-                            () => this.CloseCommand(false),
+                            () => this.Close(false),
                             () => this.InlineDialogPage.CancelButtonEnabled
                         )
                     );
                 }
-                return _CancelButtonCommand;
+
+                return this._CancelButtonCommand;
             }
         }
 
+        [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1600:ElementsMustBeDocumented", Justification = "Private backing field")]
         private CommandViewModel _OkButtonCommand;
+
+        /// <summary>
+        /// Gets the Command which instructs the Inline Dialog to close by completion 
+        /// </summary>
         public CommandViewModel OkButtonCommand
         {
             get
             {
-                if (_OkButtonCommand == null)
+                if (this._OkButtonCommand == null)
                 {
-                    _OkButtonCommand = new CommandViewModel
+                    this._OkButtonCommand = new CommandViewModel
                     (
                         this.InlineDialogPage.OkButtonText,
                         new RelayCommand
                         (
-                            () => this.CloseCommand(true),
+                            () => this.Close(true),
                             () => this.InlineDialogPage.OkButtonEnabled
                         )
                     );
                 }
-                return _OkButtonCommand;
+
+                return this._OkButtonCommand;
             }
         }
 
@@ -109,13 +148,11 @@ namespace MTGDeckConverter.ViewModel
 
         #region Public Methods
 
-        public delegate void CallWhenCompleted(InlineDialogVM inlineDialogVM);
-
-        public void CloseCommand(bool completedSuccessfully)
-        {
-            this.CompletedSuccessfully = completedSuccessfully;
-            this.Close();
-        }
+        /// <summary>
+        /// Represents a callback method that will handle the Completed event.
+        /// </summary>
+        /// <param name="inlineDialogVM">The source of the event.</param>
+        public delegate void CompletedCallback(InlineDialogVM inlineDialogVM);
 
         #endregion Public Methods
 
@@ -124,15 +161,19 @@ namespace MTGDeckConverter.ViewModel
         /// <summary>
         /// Closes the Inline Dialog, and executes the code specified to run after closing
         /// </summary>
-        private void Close()
+        /// <param name="wasNotCancelled">A value indicating whether the Inline Dialog was _not_ cancelled when closed or not</param>
+        private void Close(bool wasNotCancelled)
         {
+            this.WasNotCancelled = wasNotCancelled;
+
             if (this.CallWhenCompletedMethod != null)
             {
                 this.CallWhenCompletedMethod(this);
             }
+
             this.Completed = true;
         }
 
-        #endregion Private
+        #endregion Private Methods
     }
 }

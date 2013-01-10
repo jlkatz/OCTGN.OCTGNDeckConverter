@@ -1,4 +1,10 @@
-﻿using System;
+﻿// -----------------------------------------------------------------------
+// <copyright file="WizardPage_ChooseDeckSourceType.xaml.cs" company="TODO">
+// TODO: Update copyright text.
+// </copyright>
+// -----------------------------------------------------------------------
+
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -19,9 +25,12 @@ namespace MTGDeckConverter.View
     /// </summary>
     public partial class WizardPage_ChooseDeckSourceType : UserControl
     {
+        /// <summary>
+        /// Initializes a new instance of the WizardPage_ChooseDeckSourceType class.
+        /// </summary>
         public WizardPage_ChooseDeckSourceType()
         {
-            InitializeComponent();
+            this.InitializeComponent();
         }
     }
 }

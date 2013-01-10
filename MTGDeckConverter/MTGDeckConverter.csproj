@@ -116,10 +116,14 @@
     <Compile Include="Model\ConvertEngine.cs" />
     <Compile Include="Model\ConverterCard.cs" />
     <Compile Include="Model\ConverterDatabase.cs" />
+    <Compile Include="Model\ConverterDeck.cs" />
     <Compile Include="Model\ConverterMapping.cs" />
     <Compile Include="Model\ConverterSet.cs" />
+    <Compile Include="Model\INotifyPropertyChangedBase.cs" />
     <Compile Include="Model\SettingsManager.cs" />
     <Compile Include="Model\XmlIOHelpers.cs" />
+    <Compile Include="ViewModel\CommandViewModelBase.cs" />
+    <Compile Include="ViewModel\CommandViewModel{T}.cs" />
     <Compile Include="ViewModel\InlineDialogPage_ChooseAnotherCardVM.cs" />
     <Compile Include="ViewModel\CommandViewModel.cs" />
     <Compile Include="Model\DeckSourceTypes.cs" />
@@ -132,6 +136,7 @@
     <Compile Include="ViewModel\MainViewModel.cs" />
     <Compile Include="Model\Converter.cs" />
     <Compile Include="ViewModel\InlineDialogPage_MessageVM.cs" />
+    <Compile Include="ViewModel\PropertyChangedViewModelBase.cs" />
     <Compile Include="ViewModel\ViewModelLocator.cs" />
     <Compile Include="ViewModel\WizardPage_ChooseDeckSourceType.cs" />
     <Compile Include="ViewModel\WizardPage_CompareCards.cs" />
@@ -260,6 +265,8 @@
     <AppDesigner Include="Properties\" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="GalaSoft.MvvmLight.Extras.WPF4.dll" />
+    <Content Include="GalaSoft.MvvmLight.WPF4.dll" />
     <Content Include="Octgn.Data.dll" />
     <Content Include="Polenter.SharpSerializer.dll" />
     <Resource Include="Resources\converter.ico" />

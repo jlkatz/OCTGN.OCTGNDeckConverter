@@ -1,4 +1,10 @@
-﻿using System;
+﻿// -----------------------------------------------------------------------
+// <copyright file="InlineDialogPage_ChooseIncludedSetsView.xaml.cs" company="TODO">
+// TODO: Update copyright text.
+// </copyright>
+// -----------------------------------------------------------------------
+
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -19,9 +25,12 @@ namespace MTGDeckConverter.View
     /// </summary>
     public partial class InlineDialogPage_ChooseIncludedSetsView : UserControl
     {
+        /// <summary>
+        /// Initializes a new instance of the InlineDialogPage_ChooseIncludedSetsView class.
+        /// </summary>
         public InlineDialogPage_ChooseIncludedSetsView()
         {
-            InitializeComponent();
+            this.InitializeComponent();
         }
     }
 }

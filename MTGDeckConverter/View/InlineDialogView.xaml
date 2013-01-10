@@ -39,7 +39,6 @@
 
         <!-- CURRENT PAGE AREA -->
         <Border
-            x:Name="Content"
             Grid.Row="1" 
             Grid.Column="1" 
             HorizontalAlignment="Stretch"

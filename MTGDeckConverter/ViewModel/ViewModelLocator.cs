@@ -1,4 +1,10 @@
-﻿/*
+﻿// -----------------------------------------------------------------------
+// <copyright file="ViewModelLocator.cs" company="TODO">
+// TODO: Update copyright text.
+// </copyright>
+// -----------------------------------------------------------------------
+
+/*
   In App.xaml:
   <Application.Resources>
       <vm:ViewModelLocatorTemplate xmlns:vm="clr-namespace:MTGDeckConverter.ViewModel"
@@ -19,24 +25,24 @@ namespace MTGDeckConverter.ViewModel
     /// <summary>
     /// This class contains static references to all the view models in the
     /// application and provides an entry point for the bindings.
-    /// <para>
-    /// See http://www.galasoft.ch/mvvm
-    /// </para>
     /// </summary>
     public class ViewModelLocator
     {
+        /// <summary>
+        /// Initializes static members of the ViewModelLocator class.
+        /// </summary>
         static ViewModelLocator()
         {
             ServiceLocator.SetLocatorProvider(() => SimpleIoc.Default);
 
-            //if (ViewModelBase.IsInDesignModeStatic)
-            //{
-            //    SimpleIoc.Default.Register<IDataService, Design.DesignDataService>();
-            //}
-            //else
-            //{
-            //    SimpleIoc.Default.Register<IDataService, DataService>();
-            //}
+            ////if (ViewModelBase.IsInDesignModeStatic)
+            ////{
+            ////    SimpleIoc.Default.Register<IDataService, Design.DesignDataService>();
+            ////}
+            ////else
+            ////{
+            ////    SimpleIoc.Default.Register<IDataService, DataService>();
+            ////}
 
             SimpleIoc.Default.Register<MainViewModel>();
         }

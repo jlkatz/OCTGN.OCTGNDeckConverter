@@ -14,6 +14,11 @@
             <!-- Workaround needed, see http://stackoverflow.com/a/8733564 -->
             <Style x:Key="ComboBoxCardMouseOverStyle" TargetType="{x:Type ComboBox}">
                 <EventSetter Event="MouseMove" Handler="ComboBox_MouseMove" />
+                <Style.Triggers>
+                    <DataTrigger Binding="{Binding Path=PotentialOCTGNCards.Count}" Value="0">
+                        <Setter Property="Visibility" Value="Collapsed" />
+                    </DataTrigger>
+                </Style.Triggers>
             </Style>
             <DataTemplate x:Key="CardListDataGrid">
                 <DataGrid
@@ -50,7 +55,7 @@
                         </DataGridTextColumn>
 
                         <DataGridTextColumn
-                            Header="Imported Card"
+                            Header="Imported Card Name"
                             Width="2*"
                             Binding="{Binding Path=CardName}"
                             IsReadOnly="True"
@@ -65,7 +70,7 @@
                         </DataGridTextColumn>
 
                         <DataGridTemplateColumn
-                            Header="OCTGN Card" 
+                            Header="Matched OCTGN Card" 
                             CanUserSort="False"
                             CanUserReorder="False"
                             Width="3*"
@@ -130,7 +135,7 @@
             <TextBlock 
                 Grid.Row="0" 
                 TextWrapping="Wrap"
-                Text="Compare each original Card against the matched OCTGN Card.  Make changes, then click Save." 
+                Text="Compare each imported Card against the matched OCTGN Card.  Make changes, then click Save." 
                 />
 
             <TabControl 
@@ -139,22 +144,22 @@
                 >
                 <TabItem
                     ContentTemplate="{StaticResource CardListDataGrid}"
-                    Content="{Binding Path=ImportDeckWizardVM.Converter.MainDeckMappings}"
+                    Content="{Binding Path=ImportDeckWizardVM.Converter.ConverterDeck.MainDeck}"
                     >
                     <TabItem.Header>
                         <TextBlock 
-                            Text="{Binding Path=ImportDeckWizardVM.Converter.MainDeckCount, StringFormat='Main Deck ({0})'}" 
+                            Text="{Binding Path=ImportDeckWizardVM.Converter.ConverterDeck.MainDeckCount, StringFormat='Main Deck ({0})'}" 
                             FontWeight="Bold"
                             />
                     </TabItem.Header>
                 </TabItem>
                 <TabItem
                     ContentTemplate="{StaticResource CardListDataGrid}"
-                    Content="{Binding Path=ImportDeckWizardVM.Converter.SideBoardMappings}"
+                    Content="{Binding Path=ImportDeckWizardVM.Converter.ConverterDeck.SideBoard}"
                     >
                     <TabItem.Header>
                         <TextBlock 
-                            Text="{Binding Path=ImportDeckWizardVM.Converter.SideBoardCount, StringFormat='Sideboard ({0})'}" 
+                            Text="{Binding Path=ImportDeckWizardVM.Converter.ConverterDeck.SideBoardCount, StringFormat='Sideboard ({0})'}" 
                             FontWeight="Bold"
                             />
                     </TabItem.Header>

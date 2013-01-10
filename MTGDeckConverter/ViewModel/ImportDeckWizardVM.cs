@@ -1,32 +1,64 @@
-﻿using System;
+﻿// -----------------------------------------------------------------------
+// <copyright file="ImportDeckWizardVM.cs" company="TODO">
+// TODO: Update copyright text.
+// </copyright>
+// -----------------------------------------------------------------------
+
+using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Text;
-using GalaSoft.MvvmLight;
-using GalaSoft.MvvmLight.Command;
-using MTGDeckConverter.Model;
-using GalaSoft.MvvmLight.Threading;
 using System.Windows.Media.Imaging;
+using GalaSoft.MvvmLight.Command;
+using GalaSoft.MvvmLight.Threading;
+using MTGDeckConverter.Model;
 
 namespace MTGDeckConverter.ViewModel
 {
-    public class ImportDeckWizardVM : ViewModelBase
+    /// <summary>
+    /// The ViewModel which drives the Import Deck Wizard.  This is responsible for determining
+    /// what Wizard page is shown based on user input.
+    /// </summary>
+    public class ImportDeckWizardVM : PropertyChangedViewModelBase
     {
         #region Fields
 
+        /// <summary>
+        /// ChooseDeckSourceType Wizard Page VM backing field
+        /// </summary>
         private WizardPage_ChooseDeckSourceType _WizardPage_ChooseDeckSourceType;
+
+        /// <summary>
+        /// SelectFile Wizard Page VM backing field
+        /// </summary>
         private WizardPage_SelectFile _WizardPage_SelectFile;
+
+        /// <summary>
+        /// EnterWebpage Wizard Page VM backing field
+        /// </summary>
         private WizardPage_EnterWebpage _WizardPage_EnterWebpage;
+
+        /// <summary>
+        /// EnterText Wizard Page VM backing field
+        /// </summary>
         private WizardPage_EnterText _WizardPage_EnterText;
+
+        /// <summary>
+        /// CompareCards Wizard Page VM backing field
+        /// </summary>
         private WizardPage_CompareCards _WizardPage_CompareCards;
 
         #endregion Fields
 
         #region Constructor
 
+        /// <summary>
+        /// Initializes a new instance of the ImportDeckWizardVM class.
+        /// </summary>
         public ImportDeckWizardVM()
         {
-            //Call Start Over, since it will reset everything and set the first page
+            // Call Start Over, since it will reset everything and set the first page
             this.StartOver();
         }
 
@@ -34,28 +66,49 @@ namespace MTGDeckConverter.ViewModel
 
         #region Public Properties
 
+        [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1600:ElementsMustBeDocumented", Justification = "Property name constant")]
         internal const string CurrentWizardPageVMPropertyName = "CurrentWizardPageVM";
+
+        [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1600:ElementsMustBeDocumented", Justification = "Private backing field")]
         private ImportDeckWizardPageVM _CurrentWizardPageVM;
+        
+        /// <summary>
+        /// Gets the View Model which represents the current Wizard Page that should be displayed
+        /// </summary>
         public ImportDeckWizardPageVM CurrentWizardPageVM
         {
-            get { return _CurrentWizardPageVM; }
-            private set { this.SetValue(ref _CurrentWizardPageVM, value, CurrentWizardPageVMPropertyName); }
+            get { return this._CurrentWizardPageVM; }
+            private set { this.SetValue(ref this._CurrentWizardPageVM, value, CurrentWizardPageVMPropertyName); }
         }
 
+        [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1600:ElementsMustBeDocumented", Justification = "Property name constant")]
         internal const string InlineDialogPropertyName = "InlineDialog";
+
+        [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1600:ElementsMustBeDocumented", Justification = "Private backing field")]
         private InlineDialogVM _InlineDialog;
+        
+        /// <summary>
+        /// Gets or sets the View Model which represents an Inline Dialog that should be shown over the current Wizard Page
+        /// </summary>
         public InlineDialogVM InlineDialog
         {
-            get { return _InlineDialog; }
-            set { this.SetValue(ref _InlineDialog, value, InlineDialogPropertyName); }
+            get { return this._InlineDialog; }
+            set { this.SetValue(ref this._InlineDialog, value, InlineDialogPropertyName); }
         }
 
+        [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1600:ElementsMustBeDocumented", Justification = "Property name constant")]
         internal const string ConverterPropertyName = "Converter";
+
+        [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1600:ElementsMustBeDocumented", Justification = "Private backing field")]
         private Converter _Converter;
+        
+        /// <summary>
+        /// Gets the Converter which contains all of the parameters and data about the conversion
+        /// </summary>
         public Converter Converter
         {
-            get { return _Converter; }
-            private set { this.SetValue(ref _Converter, value, ConverterPropertyName); }
+            get { return this._Converter; }
+            private set { this.SetValue(ref this._Converter, value, ConverterPropertyName); }
         }
 
         #endregion Public Properties
@@ -63,14 +116,21 @@ namespace MTGDeckConverter.ViewModel
         #region Commands
 
         #region Choose Another Card Command
-        CommandViewModel<ConverterMapping> _ChooseAnotherCardCommand;
+
+        [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1600:ElementsMustBeDocumented", Justification = "Private backing field")]
+        private CommandViewModel<ConverterMapping> _ChooseAnotherCardCommand;
+        
+        /// <summary>
+        /// Gets the Command which will instruct the Wizard to show a popup which allows the user to pick another
+        /// card from across all the installed MTG sets to represent the converted card text.
+        /// </summary>
         public CommandViewModel<ConverterMapping> ChooseAnotherCardCommand
         {
             get
             {
-                if (_ChooseAnotherCardCommand == null)
+                if (this._ChooseAnotherCardCommand == null)
                 {
-                    _ChooseAnotherCardCommand = new CommandViewModel<ConverterMapping>
+                    this._ChooseAnotherCardCommand = new CommandViewModel<ConverterMapping>
                     (
                         "...",
                         new RelayCommand<ConverterMapping>
@@ -81,35 +141,44 @@ namespace MTGDeckConverter.ViewModel
                                 
                                 this.InlineDialog.CallWhenCompletedMethod = delegate(InlineDialogVM inlineDialogVM)
                                 {
-                                    if (inlineDialogVM.CompletedSuccessfully)
+                                    if (inlineDialogVM.WasNotCancelled)
                                     {
                                         InlineDialogPage_ChooseAnotherCardVM page = inlineDialogVM.InlineDialogPage as InlineDialogPage_ChooseAnotherCardVM;
-                                        if(page.SelectedConverterCard != null)
+                                        if (page.SelectedConverterCard != null)
                                         {
                                             cm.AddPotentialOCTGNCard(page.SelectedConverterCard);
                                             cm.SelectedOCTGNCard = page.SelectedConverterCard;
-                                            this.Converter.UpdateCardCounts();
+                                            this.Converter.ConverterDeck.UpdateCardCounts();
                                         }
                                     }
                                 };
                             }
+
                         )
                     );
                 }
-                return _ChooseAnotherCardCommand;
+
+                return this._ChooseAnotherCardCommand;
             }
         }
         #endregion Choose Another Card Command
 
         #region Choose Included Sets Command
-        CommandViewModel _ChooseIncludedSetsCommand;
+
+        [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1600:ElementsMustBeDocumented", Justification = "Private backing field")]
+        private CommandViewModel _ChooseIncludedSetsCommand;
+        
+        /// <summary>
+        /// Gets the Command which will instruct the Wizard to show a popup that allows the user to choose
+        /// which Sets will be included when searching for matching cards.
+        /// </summary>
         public CommandViewModel ChooseIncludedSetsCommand
         {
             get
             {
-                if (_ChooseIncludedSetsCommand == null)
+                if (this._ChooseIncludedSetsCommand == null)
                 {
-                    _ChooseIncludedSetsCommand = new CommandViewModel
+                    this._ChooseIncludedSetsCommand = new CommandViewModel
                     (
                         "Choose Included Sets...",
                         new RelayCommand
@@ -118,10 +187,12 @@ namespace MTGDeckConverter.ViewModel
                             {
                                 this.InlineDialog = new InlineDialogVM(new InlineDialogPage_ChooseIncludedSetsVM());
                             }
+
                         )
                     );
                 }
-                return _ChooseIncludedSetsCommand;
+
+                return this._ChooseIncludedSetsCommand;
             }
         }
         #endregion Choose Included Sets Command
@@ -129,14 +200,20 @@ namespace MTGDeckConverter.ViewModel
         #region Command Buttons
 
         #region Next Step Command
-        CommandViewModel _NextStepCommand;
+
+        [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1600:ElementsMustBeDocumented", Justification = "Private backing field")]
+        private CommandViewModel _NextStepCommand;
+        
+        /// <summary>
+        /// Gets the Command which instructs the Wizard to move to the next step.
+        /// </summary>
         public CommandViewModel NextStepCommand
         {
             get
             {
-                if (_NextStepCommand == null)
+                if (this._NextStepCommand == null)
                 {
-                    _NextStepCommand = new CommandViewModel
+                    this._NextStepCommand = new CommandViewModel
                     (
                         "Next >",
                         new RelayCommand
@@ -148,23 +225,31 @@ namespace MTGDeckConverter.ViewModel
                                     this.CurrentWizardPageVM.CanMoveToNextStep :
                                     false;
                             }
+
                         )
                     );
                 }
-                return _NextStepCommand;
+
+                return this._NextStepCommand;
             }
         }
         #endregion Next Step Command
 
         #region StartOver Command
-        CommandViewModel _StartOverCommand;
+
+        [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1600:ElementsMustBeDocumented", Justification = "Private backing field")]
+        private CommandViewModel _StartOverCommand;
+        
+        /// <summary>
+        /// Gets the Command which instructs the Wizard to start over.
+        /// </summary>
         public CommandViewModel StartOverCommand
         {
             get
             {
-                if (_StartOverCommand == null)
+                if (this._StartOverCommand == null)
                 {
-                    _StartOverCommand = new CommandViewModel
+                    this._StartOverCommand = new CommandViewModel
                     (
                         "Start Over",
                         new RelayCommand
@@ -173,7 +258,8 @@ namespace MTGDeckConverter.ViewModel
                         )
                     );
                 }
-                return _StartOverCommand;
+
+                return this._StartOverCommand;
             }
         }
         #endregion StartOver Command
@@ -184,11 +270,19 @@ namespace MTGDeckConverter.ViewModel
 
         #region Public Methods
 
+        /// <summary>
+        /// Returns true if the current page is the last step, false otherwise.
+        /// </summary>
+        /// <returns>True if the current page is the last step, false otherwise.</returns>
         public bool IsCurrentWizardPageTheLastStep()
         {
-            return this.CurrentWizardPageVM == _WizardPage_CompareCards;
+            return this.CurrentWizardPageVM == this._WizardPage_CompareCards;
         }
 
+        /// <summary>
+        /// Instructs the Wizard to move to the next step.  This method will determine what the next step is
+        /// based on the current step and the input parameters.
+        /// </summary>
         public void MoveToNextStep()
         {
             if (this.IsCurrentWizardPageTheLastStep())
@@ -213,9 +307,9 @@ namespace MTGDeckConverter.ViewModel
             {
                 ImportDeckWizardPageVM nextPage = this.DetermineNextPage();
 
-                if (nextPage == _WizardPage_CompareCards)
+                if (nextPage == this._WizardPage_CompareCards)
                 {
-                    HandleConversionAndShowCompareCardsPage();
+                    this.HandleConversionAndShowCompareCardsPage();
                 }
                 else
                 {
@@ -228,13 +322,14 @@ namespace MTGDeckConverter.ViewModel
         
         #region Private Methods
 
-        //If the next page is CompareCards, then that means it is time to attempt conversion
-        //If the conversion is successful, advance to CompareCards
-        //If the conversion fails, show a (hopefully) helpful message and do not advance
-        //While converting, show an in-progress dialog
+        /// <summary>
+        /// Converts the cards.  If the conversion is successful, advance to CompareCards
+        /// If the conversion fails, show a (hopefully) helpful message and do not advance
+        /// While converting, show an in-progress dialog
+        /// </summary>
         private void HandleConversionAndShowCompareCardsPage()
         {
-            //Show the dialog that conversion is in progress
+            // Show the dialog that conversion is in progress
             this.InlineDialog = new InlineDialogVM(new InlineDialogPage_ConvertingCardsVM());
 
             System.Threading.Tasks.Task<Tuple<bool, string>> conversionTask =
@@ -245,120 +340,139 @@ namespace MTGDeckConverter.ViewModel
                     Tuple<bool, string> result = this.Converter.Convert();
                     
                     TimeSpan timeSinceStart = DateTime.Now - startConversionTime;
-                    double minSeconds = 0.5;  //Wait at least this long so the conversion process is convincing
+
+                    // Wait at least this long so the conversion process is convincing
+                    double minSeconds = 0.5;  
                     if (timeSinceStart.TotalSeconds < minSeconds)
                     {
                         TimeSpan leftover = TimeSpan.FromSeconds(minSeconds - timeSinceStart.TotalSeconds);
                         Console.WriteLine("Finished! Waiting to be convincing for " + leftover);
                         System.Threading.Thread.Sleep(leftover);
                     }
+
                     return result;
                 });
 
-            //Continue with this if conversion completes successfully
-            conversionTask.ContinueWith((t) =>
-            {
-                if (t.Result.Item1)
+            // Continue with this if conversion completes successfully
+            conversionTask.ContinueWith
+            (
+                (t) => 
                 {
-                    DispatcherHelper.CheckBeginInvokeOnUI(
-                        () =>
-                        {
-                            this.InlineDialog = null;
-                            this.SetCurrentPage(_WizardPage_CompareCards);
-                        });
-                }
-                else
+                    if (t.Result.Item1)
+                    {
+                        DispatcherHelper.CheckBeginInvokeOnUI(
+                            () =>
+                            {
+                                this.InlineDialog = null;
+                                this.SetCurrentPage(_WizardPage_CompareCards);
+                            });
+                    }
+                    else
+                    {
+                        StringBuilder message = new StringBuilder();
+                        message.AppendLine("An error occurred while trying to convert the deck.  Please try again.");
+                        message.AppendLine();
+                        message.AppendLine("Details:");
+                        message.AppendLine(t.Result.Item2);
+                        DispatcherHelper.CheckBeginInvokeOnUI(
+                            () => 
+                            {
+                                this.InlineDialog = new InlineDialogVM(new InlineDialogPage_MessageVM(message.ToString(), "Error While Converting Deck"));
+                            }
+
+                        );
+                    }
+                }, 
+                System.Threading.Tasks.TaskContinuationOptions.OnlyOnRanToCompletion
+            );
+
+            // Or continue with this if importing threw an unexpected exception
+            conversionTask.ContinueWith
+            (
+                (t) => 
                 {
+                    AggregateException aggEx = t.Exception;
                     StringBuilder message = new StringBuilder();
-                    message.AppendLine("An error occurred while trying to convert the deck.  Please try again.");
+                    message.AppendLine("An unexpected Exception occurred while trying to convert the deck.  Please try again.");
                     message.AppendLine();
                     message.AppendLine("Details:");
-                    message.AppendLine(t.Result.Item2);
-                    DispatcherHelper.CheckBeginInvokeOnUI(
-                        () => 
-                        {
-                            this.InlineDialog = new InlineDialogVM(new InlineDialogPage_MessageVM(message.ToString(), "Error While Converting Deck"));
-                        }
-                    );
-                }
-            }, System.Threading.Tasks.TaskContinuationOptions.OnlyOnRanToCompletion);
+                    foreach (Exception e in aggEx.InnerExceptions)
+                    {
+                        message.AppendLine(e.ToString());
+                        message.AppendLine();
+                    }
 
-            //Or continue with this if importing threw an unexpected exception
-            conversionTask.ContinueWith((t) =>
-            {
-                AggregateException aggEx = t.Exception;
-                StringBuilder message = new StringBuilder();
-                message.AppendLine("An unexpected Exception occurred while trying to convert the deck.  Please try again.");
-                message.AppendLine();
-                message.AppendLine("Details:");
-                foreach (Exception e in aggEx.InnerExceptions)
-                {
-                    message.AppendLine(e.ToString());
-                    message.AppendLine();
-                }
-                System.Diagnostics.Debug.WriteLine(message.ToString());
-
-                DispatcherHelper.CheckBeginInvokeOnUI(() =>
-                {
-                    this.InlineDialog = new InlineDialogVM(new InlineDialogPage_MessageVM(message.ToString(), "Unexpected Exception While Converting Deck"));
-                });
-            }, System.Threading.Tasks.TaskContinuationOptions.OnlyOnFaulted);
+                    DispatcherHelper.CheckBeginInvokeOnUI(() =>
+                    {
+                        this.InlineDialog = new InlineDialogVM(new InlineDialogPage_MessageVM(message.ToString(), "Unexpected Exception While Converting Deck"));
+                    });
+                }, 
+                System.Threading.Tasks.TaskContinuationOptions.OnlyOnFaulted
+            );
         }
 
+        /// <summary>
+        /// Determines what the next Wizard page should be based on the current page and input parameters.
+        /// </summary>
+        /// <returns>The next Wizard page that should be shown</returns>
         private ImportDeckWizardPageVM DetermineNextPage()
         {
-            if (this.CurrentWizardPageVM == _WizardPage_ChooseDeckSourceType)
+            if (this.CurrentWizardPageVM == this._WizardPage_ChooseDeckSourceType)
             {
                 switch (this.Converter.DeckSourceType)
                 {
                     case DeckSourceTypes.File:
-                        return _WizardPage_SelectFile;
+                        return this._WizardPage_SelectFile;
 
                     case DeckSourceTypes.Webpage:
-                        return _WizardPage_EnterWebpage;
+                        return this._WizardPage_EnterWebpage;
 
                     case DeckSourceTypes.Text:
-                        return _WizardPage_EnterText;
+                        return this._WizardPage_EnterText;
 
                     default:
                         throw new NotImplementedException();
                 }
             }
-
             else if 
             (
-                this.CurrentWizardPageVM == _WizardPage_SelectFile ||
-                this.CurrentWizardPageVM == _WizardPage_EnterWebpage ||
-                this.CurrentWizardPageVM == _WizardPage_EnterText
+                this.CurrentWizardPageVM == this._WizardPage_SelectFile ||
+                this.CurrentWizardPageVM == this._WizardPage_EnterWebpage ||
+                this.CurrentWizardPageVM == this._WizardPage_EnterText
             )
             {
-                return _WizardPage_CompareCards;
+                return this._WizardPage_CompareCards;
             }
-
             else
             {
                 throw new InvalidOperationException("A Next Page should never be requested from the current Page");
             }
         }
 
+        /// <summary>
+        /// Shows a prompt which asks the user for the filename and location to save the newly converted
+        /// Octgn 3 deck.  After saving, the chosen directory is remembered for next time.  If an error
+        /// occurs while saving, a message box will pop up to describe the problem.
+        /// </summary>
+        /// <returns>Returns true if the deck was saved successfully, false otherwise</returns>
         private bool SaveDeck()
         {
             Microsoft.Win32.SaveFileDialog sfd = new Microsoft.Win32.SaveFileDialog
             {
                 AddExtension = true,
                 Filter = "Octgn decks|*.o8d",
-                FileName = this.Converter.DeckName + ".o8d",
+                FileName = this.Converter.ConverterDeck.DeckName + ".o8d",
             };
 
-            //Attempt to set the initial directory if it exists
-            //(It might not exist if the last location was a USB stick for example)
+            // Attempt to set the initial directory if it exists
+            // (It might not exist if the last location was a USB stick for example)
             if (System.IO.Directory.Exists(SettingsManager.SingletonInstance.SaveFileDirectory))
             {
                 sfd.InitialDirectory = SettingsManager.SingletonInstance.SaveFileDirectory;
             }
             else
             {
-                //If it doesn't exist, use the OCTGN Game Definition's default location
+                // If it doesn't exist, use the OCTGN Game Definition's default location
                 sfd.InitialDirectory = ConverterDatabase.SingletonInstance.GameDefinition.DefaultDecksPath;
             }
 
@@ -378,7 +492,8 @@ namespace MTGDeckConverter.ViewModel
                 {
                     System.Windows.MessageBox.Show
                     (
-                        "An error occured while trying to save the deck:\n" + ex.Message, "Error",
+                        "An error occured while trying to save the deck:\n" + ex.Message,
+                        "Error",
                         System.Windows.MessageBoxButton.OK, 
                         System.Windows.MessageBoxImage.Error
                     );
@@ -387,54 +502,44 @@ namespace MTGDeckConverter.ViewModel
             }
         }
         
+        /// <summary>
+        /// Starts this Wizard over by re-instantiating the critical objects which keep track of state and data.
+        /// </summary>
         private void StartOver()
         {
-            _WizardPage_ChooseDeckSourceType = new WizardPage_ChooseDeckSourceType(this);
-            _WizardPage_SelectFile = new WizardPage_SelectFile(this);
-            _WizardPage_EnterWebpage = new WizardPage_EnterWebpage(this);
-            _WizardPage_EnterText = new WizardPage_EnterText(this);
-            _WizardPage_CompareCards = new WizardPage_CompareCards(this);
+            this._WizardPage_ChooseDeckSourceType = new WizardPage_ChooseDeckSourceType(this);
+            this._WizardPage_SelectFile = new WizardPage_SelectFile(this);
+            this._WizardPage_EnterWebpage = new WizardPage_EnterWebpage(this);
+            this._WizardPage_EnterText = new WizardPage_EnterText(this);
+            this._WizardPage_CompareCards = new WizardPage_CompareCards(this);
 
             this.Converter = new Converter();
 
-            this.SetCurrentPage(_WizardPage_ChooseDeckSourceType);
+            this.SetCurrentPage(this._WizardPage_ChooseDeckSourceType);
         }
 
+        /// <summary>
+        /// Sets the current page of the Wizard to page.
+        /// </summary>
+        /// <param name="page">The page object to set the Wizard to</param>
         private void SetCurrentPage(ImportDeckWizardPageVM page)
         {
             this.CurrentWizardPageVM = page;
-            this.NextStepCommand.DisplayName = this.CurrentWizardPageVM == _WizardPage_CompareCards ? 
+            this.NextStepCommand.DisplayName = this.CurrentWizardPageVM == this._WizardPage_CompareCards ? 
                 "Save Deck..." : 
                 "Next >";
         }
 
         #endregion Private Methods
 
-        #region ViewModelBase Helpers
-
-        //http://www.pochet.net/blog/2010/06/25/inotifypropertychanged-implementations-an-overview/
-        /// <summary>
-        /// Returns True if the property was changed, false if no change
-        /// </summary>
-        protected bool SetValue<T>(ref T property, T value, string propertyName, bool broadcast = false)
-        {
-            //TODO: Make this method an extension of ViewModelBase
-            if (Object.Equals(property, value))
-            {
-                return false;
-            }
-            var oldValue = property;
-            property = value;
-
-            this.RaisePropertyChanged<T>(propertyName, oldValue, value, broadcast);
-
-            return true;
-        }
-
-        #endregion ViewModelBase Helpers
-
         #region Static Helpers
 
+        /// <summary>
+        /// Returns an Image of the Octgn Card with corresponding Guid.  If there is an error (including if the Card Guid is not found)
+        /// then the default back of the card is returned.
+        /// </summary>
+        /// <param name="cardID">The Guid of the Card to get a Bitmap picture of</param>
+        /// <returns>The BitmapImage of the Octgn Card with corresponding Guid</returns>
         public static BitmapImage GetCardBitmapImage(Guid cardID)
         {
             var bim = new BitmapImage();
@@ -447,16 +552,15 @@ namespace MTGDeckConverter.ViewModel
                 bim.UriSource = Octgn.Data.CardModel.GetPictureUri(ConverterDatabase.SingletonInstance.GameDefinition, octgnCardModel.Set.Id, octgnCardModel.ImageUri);
                 bim.EndInit();
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                System.Diagnostics.Trace.WriteLine("Error loading picture uri from game pack: " + ex.ToString());
                 bim = new BitmapImage();
                 bim.CacheOption = BitmapCacheOption.OnLoad;
                 bim.BeginInit();
                 bim.UriSource = new Uri(@"pack://application:,,,/Octgn;component/Resources/Front.jpg");
                 bim.EndInit();
-
             }
+
             return bim;
         }
 

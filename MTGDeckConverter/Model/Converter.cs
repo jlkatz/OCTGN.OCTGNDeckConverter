@@ -1,15 +1,29 @@
-﻿using System;
+﻿// -----------------------------------------------------------------------
+// <copyright file="Converter.cs" company="TODO">
+// TODO: Update copyright text.
+// </copyright>
+// -----------------------------------------------------------------------
+
+using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Text;
-using System.ComponentModel;
 using System.Threading.Tasks;
-using System.Collections.ObjectModel;
 
 namespace MTGDeckConverter.Model
 {
-    public class Converter : INotifyPropertyChanged
+    /// <summary>
+    /// This object keeps tracks of the parameters and data for an entire Deck conversion process.  This uses
+    /// ConvertEngine to convert as needed based on the user parameters.
+    /// </summary>
+    public class Converter : INotifyPropertyChangedBase
     {
+        /// <summary>
+        /// Initializes a new instance of the Converter class.
+        /// Creates a new blank Converter ready to convert from anything
+        /// </summary>
         public Converter()
         {
             this.DeckSourceType = null;
@@ -17,87 +31,107 @@ namespace MTGDeckConverter.Model
 
         #region Public Properties
 
+        /// <summary>
+        /// Gets Singleton-instance of the ConverterDatabase
+        /// </summary>
         public ConverterDatabase ConverterDatabase
         {
             get { return ConverterDatabase.SingletonInstance; }
         }
 
+        [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1600:ElementsMustBeDocumented", Justification = "Property name constant")]
+        private const string ConverterDeckPropertyName = "ConverterDeck";
+
+        [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1600:ElementsMustBeDocumented", Justification = "Private backing field")]
+        private ConverterDeck _ConverterDeck;
+        
+        /// <summary>
+        /// Gets the ConverterDeck instance which stores data about the Deck to convert
+        /// </summary>
+        public ConverterDeck ConverterDeck
+        {
+            get { return this._ConverterDeck; }
+            private set { this.SetValue(ref this._ConverterDeck, value, ConverterDeckPropertyName); }
+        }
+
+        [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1600:ElementsMustBeDocumented", Justification = "Property name constant")]
+        private const string DeckFileNameWithoutExtensionPropertyName = "DeckFileNameWithoutExtension";
+        
+        [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1600:ElementsMustBeDocumented", Justification = "Private backing field")]
+        private string _DeckFileNameWithoutExtension;
+        
+        /// <summary>
+        /// Gets or sets the name of the Deck file without the file-extension
+        /// </summary>
+        public string DeckFileNameWithoutExtension
+        {
+            get { return this._DeckFileNameWithoutExtension; }
+            set { this.SetValue(ref this._DeckFileNameWithoutExtension, value, DeckFileNameWithoutExtensionPropertyName); }
+        }
+
+        [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1600:ElementsMustBeDocumented", Justification = "Property name constant")]
         private const string DeckFullPathNamePropertyName = "DeckFullPathName";
+        
+        [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1600:ElementsMustBeDocumented", Justification = "Private backing field")]
         private string _DeckFullPathName;
+        
+        /// <summary>
+        /// Gets or sets the Full Path Name of the Deck file to convert
+        /// </summary>
         public string DeckFullPathName
         {
-            get { return _DeckFullPathName; }
-            set { SetValue(ref _DeckFullPathName, value, DeckFullPathNamePropertyName); }
+            get { return this._DeckFullPathName; }
+            set { this.SetValue(ref this._DeckFullPathName, value, DeckFullPathNamePropertyName); }
         }
 
-        private const string DeckNamePropertyName = "DeckName";
-        private string _DeckName = "Imported Deck";
-        public string DeckName
-        {
-            get { return _DeckName; }
-            set 
-            {
-                //http://stackoverflow.com/a/847251
-                string invalidChars = System.Text.RegularExpressions.Regex.Escape(new string(System.IO.Path.GetInvalidFileNameChars()));
-                string invalidReStr = string.Format(@"[{0}]+", invalidChars);
-                string validFilenameValue =  System.Text.RegularExpressions.Regex.Replace(value, invalidReStr, "_");
-
-                SetValue(ref _DeckName, validFilenameValue, DeckNamePropertyName); 
-            }
-        }
-
+        [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1600:ElementsMustBeDocumented", Justification = "Property name constant")]
         private const string DeckURLPropertyName = "DeckURL";
+
+        [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1600:ElementsMustBeDocumented", Justification = "Private backing field")]
         private string _DeckURL;
+        
+        /// <summary>
+        /// Gets or sets the URL of the Deck file to convert
+        /// </summary>
         public string DeckURL
         {
-            get { return _DeckURL; }
-            set { SetValue(ref _DeckURL, value, DeckURLPropertyName); }
+            get { return this._DeckURL; }
+            set { this.SetValue(ref this._DeckURL, value, DeckURLPropertyName); }
         }
 
-        private List<ConverterMapping> _MainDeckMappings = new List<ConverterMapping>();
-        public ReadOnlyCollection<ConverterMapping> MainDeckMappings
-        {
-            get { return _MainDeckMappings.AsReadOnly(); }
-        }
-
-        private const string MainDeckCountPropertyName = "MainDeckCount";
-        private int _MainDeckCount;
-        public int MainDeckCount
-        {
-            get { return _MainDeckCount; }
-            set { SetValue(ref _MainDeckCount, value, MainDeckCountPropertyName); }
-        }
-
+        [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1600:ElementsMustBeDocumented", Justification = "Property name constant")]
         private const string MainDeckTextPropertyName = "MainDeckText";
+
+        [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1600:ElementsMustBeDocumented", Justification = "Private backing field")]
         private string _MainDeckText;
+        
+        /// <summary>
+        /// Gets or sets the text which represents the cards in the Main Deck section of the Deck
+        /// </summary>
         public string MainDeckText
         {
-            get { return _MainDeckText; }
-            set { SetValue(ref _MainDeckText, value, MainDeckTextPropertyName); }
+            get { return this._MainDeckText; }
+            set { this.SetValue(ref this._MainDeckText, value, MainDeckTextPropertyName); }
         }
 
-        private List<ConverterMapping> _SideBoardMappings = new List<ConverterMapping>();
-        public ReadOnlyCollection<ConverterMapping> SideBoardMappings
-        {
-            get { return _SideBoardMappings.AsReadOnly(); }
-        }
-
-        private const string SideBoardCountPropertyName = "SideBoardCount";
-        private int _SideBoardCount;
-        public int SideBoardCount
-        {
-            get { return _SideBoardCount; }
-            set { SetValue(ref _SideBoardCount, value, SideBoardCountPropertyName); }
-        }
-
+        [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1600:ElementsMustBeDocumented", Justification = "Property name constant")]
         private const string SideBoardTextPropertyName = "SideBoardText";
+
+        [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1600:ElementsMustBeDocumented", Justification = "Private backing field")]
         private string _SideBoardText;
+        
+        /// <summary>
+        /// Gets or sets the text which represents the cards in the Sideboard section of the deck
+        /// </summary>
         public string SideBoardText
         {
-            get { return _SideBoardText; }
-            set { SetValue(ref _SideBoardText, value, SideBoardTextPropertyName); }
+            get { return this._SideBoardText; }
+            set { this.SetValue(ref this._SideBoardText, value, SideBoardTextPropertyName); }
         }
 
+        /// <summary>
+        /// Gets or sets an enumeration which denotes the source where the Deck is located.  This is initially null.
+        /// </summary>
         public DeckSourceTypes? DeckSourceType
         {
             get;
@@ -108,34 +142,44 @@ namespace MTGDeckConverter.Model
 
         #region Public Methods
 
+        /// <summary>
+        /// Sets the ConverterDeck property to a new instance which represents the data that is converted
+        /// using the parameters defined in this object.  Returns a Tuple where Item1 (bool) indicates if
+        /// the conversion was successful, and Item2 (string) contains any error messages if unsuccessful.
+        /// </summary>
+        /// <returns>A Tuple where Item1 indicates if the conversion was successful, and Item2 contains any error messages if unsuccessful.</returns>
         public Tuple<bool, string> Convert()
         {
-            //Before attempting to convert, ensure that the card database is fully built.
-            //If OCTGN takes too long building the database, give up
-            if(!this.ConverterDatabase.WaitForInitializationToComplete(TimeSpan.FromSeconds(30)))
+            // Before attempting to convert, ensure that the card database is fully built.
+            // If OCTGN takes too long building the database, give up
+            if (!this.ConverterDatabase.WaitForInitializationToComplete(TimeSpan.FromSeconds(30)))
             {
                 throw new TimeoutException("Timeout while building the Card Database");
             }
 
             if (!this.DeckSourceType.HasValue)
-            { return new Tuple<bool, string>(false, "Deck Source has not been chosen"); }
+            { 
+                return new Tuple<bool, string>(false, "Deck Source has not been chosen"); 
+            }
 
-            Tuple<bool, IEnumerable<ConverterMapping>, IEnumerable<ConverterMapping>, string, string> conversionResult = null;
             try
             {
                 switch (this.DeckSourceType.Value)
                 {
                     case DeckSourceTypes.File:
-                        conversionResult = ConvertEngine.ConvertFile(this.DeckFullPathName, this.ConverterDatabase.Sets);
+                        this.ConverterDeck = ConvertEngine.ConvertFile(this.DeckFullPathName, this.ConverterDatabase.Sets);
                         break;
 
                     case DeckSourceTypes.Webpage:
-                        conversionResult = ConvertEngine.ConvertURL(this.DeckURL, this.ConverterDatabase.Sets);
+                        this.ConverterDeck = ConvertEngine.ConvertURL(this.DeckURL, this.ConverterDatabase.Sets);
                         break;
 
                     case DeckSourceTypes.Text:
-                        conversionResult = ConvertEngine.ConvertText(this.MainDeckText, this.SideBoardText, this.ConverterDatabase.Sets);
+                        this.ConverterDeck = ConvertEngine.ConvertText(this.MainDeckText, this.SideBoardText, this.ConverterDatabase.Sets);
                         break;
+
+                    default:
+                        throw new NotImplementedException();
                 }
             }
             catch (Exception e)
@@ -143,40 +187,36 @@ namespace MTGDeckConverter.Model
                 return new Tuple<bool, string>(false, e.ToString());
             }
 
-            _MainDeckMappings = new List<ConverterMapping>(conversionResult.Item2);
-            foreach (ConverterMapping cm in _MainDeckMappings)
-            { cm.AutoSelectPotentialOCTGNCard(); }
+            this.ConverterDeck.AutoSelectPotentialCards();
+            this.ConverterDeck.UpdateCardCounts();
 
-            _SideBoardMappings = new List<ConverterMapping>(conversionResult.Item3);
-            foreach (ConverterMapping cm in _SideBoardMappings)
-            { cm.AutoSelectPotentialOCTGNCard(); }
-
-            if (!string.IsNullOrWhiteSpace(conversionResult.Item4))
+            if (string.IsNullOrWhiteSpace(this.ConverterDeck.DeckName))
             {
-                this.DeckName = conversionResult.Item4;
+                this.ConverterDeck.DeckName = this.DeckFileNameWithoutExtension;
             }
 
-            this.UpdateCardCounts();
-
-            return new Tuple<bool, string>(conversionResult.Item1, conversionResult.Item5);
+            return new Tuple<bool, string>(true, string.Empty);
         }
 
+        /// <summary>
+        /// Saves the deck to disk in the Octgn 3 format
+        /// </summary>
+        /// <param name="fullPathName">The full path name of the location to save the converted deck.</param>
         public void SaveDeck(string fullPathName)
         {
-            Octgn.Data.Deck d = new Octgn.Data.Deck(this.ConverterDatabase.GameDefinition);
+            Octgn.Data.Deck deck = new Octgn.Data.Deck(this.ConverterDatabase.GameDefinition);
 
-            //[0] = "Main"
-            //[1] = "Sideboard"
-            //[2] = "Command Zone"
-            //[3] = "Planes/Schemes"
-
-            Octgn.Data.Deck.Section mainDeckSection = d.Sections.First(s => s.Name.Equals("Main", StringComparison.InvariantCultureIgnoreCase));
-            Octgn.Data.Deck.Section sideboardSection = d.Sections.First(s => s.Name.Equals("Sideboard", StringComparison.InvariantCultureIgnoreCase));
+            // [0] = "Main"
+            // [1] = "Sideboard"
+            // [2] = "Command Zone"
+            // [3] = "Planes/Schemes"
+            Octgn.Data.Deck.Section mainDeckSection = deck.Sections.First(s => s.Name.Equals("Main", StringComparison.InvariantCultureIgnoreCase));
+            Octgn.Data.Deck.Section sideboardSection = deck.Sections.First(s => s.Name.Equals("Sideboard", StringComparison.InvariantCultureIgnoreCase));
 
             List<Tuple<Octgn.Data.Deck.Section, IEnumerable<ConverterMapping>>> pairSectionAndMappingsList = new List<Tuple<Octgn.Data.Deck.Section, IEnumerable<ConverterMapping>>>()
             {
-                new Tuple<Octgn.Data.Deck.Section, IEnumerable<ConverterMapping>>(mainDeckSection, this.MainDeckMappings),
-                new Tuple<Octgn.Data.Deck.Section, IEnumerable<ConverterMapping>>(sideboardSection, this.SideBoardMappings),
+                new Tuple<Octgn.Data.Deck.Section, IEnumerable<ConverterMapping>>(mainDeckSection, this.ConverterDeck.MainDeck),
+                new Tuple<Octgn.Data.Deck.Section, IEnumerable<ConverterMapping>>(sideboardSection, this.ConverterDeck.SideBoard),
             };
 
             foreach (var pair in pairSectionAndMappingsList)
@@ -192,58 +232,15 @@ namespace MTGDeckConverter.Model
                                 Card = this.ConverterDatabase.GameDefinition.GetCardById(converterMapping.SelectedOCTGNCard.CardID),
                                 Quantity = (byte)converterMapping.Quantity
                             }
+
                         );
                     }
                 }
             }
 
-            d.Save(fullPathName);
-        }
-
-        public void UpdateCardCounts()
-        {
-            this.MainDeckCount = (
-                from cm in this.MainDeckMappings
-                where cm.SelectedOCTGNCard != null
-                select cm.Quantity
-            ).Sum();
-
-            this.SideBoardCount = (
-                from cm in this.SideBoardMappings
-                where cm.SelectedOCTGNCard != null
-                select cm.Quantity
-            ).Sum();
+            deck.Save(fullPathName);
         }
 
         #endregion Public Methods
-
-        #region INotifyPropertyChanged Members
-
-        public event PropertyChangedEventHandler PropertyChanged;
-
-        protected void OnPropertyChanged(string name)
-        {
-            PropertyChangedEventHandler handler = PropertyChanged;
-            if (handler != null)
-            {
-                handler(this, new PropertyChangedEventArgs(name));
-            }
-        }
-
-        //http://www.pochet.net/blog/2010/06/25/inotifypropertychanged-implementations-an-overview/
-        protected bool SetValue<T>(ref T property, T value, string propertyName)
-        {
-            if (Object.Equals(property, value))
-            {
-                return false;
-            }
-            property = value;
-
-            this.OnPropertyChanged(propertyName);
-
-            return true;
-        }
-
-        #endregion
     }
 }

@@ -1,4 +1,10 @@
-﻿using System;
+﻿// -----------------------------------------------------------------------
+// <copyright file="InlineDialogPage_ChooseAnotherCardView.xaml.cs" company="TODO">
+// TODO: Update copyright text.
+// </copyright>
+// -----------------------------------------------------------------------
+
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -11,8 +17,8 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
-using MTGDeckConverter.ViewModel;
 using MTGDeckConverter.Model;
+using MTGDeckConverter.ViewModel;
 
 namespace MTGDeckConverter.View
 {
@@ -21,39 +27,57 @@ namespace MTGDeckConverter.View
     /// </summary>
     public partial class InlineDialogPage_ChooseAnotherCardView : UserControl
     {
+        /// <summary>
+        /// Initializes a new instance of the InlineDialogPage_ChooseAnotherCardView class.
+        /// </summary>
         public InlineDialogPage_ChooseAnotherCardView()
         {
-            InitializeComponent();
+            this.InitializeComponent();
         }
 
+        /// <summary>
+        /// Handles the SelectedItemChanged event on the Choose Another Card TreeView
+        /// </summary>
+        /// <param name="sender">The TreeView firing the event</param>
+        /// <param name="e">The parameter is not used.</param>
         private void TreeView_SelectedItemChanged(object sender, RoutedPropertyChangedEventArgs<object> e)
         {
             if (this.DataContext is InlineDialogPage_ChooseAnotherCardVM)
             {
-                InlineDialogPage_ChooseAnotherCardVM dc = this.DataContext as InlineDialogPage_ChooseAnotherCardVM;
-                TreeView tv = sender as TreeView;
-                dc.SelectedConverterCard = tv.SelectedItem is ConverterCard ?
-                    tv.SelectedItem as ConverterCard :
+                InlineDialogPage_ChooseAnotherCardVM inlineDialogPageChooseAnotherCardVM = this.DataContext as InlineDialogPage_ChooseAnotherCardVM;
+                TreeView treeView = sender as TreeView;
+                inlineDialogPageChooseAnotherCardVM.SelectedConverterCard = treeView.SelectedItem is ConverterCard ?
+                    treeView.SelectedItem as ConverterCard :
                     null;
             }
         }
 
+        /// <summary>
+        /// Handles the MouseEnter event on the TextBlock with corresponding ConverterCard as DataContext
+        /// </summary>
+        /// <param name="sender">TextBlock the mouse is now hovering over</param>
+        /// <param name="e">The parameter is not used.</param>
         private void ConverterCard_MouseEnter(object sender, MouseEventArgs e)
         {
             if (this.DataContext is InlineDialogPage_ChooseAnotherCardVM)
             {
-                InlineDialogPage_ChooseAnotherCardVM dc = this.DataContext as InlineDialogPage_ChooseAnotherCardVM;
-                TextBlock tb = sender as TextBlock;
-                dc.MouseOverConverterCard = tb.DataContext as ConverterCard;
+                InlineDialogPage_ChooseAnotherCardVM inlineDialogPageChooseAnotherCardVM = this.DataContext as InlineDialogPage_ChooseAnotherCardVM;
+                TextBlock textBlock = sender as TextBlock;
+                inlineDialogPageChooseAnotherCardVM.MouseOverConverterCard = textBlock.DataContext as ConverterCard;
             }
         }
 
+        /// <summary>
+        /// Handles the MouseLeave event on the TextBlock with corresponding ConverterCard as DataContext
+        /// </summary>
+        /// <param name="sender">TextBlock the mouse is no longer hovering over</param>
+        /// <param name="e">The parameter is not used.</param>
         private void ConverterCard_MouseLeave(object sender, MouseEventArgs e)
         {
             if (this.DataContext is InlineDialogPage_ChooseAnotherCardVM)
             {
-                InlineDialogPage_ChooseAnotherCardVM dc = this.DataContext as InlineDialogPage_ChooseAnotherCardVM;
-                dc.MouseOverConverterCard = null;
+                InlineDialogPage_ChooseAnotherCardVM inlineDialogPageChooseAnotherCardVM = this.DataContext as InlineDialogPage_ChooseAnotherCardVM;
+                inlineDialogPageChooseAnotherCardVM.MouseOverConverterCard = null;
             }
         }
     }

@@ -1,4 +1,10 @@
-﻿using System;
+﻿// -----------------------------------------------------------------------
+// <copyright file="InlineDialogView.xaml.cs" company="TODO">
+// TODO: Update copyright text.
+// </copyright>
+// -----------------------------------------------------------------------
+
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -19,9 +25,12 @@ namespace MTGDeckConverter.View
     /// </summary>
     public partial class InlineDialogView : UserControl
     {
+        /// <summary>
+        /// Initializes a new instance of the InlineDialogView class.
+        /// </summary>
         public InlineDialogView()
         {
-            InitializeComponent();
+            this.InitializeComponent();
         }
     }
 }

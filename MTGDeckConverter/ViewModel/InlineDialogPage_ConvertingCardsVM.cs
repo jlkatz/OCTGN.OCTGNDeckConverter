@@ -1,18 +1,41 @@
-﻿using System;
+﻿// -----------------------------------------------------------------------
+// <copyright file="InlineDialogPage_ConvertingCardsVM.cs" company="TODO">
+// TODO: Update copyright text.
+// </copyright>
+// -----------------------------------------------------------------------
+
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
 namespace MTGDeckConverter.ViewModel
 {
+    /// <summary>
+    /// Represents dialog content to be displayed by a View which shows that
+    /// the conversion is currently in progress.
+    /// </summary>
     public class InlineDialogPage_ConvertingCardsVM : InlineDialogPageVM
     {
+        /// <summary>
+        /// Gets a value indicating whether the Cancel Button should be shown by a View
+        /// </summary>
         public override bool CancelButtonVisible
-        { get { return false; } }
+        { 
+            get { return false; } 
+        }
 
+        /// <summary>
+        /// Gets a value indicating whether the Ok Button should be shown by a View
+        /// </summary>
         public override bool OkButtonVisible
-        { get { return false; } }
+        {
+            get { return false; }
+        }
 
+        /// <summary>
+        /// Gets the Title for this dialog that should be shown by a View
+        /// </summary>
         public override string Title
         {
             get { return "Converting Cards"; }

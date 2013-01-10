@@ -1,61 +1,76 @@
-﻿using System;
+﻿// -----------------------------------------------------------------------
+// <copyright file="ImportDeckWizardPageVM.cs" company="TODO">
+// TODO: Update copyright text.
+// </copyright>
+// -----------------------------------------------------------------------
+
+using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Text;
-using GalaSoft.MvvmLight;
 
 namespace MTGDeckConverter.ViewModel
 {
-    public abstract class ImportDeckWizardPageVM : ViewModelBase
+    /// <summary>
+    /// A base class for all Wizard page ViewModels.  Provides navigation framework.
+    /// </summary>
+    public abstract class ImportDeckWizardPageVM : PropertyChangedViewModelBase
     {
+        /// <summary>
+        /// Initializes a new instance of the ImportDeckWizardPageVM class.
+        /// </summary>
+        /// <param name="importDeckWizardVM">The parent Import Deck Wizard ViewModel</param>
         public ImportDeckWizardPageVM(ImportDeckWizardVM importDeckWizardVM)
         {
             if (importDeckWizardVM == null)
             {
                 throw new ArgumentNullException();
             }
+
             this.ImportDeckWizardVM = importDeckWizardVM;
         }
 
+        /// <summary>
+        /// Gets the parent ImportDeckWizardVM
+        /// </summary>
         public ImportDeckWizardVM ImportDeckWizardVM
         {
             get;
             private set;
         }
 
+        [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1600:ElementsMustBeDocumented", Justification = "Property name constant")]
         internal const string CanMoveToNextStepPropertyName = "CanMoveToNextStep";
+
+        [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1600:ElementsMustBeDocumented", Justification = "Private backing field")]
         private bool _CanMoveToNextStep = true;
+        
+        /// <summary>
+        /// Gets or sets a value indicating whether the Wizard can move from this Page to the next or not
+        /// </summary>
         public bool CanMoveToNextStep
         {
-            get { return _CanMoveToNextStep; }
-            protected set { this.SetValue(ref _CanMoveToNextStep, value, CanMoveToNextStepPropertyName); }
+            get { return this._CanMoveToNextStep; }
+            protected set { this.SetValue(ref this._CanMoveToNextStep, value, CanMoveToNextStepPropertyName); }
         }
 
-        public abstract bool ShowNextStepCommand { get; }
-        public abstract bool ShowStartOverCommand { get; }
-        public virtual string Title { get { return ""; } }
-
-        #region ViewModelBase Helpers
-
-        //http://www.pochet.net/blog/2010/06/25/inotifypropertychanged-implementations-an-overview/
         /// <summary>
-        /// Returns True if the property was changed, false if no change
+        /// Gets a value indicating whether a View should show the Next Step command or not
         /// </summary>
-        protected bool SetValue<T>(ref T property, T value, string propertyName, bool broadcast = false)
-        {
-            //TODO: Make this method an extension of ViewModelBase
-            if (Object.Equals(property, value))
-            {
-                return false;
-            }
-            var oldValue = property;
-            property = value;
+        public abstract bool ShowNextStepCommand { get; }
 
-            this.RaisePropertyChanged<T>(propertyName, oldValue, value, broadcast);
-
-            return true;
+        /// <summary>
+        /// Gets a value indicating whether a View should show the Start Over command or not
+        /// </summary>
+        public abstract bool ShowStartOverCommand { get; }
+        
+        /// <summary>
+        /// Gets the Title for this Page that should be shown by a View
+        /// </summary>
+        public virtual string Title 
+        { 
+            get { return string.Empty; } 
         }
-
-        #endregion ViewModelBase Helpers
     }
 }

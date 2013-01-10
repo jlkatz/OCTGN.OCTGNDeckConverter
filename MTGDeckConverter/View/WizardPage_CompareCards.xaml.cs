@@ -1,4 +1,10 @@
-﻿using System;
+﻿// -----------------------------------------------------------------------
+// <copyright file="WizardPage_CompareCards.xaml.cs" company="TODO">
+// TODO: Update copyright text.
+// </copyright>
+// -----------------------------------------------------------------------
+
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -20,14 +26,29 @@ namespace MTGDeckConverter.View
     /// </summary>
     public partial class WizardPage_CompareCards : UserControl
     {
+        #region Constructor
+
+        /// <summary>
+        /// Initializes a new instance of the WizardPage_CompareCards class.
+        /// </summary>
         public WizardPage_CompareCards()
         {
-            InitializeComponent();
+            this.InitializeComponent();
         }
 
+        #endregion Constructor
+
+        #region Event Handlers
+
+        /// <summary>
+        /// Handles the MouseEnter event on the Compare Cards DataGridRow
+        /// </summary>
+        /// <param name="sender">DataGridRow the mouse is now hovering over</param>
+        /// <param name="e">The parameter is not used.</param>
         private void ConverterDataGridRow_MouseEnter(object sender, MouseEventArgs e)
         {
-            DataGridRow dataGridRow = (sender as DataGridRow);
+            DataGridRow dataGridRow = sender as DataGridRow;
+
             if (dataGridRow != null)
             {
                 ConverterMapping converterMapping = dataGridRow.DataContext as ConverterMapping;
@@ -40,21 +61,33 @@ namespace MTGDeckConverter.View
             }
         }
 
+        /// <summary>
+        /// Handles the MouseLeave event on the Compare Cards DataGridRow
+        /// </summary>
+        /// <param name="sender">DataGridRow the mouse is no longer hovering over</param>
+        /// <param name="e">The parameter is not used.</param>
         private void ConverterDataGridRow_MouseLeave(object sender, MouseEventArgs e)
         {
-            DataGridRow dataGridRow = (sender as DataGridRow);
+            DataGridRow dataGridRow = sender as DataGridRow;
+
             if (dataGridRow != null)
             {
                 this.MouseOverConverterCard(null);
             }
         }
 
+        /// <summary>
+        /// Handles the MouseMove event on the ComboBox inside a DataGridRow
+        /// </summary>
+        /// <param name="sender">ComboBox the mouse is hovering over</param>
+        /// <param name="e">The parameter is not used.</param>
         private void ComboBox_MouseMove(object sender, MouseEventArgs e)
         {
             var container = (sender as ComboBox).ContainerFromElement((DependencyObject)e.OriginalSource);
             if (container != null)
             {
-                ComboBoxItem comboBoxItem = (container as ComboBoxItem);
+                ComboBoxItem comboBoxItem = container as ComboBoxItem;
+
                 if (comboBoxItem != null)
                 {
                     this.MouseOverConverterCard(comboBoxItem.Content as ConverterCard);
@@ -62,13 +95,23 @@ namespace MTGDeckConverter.View
             }
         }
 
+        #endregion Event Handlers
+
+        #region Private Methods
+
+        /// <summary>
+        /// Sets the MouseOver ConverterCard on the ViewModel based on mouse events
+        /// </summary>
+        /// <param name="converterCard">The ConverterCard the mouse is hovering over.  If null, then mouse is not hovering over any.</param>
         private void MouseOverConverterCard(ConverterCard converterCard)
         {
-            ViewModel.WizardPage_CompareCards dc = this.DataContext as ViewModel.WizardPage_CompareCards;
-            if (dc != null)
+            ViewModel.WizardPage_CompareCards wizardPageCompareCards = this.DataContext as ViewModel.WizardPage_CompareCards;
+            if (wizardPageCompareCards != null)
             {
-                dc.MouseOverConverterCard = converterCard;
+                wizardPageCompareCards.MouseOverConverterCard = converterCard;
             }
         }
+
+        #endregion Private Methods
     }
 }

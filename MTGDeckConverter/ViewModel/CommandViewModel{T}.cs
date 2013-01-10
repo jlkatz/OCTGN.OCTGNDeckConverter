@@ -1,30 +1,29 @@
 ﻿// -----------------------------------------------------------------------
-// <copyright file="CommandViewModel.cs" company="TODO">
+// <copyright file="CommandViewModel{T}.cs" company="TODO">
 // TODO: Update copyright text.
 // </copyright>
 // -----------------------------------------------------------------------
 
 using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
-using System.Windows.Input;
 using GalaSoft.MvvmLight.Command;
 
 namespace MTGDeckConverter.ViewModel
-{
+{    
     /// <summary>
     /// Represents an actionable item displayed by a View.
     /// </summary>
-    public class CommandViewModel : CommandViewModelBase
+    /// <typeparam name="T">The type of the Command Parameter to be used with this</typeparam>
+    public class CommandViewModel<T> : CommandViewModelBase
     {
         /// <summary>
-        /// Initializes a new instance of the CommandViewModel class.  
+        /// Initializes a new instance of the <see cref="CommandViewModel{T}"/> class.  
         /// </summary>
         /// <param name="displayName">The name displayed by a View</param>
         /// <param name="command">The RelayCommand object to execute</param>
-        public CommandViewModel(string displayName, RelayCommand command)
+        public CommandViewModel(string displayName, RelayCommand<T> command)
             : base(displayName, command)
         { 
         }

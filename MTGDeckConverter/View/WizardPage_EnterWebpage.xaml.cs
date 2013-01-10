@@ -1,4 +1,10 @@
-﻿using System;
+﻿// -----------------------------------------------------------------------
+// <copyright file="WizardPage_EnterWebpage.xaml.cs" company="TODO">
+// TODO: Update copyright text.
+// </copyright>
+// -----------------------------------------------------------------------
+
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -19,9 +25,12 @@ namespace MTGDeckConverter.View
     /// </summary>
     public partial class WizardPage_EnterWebpage : UserControl
     {
+        /// <summary>
+        /// Initializes a new instance of the WizardPage_EnterWebpage class.
+        /// </summary>
         public WizardPage_EnterWebpage()
         {
-            InitializeComponent();
+            this.InitializeComponent();
         }
     }
 }
