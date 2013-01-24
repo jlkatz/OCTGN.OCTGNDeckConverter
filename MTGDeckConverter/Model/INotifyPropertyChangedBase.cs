@@ -1,6 +1,6 @@
 ﻿// -----------------------------------------------------------------------
-// <copyright file="INotifyPropertyChangedBase.cs" company="TODO">
-// TODO: Update copyright text.
+// <copyright file="INotifyPropertyChangedBase.cs" company="jlkatz">
+// Copyright (c) 2013 Justin L Katz. All rights reserved.
 // </copyright>
 // -----------------------------------------------------------------------
 
@@ -10,7 +10,7 @@ using System.ComponentModel;
 using System.Linq;
 using System.Text;
 
-namespace MTGDeckConverter.Model
+namespace Octgn.MTGDeckConverter.Model
 {
     /// <summary>
     /// A base class for object which implement INotifyPropertyChanged with some helper methods

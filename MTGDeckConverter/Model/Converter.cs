@@ -1,6 +1,6 @@
 ﻿// -----------------------------------------------------------------------
-// <copyright file="Converter.cs" company="TODO">
-// TODO: Update copyright text.
+// <copyright file="Converter.cs" company="jlkatz">
+// Copyright (c) 2013 Justin L Katz. All rights reserved.
 // </copyright>
 // -----------------------------------------------------------------------
 
@@ -12,7 +12,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace MTGDeckConverter.Model
+namespace Octgn.MTGDeckConverter.Model
 {
     /// <summary>
     /// This object keeps tracks of the parameters and data for an entire Deck conversion process.  This uses
@@ -204,6 +204,15 @@ namespace MTGDeckConverter.Model
         /// <param name="fullPathName">The full path name of the location to save the converted deck.</param>
         public void SaveDeck(string fullPathName)
         {
+            this.CreateDeck().Save(fullPathName);
+        }
+
+        /// <summary>
+        /// Creates and returns an OCTGN format Deck who's contents are the cards which were converted in the Wizard.
+        /// </summary>
+        /// <returns>an OCTGN format Deck who's contents are the cards which were converted in the Wizard.</returns>
+        public Octgn.Data.Deck CreateDeck()
+        {
             Octgn.Data.Deck deck = new Octgn.Data.Deck(this.ConverterDatabase.GameDefinition);
 
             // [0] = "Main"
@@ -238,7 +247,7 @@ namespace MTGDeckConverter.Model
                 }
             }
 
-            deck.Save(fullPathName);
+            return deck;
         }
 
         #endregion Public Methods

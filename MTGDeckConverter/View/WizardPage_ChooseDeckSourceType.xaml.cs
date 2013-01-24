@@ -1,6 +1,6 @@
 ﻿// -----------------------------------------------------------------------
-// <copyright file="WizardPage_ChooseDeckSourceType.xaml.cs" company="TODO">
-// TODO: Update copyright text.
+// <copyright file="WizardPage_ChooseDeckSourceType.xaml.cs" company="jlkatz">
+// Copyright (c) 2013 Justin L Katz. All rights reserved.
 // </copyright>
 // -----------------------------------------------------------------------
 
@@ -18,7 +18,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 
-namespace MTGDeckConverter.View
+namespace Octgn.MTGDeckConverter.View
 {
     /// <summary>
     /// Interaction logic for WizardPage_ChooseDeckSourceType.xaml

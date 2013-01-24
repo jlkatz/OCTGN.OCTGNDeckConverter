@@ -1,6 +1,6 @@
 ﻿// -----------------------------------------------------------------------
-// <copyright file="InlineDialogVM.cs" company="TODO">
-// TODO: Update copyright text.
+// <copyright file="InlineDialogVM.cs" company="jlkatz">
+// Copyright (c) 2013 Justin L Katz. All rights reserved.
 // </copyright>
 // -----------------------------------------------------------------------
 
@@ -11,12 +11,12 @@ using System.Linq;
 using System.Text;
 using GalaSoft.MvvmLight.Command;
 
-namespace MTGDeckConverter.ViewModel
+namespace Octgn.MTGDeckConverter.ViewModel
 {
     /// <summary>
     /// A class to represent a dialog to be displayed by a View 
     /// </summary>
-    public class InlineDialogVM : PropertyChangedViewModelBase
+    public class InlineDialogVM : Model.INotifyPropertyChangedBase
     {
         #region Constructor
 

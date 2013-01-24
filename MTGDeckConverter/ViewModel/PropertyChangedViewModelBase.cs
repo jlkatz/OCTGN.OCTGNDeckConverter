@@ -1,10 +1,10 @@
 ﻿// -----------------------------------------------------------------------
-// <copyright file="PropertyChangedViewModelBase.cs" company="TODO">
-// TODO: Update copyright text.
+// <copyright file="PropertyChangedViewModelBase.cs" company="jlkatz">
+// Copyright (c) 2013 Justin L Katz. All rights reserved.
 // </copyright>
 // -----------------------------------------------------------------------
 
-namespace MTGDeckConverter.ViewModel
+namespace Octgn.MTGDeckConverter.ViewModel
 {
     using System;
     using System.Collections.Generic;

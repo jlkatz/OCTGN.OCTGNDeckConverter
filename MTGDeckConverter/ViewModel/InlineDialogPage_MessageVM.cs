@@ -1,6 +1,6 @@
 ﻿// -----------------------------------------------------------------------
-// <copyright file="InlineDialogPage_MessageVM.cs" company="TODO">
-// TODO: Update copyright text.
+// <copyright file="InlineDialogPage_MessageVM.cs" company="jlkatz">
+// Copyright (c) 2013 Justin L Katz. All rights reserved.
 // </copyright>
 // -----------------------------------------------------------------------
 
@@ -9,7 +9,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace MTGDeckConverter.ViewModel
+namespace Octgn.MTGDeckConverter.ViewModel
 {
     /// <summary>
     /// Represents dialog content to be displayed by a View which shows the user
@@ -58,7 +58,7 @@ namespace MTGDeckConverter.ViewModel
         /// </summary>
         public override string Title
         {
-            get { return _Title; }
+            get { return this._Title; }
         }
 
         /// <summary>

@@ -1,6 +1,6 @@
 ﻿// -----------------------------------------------------------------------
-// <copyright file="WizardPage_CompareCards.xaml.cs" company="TODO">
-// TODO: Update copyright text.
+// <copyright file="WizardPage_CompareCards.xaml.cs" company="jlkatz">
+// Copyright (c) 2013 Justin L Katz. All rights reserved.
 // </copyright>
 // -----------------------------------------------------------------------
 
@@ -17,9 +17,9 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
-using MTGDeckConverter.Model;
+using Octgn.MTGDeckConverter.Model;
 
-namespace MTGDeckConverter.View
+namespace Octgn.MTGDeckConverter.View
 {
     /// <summary>
     /// Interaction logic for WizardPage_CompareCards.xaml

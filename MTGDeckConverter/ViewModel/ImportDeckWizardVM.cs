@@ -1,6 +1,6 @@
 ﻿// -----------------------------------------------------------------------
-// <copyright file="ImportDeckWizardVM.cs" company="TODO">
-// TODO: Update copyright text.
+// <copyright file="ImportDeckWizardVM.cs" company="jlkatz">
+// Copyright (c) 2013 Justin L Katz. All rights reserved.
 // </copyright>
 // -----------------------------------------------------------------------
 
@@ -11,16 +11,15 @@ using System.Linq;
 using System.Text;
 using System.Windows.Media.Imaging;
 using GalaSoft.MvvmLight.Command;
-using GalaSoft.MvvmLight.Threading;
-using MTGDeckConverter.Model;
+using Octgn.MTGDeckConverter.Model;
 
-namespace MTGDeckConverter.ViewModel
+namespace Octgn.MTGDeckConverter.ViewModel
 {
     /// <summary>
     /// The ViewModel which drives the Import Deck Wizard.  This is responsible for determining
     /// what Wizard page is shown based on user input.
     /// </summary>
-    public class ImportDeckWizardVM : PropertyChangedViewModelBase
+    public class ImportDeckWizardVM : Model.INotifyPropertyChangedBase
     {
         #region Fields
 
@@ -64,7 +63,28 @@ namespace MTGDeckConverter.ViewModel
 
         #endregion Constructor
 
+        #region Events
+
+        /// <summary>
+        /// Raised when the Import Deck Wizard is commanded to Close.
+        /// </summary>
+        public event EventHandler Close;
+
+        #endregion Events
+
         #region Public Properties
+
+        [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1600:ElementsMustBeDocumented", Justification = "Private backing field")]
+        private bool _Completed = false;
+
+        /// <summary>
+        /// Gets or sets a value indicating whether the user has clicked a command to close the Wizard or not.  (Such as Complete or Cancel)
+        /// </summary>
+        public bool Completed
+        {
+            get { return this._Completed; }
+            protected set { this.SetValue(ref this._Completed, value, CompletedPropertyName); }
+        }
 
         [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1600:ElementsMustBeDocumented", Justification = "Property name constant")]
         internal const string CurrentWizardPageVMPropertyName = "CurrentWizardPageVM";
@@ -109,6 +129,24 @@ namespace MTGDeckConverter.ViewModel
         {
             get { return this._Converter; }
             private set { this.SetValue(ref this._Converter, value, ConverterPropertyName); }
+        }
+
+        [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1600:ElementsMustBeDocumented", Justification = "Property name constant")]
+        internal const string CompletedPropertyName = "Completed";
+
+        [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1600:ElementsMustBeDocumented", Justification = "Property name constant")]
+        internal const string WasNotCancelledPropertyName = "WasNotCancelled";
+
+        [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1600:ElementsMustBeDocumented", Justification = "Private backing field")]
+        private bool _WasNotCancelled = true;
+
+        /// <summary>
+        /// Gets or sets a value indicating whether the user cancelled the Import Deck Wizard when closing it or not.
+        /// </summary>
+        public bool WasNotCancelled
+        {
+            get { return this._WasNotCancelled; }
+            protected set { this.SetValue(ref this._WasNotCancelled, value, WasNotCancelledPropertyName); }
         }
 
         #endregion Public Properties
@@ -264,6 +302,35 @@ namespace MTGDeckConverter.ViewModel
         }
         #endregion StartOver Command
 
+        #region Cancel Command
+
+        [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1600:ElementsMustBeDocumented", Justification = "Private backing field")]
+        private CommandViewModel _CancelCommand;
+        
+        /// <summary>
+        /// Gets the Command which instructs the Wizard to be cancelled.
+        /// </summary>
+        public CommandViewModel CancelCommand
+        {
+            get
+            {
+                if (this._CancelCommand == null)
+                {
+                    this._CancelCommand = new CommandViewModel
+                    (
+                        "Cancel",
+                        new RelayCommand
+                        (
+                            () => this.CloseWizard(false)
+                        )
+                    );
+                }
+
+                return this._CancelCommand;
+            }
+        }
+        #endregion Cancel Command
+
         #endregion Command Buttons
 
         #endregion Commands
@@ -287,21 +354,7 @@ namespace MTGDeckConverter.ViewModel
         {
             if (this.IsCurrentWizardPageTheLastStep())
             {
-                if (this.SaveDeck())
-                {
-                    this.InlineDialog = new InlineDialogVM
-                    (
-                        new InlineDialogPage_MessageVM
-                        (
-                            "Congratulations, you successfully converted your Deck to OCTGN!  Click Ok to start over.",
-                            "Conversion Complete"
-                        )
-                    );
-                    this.InlineDialog.CallWhenCompletedMethod = delegate(InlineDialogVM inlineDialogVM)
-                    {
-                        this.StartOver();
-                    };
-                }
+                this.CloseWizard(true);
             }
             else
             {
@@ -323,12 +376,31 @@ namespace MTGDeckConverter.ViewModel
         #region Private Methods
 
         /// <summary>
+        /// Closes the Import Deck Wizard
+        /// </summary>
+        /// <param name="wasNotCancelled">A value indicating whether the Inline Dialog was _not_ cancelled when closed or not</param>
+        private void CloseWizard(bool wasNotCancelled)
+        {
+            this.WasNotCancelled = wasNotCancelled;
+            this.Completed = true;
+
+            var handler = this.Close;
+            if (handler != null)
+            {
+                handler(this, EventArgs.Empty);
+            }
+        }
+
+        /// <summary>
         /// Converts the cards.  If the conversion is successful, advance to CompareCards
         /// If the conversion fails, show a (hopefully) helpful message and do not advance
         /// While converting, show an in-progress dialog
         /// </summary>
         private void HandleConversionAndShowCompareCardsPage()
         {
+            var uiScheduler = System.Threading.Tasks.TaskScheduler.FromCurrentSynchronizationContext();
+            var cancellationToken = new System.Threading.CancellationToken();
+
             // Show the dialog that conversion is in progress
             this.InlineDialog = new InlineDialogVM(new InlineDialogPage_ConvertingCardsVM());
 
@@ -360,12 +432,8 @@ namespace MTGDeckConverter.ViewModel
                 {
                     if (t.Result.Item1)
                     {
-                        DispatcherHelper.CheckBeginInvokeOnUI(
-                            () =>
-                            {
-                                this.InlineDialog = null;
-                                this.SetCurrentPage(_WizardPage_CompareCards);
-                            });
+                        this.InlineDialog = null;
+                        this.SetCurrentPage(_WizardPage_CompareCards);
                     }
                     else
                     {
@@ -374,16 +442,12 @@ namespace MTGDeckConverter.ViewModel
                         message.AppendLine();
                         message.AppendLine("Details:");
                         message.AppendLine(t.Result.Item2);
-                        DispatcherHelper.CheckBeginInvokeOnUI(
-                            () => 
-                            {
-                                this.InlineDialog = new InlineDialogVM(new InlineDialogPage_MessageVM(message.ToString(), "Error While Converting Deck"));
-                            }
-
-                        );
+                        this.InlineDialog = new InlineDialogVM(new InlineDialogPage_MessageVM(message.ToString(), "Error While Converting Deck"));
                     }
-                }, 
-                System.Threading.Tasks.TaskContinuationOptions.OnlyOnRanToCompletion
+                },
+                cancellationToken,
+                System.Threading.Tasks.TaskContinuationOptions.OnlyOnRanToCompletion, 
+                uiScheduler
             );
 
             // Or continue with this if importing threw an unexpected exception
@@ -401,13 +465,12 @@ namespace MTGDeckConverter.ViewModel
                         message.AppendLine(e.ToString());
                         message.AppendLine();
                     }
-
-                    DispatcherHelper.CheckBeginInvokeOnUI(() =>
-                    {
-                        this.InlineDialog = new InlineDialogVM(new InlineDialogPage_MessageVM(message.ToString(), "Unexpected Exception While Converting Deck"));
-                    });
-                }, 
-                System.Threading.Tasks.TaskContinuationOptions.OnlyOnFaulted
+                    
+                    this.InlineDialog = new InlineDialogVM(new InlineDialogPage_MessageVM(message.ToString(), "Unexpected Exception While Converting Deck"));
+                },
+                cancellationToken,
+                System.Threading.Tasks.TaskContinuationOptions.OnlyOnFaulted,
+                uiScheduler
             );
         }
 
@@ -448,60 +511,7 @@ namespace MTGDeckConverter.ViewModel
                 throw new InvalidOperationException("A Next Page should never be requested from the current Page");
             }
         }
-
-        /// <summary>
-        /// Shows a prompt which asks the user for the filename and location to save the newly converted
-        /// Octgn 3 deck.  After saving, the chosen directory is remembered for next time.  If an error
-        /// occurs while saving, a message box will pop up to describe the problem.
-        /// </summary>
-        /// <returns>Returns true if the deck was saved successfully, false otherwise</returns>
-        private bool SaveDeck()
-        {
-            Microsoft.Win32.SaveFileDialog sfd = new Microsoft.Win32.SaveFileDialog
-            {
-                AddExtension = true,
-                Filter = "Octgn decks|*.o8d",
-                FileName = this.Converter.ConverterDeck.DeckName + ".o8d",
-            };
-
-            // Attempt to set the initial directory if it exists
-            // (It might not exist if the last location was a USB stick for example)
-            if (System.IO.Directory.Exists(SettingsManager.SingletonInstance.SaveFileDirectory))
-            {
-                sfd.InitialDirectory = SettingsManager.SingletonInstance.SaveFileDirectory;
-            }
-            else
-            {
-                // If it doesn't exist, use the OCTGN Game Definition's default location
-                sfd.InitialDirectory = ConverterDatabase.SingletonInstance.GameDefinition.DefaultDecksPath;
-            }
-
-            if (!sfd.ShowDialog().GetValueOrDefault())
-            {
-                return false;
-            }
-            else
-            {
-                try
-                {
-                    SettingsManager.SingletonInstance.SaveFileDirectory = System.IO.Path.GetDirectoryName(sfd.FileName);
-                    this.Converter.SaveDeck(sfd.FileName);
-                    return true;
-                }
-                catch (Exception ex)
-                {
-                    System.Windows.MessageBox.Show
-                    (
-                        "An error occured while trying to save the deck:\n" + ex.Message,
-                        "Error",
-                        System.Windows.MessageBoxButton.OK, 
-                        System.Windows.MessageBoxImage.Error
-                    );
-                    return false;
-                }
-            }
-        }
-        
+                
         /// <summary>
         /// Starts this Wizard over by re-instantiating the critical objects which keep track of state and data.
         /// </summary>
@@ -526,7 +536,7 @@ namespace MTGDeckConverter.ViewModel
         {
             this.CurrentWizardPageVM = page;
             this.NextStepCommand.DisplayName = this.CurrentWizardPageVM == this._WizardPage_CompareCards ? 
-                "Save Deck..." : 
+                "Load Deck in OCTGN" : 
                 "Next >";
         }
 

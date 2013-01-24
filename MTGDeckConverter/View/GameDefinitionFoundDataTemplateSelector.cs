@@ -1,6 +1,6 @@
 ﻿// -----------------------------------------------------------------------
-// <copyright file="GameDefinitionFoundDataTemplateSelector.cs" company="TODO">
-// TODO: Update copyright text.
+// <copyright file="GameDefinitionFoundDataTemplateSelector.cs" company="jlkatz">
+// Copyright (c) 2013 Justin L Katz. All rights reserved.
 // </copyright>
 // -----------------------------------------------------------------------
 
@@ -10,9 +10,9 @@ using System.Linq;
 using System.Text;
 using System.Windows;
 using System.Windows.Controls;
-using MTGDeckConverter.Model;
+using Octgn.MTGDeckConverter.Model;
 
-namespace MTGDeckConverter.View
+namespace Octgn.MTGDeckConverter.View
 {
     /// <summary>
     /// Provides a way to choose a DataTemplate based on whether the ConverterDatabase was able to find the GameDefinition or not.

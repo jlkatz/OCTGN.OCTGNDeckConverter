@@ -1,14 +1,14 @@
 ﻿<UserControl 
-    x:Class="MTGDeckConverter.View.WizardPage_ChooseDeckSourceType"
+    x:Class="Octgn.MTGDeckConverter.View.WizardPage_ChooseDeckSourceType"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
     mc:Ignorable="d" 
     d:DesignHeight="600" d:DesignWidth="800"
-    xmlns:model="clr-namespace:MTGDeckConverter.Model"
-    xmlns:viewModel="clr-namespace:MTGDeckConverter.ViewModel"
-    xmlns:view="clr-namespace:MTGDeckConverter.View"
+    xmlns:model="clr-namespace:Octgn.MTGDeckConverter.Model"
+    xmlns:viewModel="clr-namespace:Octgn.MTGDeckConverter.ViewModel"
+    xmlns:view="clr-namespace:Octgn.MTGDeckConverter.View"
     >
     <UserControl.Resources>
         <view:BoolToVisibilityConverter x:Key="BoolToVisibilityConverter" />
@@ -23,7 +23,7 @@
         <Border
             Grid.Row="0"
             Margin="50"
-            Background="#F2F2F8"
+            Background="#33FFFFFF"
             Padding="25"
             >
             <TextBlock

@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace MTGDeckConverter.Properties {
+namespace Octgn.MTGDeckConverter.Properties {
     using System;
     
     
@@ -39,7 +39,7 @@ namespace MTGDeckConverter.Properties {
         internal static global::System.Resources.ResourceManager ResourceManager {
             get {
                 if (object.ReferenceEquals(resourceMan, null)) {
-                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("MTGDeckConverter.Properties.Resources", typeof(Resources).Assembly);
+                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("Octgn.MTGDeckConverter.Properties.Resources", typeof(Resources).Assembly);
                     resourceMan = temp;
                 }
                 return resourceMan;
@@ -57,6 +57,20 @@ namespace MTGDeckConverter.Properties {
             }
             set {
                 resourceCulture = value;
+            }
+        }
+        
+        internal static byte[] GalaSoft_MvvmLight_Extras_WPF4 {
+            get {
+                object obj = ResourceManager.GetObject("GalaSoft_MvvmLight_Extras_WPF4", resourceCulture);
+                return ((byte[])(obj));
+            }
+        }
+        
+        internal static byte[] GalaSoft_MvvmLight_WPF4 {
+            get {
+                object obj = ResourceManager.GetObject("GalaSoft_MvvmLight_WPF4", resourceCulture);
+                return ((byte[])(obj));
             }
         }
     }

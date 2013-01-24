@@ -1,4 +1,4 @@
-﻿<UserControl x:Class="MTGDeckConverter.View.WizardPage_EnterWebpage"
+﻿<UserControl x:Class="Octgn.MTGDeckConverter.View.WizardPage_EnterWebpage"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
@@ -14,7 +14,7 @@
         <Border
             Grid.Row="0"
             Margin="50"
-            Background="#F2F2F8"
+            Background="#33FFFFFF"
             Padding="25"
             >
             <TextBlock

@@ -1,6 +1,6 @@
 ﻿// -----------------------------------------------------------------------
-// <copyright file="CommandViewModelBase.cs" company="TODO">
-// TODO: Update copyright text.
+// <copyright file="CommandViewModelBase.cs" company="jlkatz">
+// Copyright (c) 2013 Justin L Katz. All rights reserved.
 // </copyright>
 // -----------------------------------------------------------------------
 
@@ -12,12 +12,12 @@ using System.Linq;
 using System.Text;
 using System.Windows.Input;
 
-namespace MTGDeckConverter.ViewModel
+namespace Octgn.MTGDeckConverter.ViewModel
 {
     /// <summary>
     /// TODO: Update summary.
     /// </summary>
-    public abstract class CommandViewModelBase : PropertyChangedViewModelBase
+    public abstract class CommandViewModelBase : Model.INotifyPropertyChangedBase
     {
         #region Constructor
 

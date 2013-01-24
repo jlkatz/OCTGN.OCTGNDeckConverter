@@ -1,6 +1,6 @@
 ﻿// -----------------------------------------------------------------------
-// <copyright file="ConverterMapping.cs" company="TODO">
-// TODO: Update copyright text.
+// <copyright file="ConverterMapping.cs" company="jlkatz">
+// Copyright (c) 2013 Justin L Katz. All rights reserved.
 // </copyright>
 // -----------------------------------------------------------------------
 
@@ -11,7 +11,7 @@ using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Text;
 
-namespace MTGDeckConverter.Model
+namespace Octgn.MTGDeckConverter.Model
 {
     /// <summary>
     /// Represents a parsed Card, Quantity, and possibly Set.  It contains a collection of potential

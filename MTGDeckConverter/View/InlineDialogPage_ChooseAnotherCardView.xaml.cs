@@ -1,6 +1,6 @@
 ﻿// -----------------------------------------------------------------------
-// <copyright file="InlineDialogPage_ChooseAnotherCardView.xaml.cs" company="TODO">
-// TODO: Update copyright text.
+// <copyright file="InlineDialogPage_ChooseAnotherCardView.xaml.cs" company="jlkatz">
+// Copyright (c) 2013 Justin L Katz. All rights reserved.
 // </copyright>
 // -----------------------------------------------------------------------
 
@@ -17,10 +17,10 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
-using MTGDeckConverter.Model;
-using MTGDeckConverter.ViewModel;
+using Octgn.MTGDeckConverter.Model;
+using Octgn.MTGDeckConverter.ViewModel;
 
-namespace MTGDeckConverter.View
+namespace Octgn.MTGDeckConverter.View
 {
     /// <summary>
     /// Interaction logic for InlineDialogPage_ChooseAnotherCardView.xaml

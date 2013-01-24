@@ -1,6 +1,6 @@
 ﻿// -----------------------------------------------------------------------
-// <copyright file="BoolToVisibilityConverter.cs" company="TODO">
-// TODO: Update copyright text.
+// <copyright file="BoolToVisibilityConverter.cs" company="jlkatz">
+// Copyright (c) 2013 Justin L Katz. All rights reserved.
 // </copyright>
 // -----------------------------------------------------------------------
 
@@ -11,7 +11,7 @@ using System.Text;
 using System.Windows;
 using System.Windows.Data;
 
-namespace MTGDeckConverter.View
+namespace Octgn.MTGDeckConverter.View
 {
     /// <summary>
     /// Represents the converter that converts Boolean values to System.Windows.Visibility enumeration values, and can be set to return opposite values.

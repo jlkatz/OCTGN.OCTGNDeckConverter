@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace MTGDeckConverter.Properties {
+namespace Octgn.MTGDeckConverter.Properties {
     
     
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]

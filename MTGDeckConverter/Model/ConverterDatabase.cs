@@ -1,10 +1,10 @@
 ﻿// -----------------------------------------------------------------------
-// <copyright file="ConverterDatabase.cs" company="TODO">
-// TODO: Update copyright text.
+// <copyright file="ConverterDatabase.cs" company="jlkatz">
+// Copyright (c) 2013 Justin L Katz. All rights reserved.
 // </copyright>
 // -----------------------------------------------------------------------
 
-namespace MTGDeckConverter.Model
+namespace Octgn.MTGDeckConverter.Model
 {
     using System;
     using System.Collections.Generic;
@@ -13,6 +13,7 @@ namespace MTGDeckConverter.Model
     using System.Linq;
     using System.Text;
     using System.Threading.Tasks;
+using Octgn.Library.Plugin;
 
     /// <summary>
     /// Singleton object which contains the Octgn.Data.Game definition for MTG, a Dictionary of all the Sets
@@ -30,18 +31,30 @@ namespace MTGDeckConverter.Model
 
         /// <summary>
         /// Prevents a default instance of the <see cref="ConverterDatabase"/> class from being created.
-        /// The database of all OCTGN card Name, Guid, Set, and MultiverseID info needs to be read in.
-        /// It only needs to be done once, which is why this is a Singleton.  
-        /// When this is instantiated, the database is read on a worker thread so the user can
-        /// immediately begin entering their deck info.
         /// </summary>
         private ConverterDatabase()
         {
-            this.GameDefinition = ConverterDatabase.GetGameDefinition();
+        }
+
+        /// <summary>
+        /// The database of all OCTGN card Name, Guid, Set, and MultiverseID info needs to be read in.
+        /// It only needs to be done once, which is why this is a Singleton.  
+        /// When Initialize is called, the database is read from the Controller on a worker thread so 
+        /// the user can immediately begin entering their deck info.
+        /// </summary>
+        /// <param name="mtgGame">The OCTGN Game to be used to build cards from.  It must be MTG.</param>
+        public void Initialize(Data.Game mtgGame)
+        {
+            if (mtgGame == null)
+            {
+                throw new ArgumentNullException();
+            }
+
+            this.GameDefinition = mtgGame;
 
             if (this.GameDefinition != null)
             {
-                this._BuildCardDatabaseTask = Task.Factory.StartNew(() =>
+                this._BuildCardDatabaseTask = new Task(() =>
                 {
                     this.Sets = ConverterDatabase.BuildCardDatabase(this.GameDefinition);
                     this.IsInitialized = true;
@@ -53,9 +66,11 @@ namespace MTGDeckConverter.Model
                     (t) =>
                     {
                         this.BuildCardDatabaseExceptions = t.Exception;
-                    }, 
+                    },
                     System.Threading.Tasks.TaskContinuationOptions.OnlyOnFaulted
                 );
+
+                this._BuildCardDatabaseTask.Start();
             }
         }
 
@@ -117,12 +132,12 @@ namespace MTGDeckConverter.Model
         private bool _IsInitialized = false;
 
         /// <summary>
-        /// Gets or sets a value indicating whether the ConverterDatabase Singleton instance has finished initializing or not.
+        /// Gets a value indicating whether the ConverterDatabase Singleton instance has finished initializing or not.
         /// </summary>
         public bool IsInitialized
         {
             get { return this._IsInitialized; }
-            set { this.SetValue(ref this._IsInitialized, value, IsInitializedPropertyName); }
+            private set { this.SetValue(ref this._IsInitialized, value, IsInitializedPropertyName); }
         }
         
         /// <summary>
@@ -175,16 +190,6 @@ namespace MTGDeckConverter.Model
         #endregion Public Methods
 
         #region Static Helpers
-
-        /// <summary>
-        /// Attempts to retrieve and return a reference to the MTG Game Definition.
-        /// </summary>
-        /// <returns>Octgn.Data.Game object for MTG if installed, null otherwise.</returns>
-        private static Octgn.Data.Game GetGameDefinition()
-        {
-            Octgn.Data.GamesRepository repo = new Octgn.Data.GamesRepository();
-            return repo.Games.FirstOrDefault(g => g.Id == Guid.Parse("A6C8D2E8-7CD8-11DD-8F94-E62B56D89593"));
-        }
 
         /// <summary>
         /// Returns a Dictionary who's keys are Guids which represent Octgn Sets, and who's values are corresponding

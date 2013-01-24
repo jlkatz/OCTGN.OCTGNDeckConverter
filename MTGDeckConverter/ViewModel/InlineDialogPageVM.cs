@@ -1,6 +1,6 @@
 ﻿// -----------------------------------------------------------------------
-// <copyright file="InlineDialogPageVM.cs" company="TODO">
-// TODO: Update copyright text.
+// <copyright file="InlineDialogPageVM.cs" company="jlkatz">
+// Copyright (c) 2013 Justin L Katz. All rights reserved.
 // </copyright>
 // -----------------------------------------------------------------------
 
@@ -10,12 +10,12 @@ using System.Linq;
 using System.Text;
 using GalaSoft.MvvmLight;
 
-namespace MTGDeckConverter.ViewModel
+namespace Octgn.MTGDeckConverter.ViewModel
 {
     /// <summary>
     /// A base class to represent dialog content to be displayed by a View 
     /// </summary>
-    public abstract class InlineDialogPageVM : PropertyChangedViewModelBase
+    public abstract class InlineDialogPageVM : Model.INotifyPropertyChangedBase
     {
         /// <summary>
         /// Gets the text of the Cancel Button to be shown by a View

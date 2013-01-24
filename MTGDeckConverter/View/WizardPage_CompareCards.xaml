@@ -1,18 +1,22 @@
 ﻿<UserControl 
-    x:Class="MTGDeckConverter.View.WizardPage_CompareCards"
+    x:Class="Octgn.MTGDeckConverter.View.WizardPage_CompareCards"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
     mc:Ignorable="d" 
     d:DesignHeight="600" d:DesignWidth="800"
-    xmlns:view="clr-namespace:MTGDeckConverter.View"
-    xmlns:model="clr-namespace:MTGDeckConverter.Model"
+    xmlns:view="clr-namespace:Octgn.MTGDeckConverter.View"
+    xmlns:model="clr-namespace:Octgn.MTGDeckConverter.Model"
     >
     <UserControl.Resources>
         <ResourceDictionary>
+            
             <!-- Workaround needed, see http://stackoverflow.com/a/8733564 -->
             <Style x:Key="ComboBoxCardMouseOverStyle" TargetType="{x:Type ComboBox}">
+                <Setter Property="Foreground" Value="{DynamicResource TextBrush}" />
+                <Setter Property="SnapsToDevicePixels" Value="true" />
+                <Setter Property="Template" Value="{DynamicResource ComboBoxTemplate}" />
                 <EventSetter Event="MouseMove" Handler="ComboBox_MouseMove" />
                 <Style.Triggers>
                     <DataTrigger Binding="{Binding Path=PotentialOCTGNCards.Count}" Value="0">
@@ -20,6 +24,7 @@
                     </DataTrigger>
                 </Style.Triggers>
             </Style>
+
             <DataTemplate x:Key="CardListDataGrid">
                 <DataGrid
                     AutoGenerateColumns="False"
@@ -118,6 +123,7 @@
                     </DataGrid.Columns>
                 </DataGrid>
             </DataTemplate>
+
         </ResourceDictionary>
     </UserControl.Resources>
     <Grid>

@@ -1,6 +1,6 @@
 ﻿// -----------------------------------------------------------------------
-// <copyright file="ConverterSet.cs" company="TODO">
-// TODO: Update copyright text.
+// <copyright file="ConverterSet.cs" company="jlkatz">
+// Copyright (c) 2013 Justin L Katz. All rights reserved.
 // </copyright>
 // -----------------------------------------------------------------------
 
@@ -11,7 +11,7 @@ using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Text;
 
-namespace MTGDeckConverter.Model
+namespace Octgn.MTGDeckConverter.Model
 {
     /// <summary>
     /// Contains the Octgn information about a Set, and a reference to the Octgn.Data.Set object

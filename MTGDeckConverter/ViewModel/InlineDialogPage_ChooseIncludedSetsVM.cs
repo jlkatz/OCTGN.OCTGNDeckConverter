@@ -1,6 +1,6 @@
 ﻿// -----------------------------------------------------------------------
-// <copyright file="InlineDialogPage_ChooseIncludedSetsVM.cs" company="TODO">
-// TODO: Update copyright text.
+// <copyright file="InlineDialogPage_ChooseIncludedSetsVM.cs" company="jlkatz">
+// Copyright (c) 2013 Justin L Katz. All rights reserved.
 // </copyright>
 // -----------------------------------------------------------------------
 
@@ -8,9 +8,9 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using MTGDeckConverter.Model;
+using Octgn.MTGDeckConverter.Model;
 
-namespace MTGDeckConverter.ViewModel
+namespace Octgn.MTGDeckConverter.ViewModel
 {
     /// <summary>
     /// Represents dialog content to be displayed by a View which prompts the user 

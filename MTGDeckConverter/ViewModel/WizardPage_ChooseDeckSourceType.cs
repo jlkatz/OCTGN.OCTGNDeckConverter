@@ -1,6 +1,6 @@
 ﻿// -----------------------------------------------------------------------
-// <copyright file="WizardPage_ChooseDeckSourceType.cs" company="TODO">
-// TODO: Update copyright text.
+// <copyright file="WizardPage_ChooseDeckSourceType.cs" company="jlkatz">
+// Copyright (c) 2013 Justin L Katz. All rights reserved.
 // </copyright>
 // -----------------------------------------------------------------------
 
@@ -10,9 +10,9 @@ using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Text;
 using GalaSoft.MvvmLight.Command;
-using MTGDeckConverter.Model;
+using Octgn.MTGDeckConverter.Model;
 
-namespace MTGDeckConverter.ViewModel
+namespace Octgn.MTGDeckConverter.ViewModel
 {
     /// <summary>
     /// Represents a step in the Import Deck Wizard to be displayed by a View which
