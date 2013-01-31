@@ -52,33 +52,33 @@ namespace Octgn.MTGDeckConverter.Model
             string[] lines = ConvertEngine.SplitLines(text);
             ConverterDeck converterDeck = null;
 
-            if 
+            if
             (
                 extension.Equals(FileExtensionMWS, StringComparison.InvariantCultureIgnoreCase) ||
                 extension.Equals(FileExtensionApprentice, StringComparison.InvariantCultureIgnoreCase)
             )
             {
-                converterDeck = ConvertDeckWithSideBoardCardsListedEachLine(lines); 
+                converterDeck = ConvertEngine.ConvertDeckWithSideBoardCardsListedEachLine(lines);
             }
             else if (extension.Equals(FileExtensionCockatrice, StringComparison.InvariantCultureIgnoreCase))
             {
-                converterDeck = ConvertCockatrice(fullPathName); 
+                converterDeck = ConvertEngine.ConvertCockatrice(fullPathName);
             }
             else if (extension.Equals(FileExtensionOctgn, StringComparison.InvariantCultureIgnoreCase))
             {
-                converterDeck = ConvertOctgn(fullPathName); 
+                converterDeck = ConvertEngine.ConvertOctgn(fullPathName);
             }
             else
             {
                 //// The file is in another format, probably '.txt'.  
 
-                // Sideboard cards appear to be specified on each line?  Process it that way
+                // Do sideboard cards appear to be specified on each line?  If so, process it that way
                 if (lines.Any(l => RegexMatch_RegularSideBoardCard(l) != null || RegexMatch_MWSSideBoardCard(l) != null))
                 {
-                    converterDeck = ConvertDeckWithSideBoardCardsListedEachLine(lines);
+                    converterDeck = ConvertEngine.ConvertDeckWithSideBoardCardsListedEachLine(lines);
                 }
                 else
-                {    
+                {
                     //// Look for the 'Sideboard' section
 
                     List<string> mainDeckLines = new List<string>();
@@ -89,18 +89,18 @@ namespace Octgn.MTGDeckConverter.Model
                     {
                         Match match_StartsWithSideboard = ConvertEngine.Regex_StartsWithSideboard.Match(line);
                         if (match_StartsWithSideboard.Success)
-                        { 
-                            sideboardStringPassed = true; 
+                        {
+                            sideboardStringPassed = true;
                         }
                         else
                         {
                             if (!sideboardStringPassed)
                             {
-                                mainDeckLines.Add(line); 
+                                mainDeckLines.Add(line);
                             }
                             else
-                            { 
-                                sideBoardLines.Add(line); 
+                            {
+                                sideBoardLines.Add(line);
                             }
                         }
                     }
@@ -123,18 +123,18 @@ namespace Octgn.MTGDeckConverter.Model
         public static ConverterDeck ConvertURL(string url, Dictionary<Guid, ConverterSet> converterSets)
         {
             ConverterDeck converterDeck =
-                url.ToLower().Contains("ccgdecks.com")       ? ConvertEngine.ConvertURL_ccgdecks_com(url) :
-                url.ToLower().Contains("deckcheck.de")       ? ConvertEngine.ConvertURL_deckcheck_de(url) :
+                url.ToLower().Contains("ccgdecks.com") ? ConvertEngine.ConvertURL_ccgdecks_com(url) :
+                url.ToLower().Contains("deckcheck.de") ? ConvertEngine.ConvertURL_deckcheck_de(url) :
                 url.ToLower().Contains("essentialmagic.com") ? ConvertEngine.ConvertURL_essentialmagic_com(url) :
-                url.ToLower().Contains("starcitygames.com")  ? ConvertEngine.ConvertURL_starcitygames_com(url) :
-                url.ToLower().Contains("tcgplayer.com")      ? ConvertEngine.ConvertURL_tcgplayer_com(url) :
-                url.ToLower().Contains("tappedout.net")      ? ConvertEngine.ConvertURL_tappedout_net(url) :
-                url.ToLower().Contains("decklists.net")      ? ConvertEngine.ConvertURL_decklists_net(url) :
+                url.ToLower().Contains("starcitygames.com") ? ConvertEngine.ConvertURL_starcitygames_com(url) :
+                url.ToLower().Contains("tcgplayer.com") ? ConvertEngine.ConvertURL_tcgplayer_com(url) :
+                url.ToLower().Contains("tappedout.net") ? ConvertEngine.ConvertURL_tappedout_net(url) :
+                url.ToLower().Contains("decklists.net") ? ConvertEngine.ConvertURL_decklists_net(url) :
                 null;
 
             if (converterDeck == null)
-            { 
-                throw new InvalidOperationException("There was a problem importing the deck from the given url, or the website has not been implemented yet"); 
+            {
+                throw new InvalidOperationException("There was a problem importing the deck from the given url, or the website has not been implemented yet");
             }
 
             converterDeck.PopulateConverterMappings(converterSets);
@@ -307,10 +307,10 @@ namespace Octgn.MTGDeckConverter.Model
             {
                 // The line is the Deck Name?  Record it.
                 string potentialDeckName = ConvertEngine.RegexMatch_DeckName(line);
-                
+
                 if (potentialDeckName != null)
                 {
-                    converterDeck.DeckName = potentialDeckName; 
+                    converterDeck.DeckName = potentialDeckName;
                 }
                 else
                 {
@@ -384,10 +384,10 @@ namespace Octgn.MTGDeckConverter.Model
                 {
                     // The line is the Deck Name?  Record it.
                     string potentialDeckName = ConvertEngine.RegexMatch_DeckName(line);
-                    
+
                     if (potentialDeckName != null)
                     {
-                        converterDeck.DeckName = potentialDeckName; 
+                        converterDeck.DeckName = potentialDeckName;
                     }
                     else
                     {
@@ -790,7 +790,7 @@ namespace Octgn.MTGDeckConverter.Model
         /// </summary>
         /// <param name="text">Text to be split on each new line</param>
         /// <returns>text split into an array, split on newlines.  Empty lines are not included.</returns>
-        /// <see cref="http://stackoverflow.com/questions/1547476/easiest-way-to-split-a-string-on-newlines-in-net"/>
+        /// <seealso cref="http://stackoverflow.com/questions/1547476/easiest-way-to-split-a-string-on-newlines-in-net"/>
         private static string[] SplitLines(string text)
         {
             return text == null ?
@@ -807,7 +807,7 @@ namespace Octgn.MTGDeckConverter.Model
         /// </summary>
         /// <param name="uri">The URI string to parse for Parameters</param>
         /// <returns>Dictionary of Key-Value strings of the parameters</returns>
-        /// <seealso cref="http://codereview.stackexchange.com/a/1592"/>
+        /// <see cref="http://codereview.stackexchange.com/a/1592"/>
         private static Dictionary<string, string> GetParams(string uri)
         {
             var matches = Regex.Matches(uri, @"[\?&](([^&=]+)=([^&=#]*))", RegexOptions.Compiled);

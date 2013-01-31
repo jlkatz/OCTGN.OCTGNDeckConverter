@@ -15,10 +15,14 @@
     <FileAlignment>512</FileAlignment>
     <ProjectTypeGuids>{60dc8134-eba5-43b8-bcc9-bb4bc16c2548};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
     <WarningLevel>4</WarningLevel>
-    <SccProjectName>SAK</SccProjectName>
-    <SccLocalPath>SAK</SccLocalPath>
-    <SccAuxPath>SAK</SccAuxPath>
-    <SccProvider>SAK</SccProvider>
+    <SccProjectName>
+    </SccProjectName>
+    <SccLocalPath>
+    </SccLocalPath>
+    <SccAuxPath>
+    </SccAuxPath>
+    <SccProvider>
+    </SccProvider>
     <PublishUrl>publish\</PublishUrl>
     <Install>true</Install>
     <InstallFrom>Disk</InstallFrom>
@@ -97,12 +101,6 @@
     <Reference Include="Octgn.Library, Version=3.0.1.27, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>.\Octgn.Library.dll</HintPath>
-      <Private>False</Private>
-    </Reference>
-    <Reference Include="PresentationFramework.Aero" />
-    <Reference Include="System.Data.SQLite, Version=1.0.81.0, Culture=neutral, PublicKeyToken=db937bc2d44ff139, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>Resources\System.Data.SQLite.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="System.Windows.Interactivity">
@@ -278,10 +276,7 @@
   <ItemGroup>
     <Content Include="Octgn.Data.dll" />
     <Content Include="Octgn.Library.dll" />
-    <Content Include="Polenter.SharpSerializer.dll" />
     <Resource Include="Resources\Regex Card Matching Documentation.txt" />
-    <Content Include="SQLite.Interop.dll" />
-    <Content Include="System.Data.SQLite.dll" />
   </ItemGroup>
   <ItemGroup>
     <BootstrapperPackage Include=".NETFramework,Version=v4.0,Profile=Client">

@@ -44,7 +44,7 @@ namespace Octgn.MTGDeckConverter.Model
 
         [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1600:ElementsMustBeDocumented", Justification = "Private backing field")]
         private ConverterDeck _ConverterDeck;
-        
+
         /// <summary>
         /// Gets the ConverterDeck instance which stores data about the Deck to convert
         /// </summary>
@@ -56,10 +56,10 @@ namespace Octgn.MTGDeckConverter.Model
 
         [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1600:ElementsMustBeDocumented", Justification = "Property name constant")]
         private const string DeckFileNameWithoutExtensionPropertyName = "DeckFileNameWithoutExtension";
-        
+
         [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1600:ElementsMustBeDocumented", Justification = "Private backing field")]
-        private string _DeckFileNameWithoutExtension;
-        
+        private string _DeckFileNameWithoutExtension = string.Empty;
+
         /// <summary>
         /// Gets or sets the name of the Deck file without the file-extension
         /// </summary>
@@ -71,10 +71,10 @@ namespace Octgn.MTGDeckConverter.Model
 
         [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1600:ElementsMustBeDocumented", Justification = "Property name constant")]
         private const string DeckFullPathNamePropertyName = "DeckFullPathName";
-        
+
         [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1600:ElementsMustBeDocumented", Justification = "Private backing field")]
-        private string _DeckFullPathName;
-        
+        private string _DeckFullPathName = string.Empty;
+
         /// <summary>
         /// Gets or sets the Full Path Name of the Deck file to convert
         /// </summary>
@@ -88,8 +88,8 @@ namespace Octgn.MTGDeckConverter.Model
         private const string DeckURLPropertyName = "DeckURL";
 
         [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1600:ElementsMustBeDocumented", Justification = "Private backing field")]
-        private string _DeckURL;
-        
+        private string _DeckURL = string.Empty;
+
         /// <summary>
         /// Gets or sets the URL of the Deck file to convert
         /// </summary>
@@ -103,8 +103,8 @@ namespace Octgn.MTGDeckConverter.Model
         private const string MainDeckTextPropertyName = "MainDeckText";
 
         [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1600:ElementsMustBeDocumented", Justification = "Private backing field")]
-        private string _MainDeckText;
-        
+        private string _MainDeckText = string.Empty;
+
         /// <summary>
         /// Gets or sets the text which represents the cards in the Main Deck section of the Deck
         /// </summary>
@@ -118,8 +118,8 @@ namespace Octgn.MTGDeckConverter.Model
         private const string SideBoardTextPropertyName = "SideBoardText";
 
         [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1600:ElementsMustBeDocumented", Justification = "Private backing field")]
-        private string _SideBoardText;
-        
+        private string _SideBoardText = string.Empty;
+
         /// <summary>
         /// Gets or sets the text which represents the cards in the Sideboard section of the deck
         /// </summary>
@@ -158,8 +158,8 @@ namespace Octgn.MTGDeckConverter.Model
             }
 
             if (!this.DeckSourceType.HasValue)
-            { 
-                return new Tuple<bool, string>(false, "Deck Source has not been chosen"); 
+            {
+                return new Tuple<bool, string>(false, "Deck Source has not been chosen");
             }
 
             try

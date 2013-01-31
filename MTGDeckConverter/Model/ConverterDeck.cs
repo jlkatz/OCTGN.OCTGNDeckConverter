@@ -34,10 +34,10 @@ namespace Octgn.MTGDeckConverter.Model
             get
             {
                 if (this._MainDeckReadOnly == null)
-                { 
-                    this._MainDeckReadOnly = new ReadOnlyObservableCollection<ConverterMapping>(this._MainDeck); 
+                {
+                    this._MainDeckReadOnly = new ReadOnlyObservableCollection<ConverterMapping>(this._MainDeck);
                 }
-                
+
                 return this._MainDeckReadOnly;
             }
         }
@@ -72,7 +72,7 @@ namespace Octgn.MTGDeckConverter.Model
             get
             {
                 if (this._SideBoardReadOnly == null)
-                { 
+                {
                     this._SideBoardReadOnly = new ReadOnlyObservableCollection<ConverterMapping>(this._SideBoard);
                 }
 
@@ -82,10 +82,10 @@ namespace Octgn.MTGDeckConverter.Model
 
         [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1600:ElementsMustBeDocumented", Justification = "Property name constant")]
         private const string SideBoardCountPropertyName = "SideBoardCount";
-        
+
         [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1600:ElementsMustBeDocumented", Justification = "Private backing field")]
         private int _SideBoardCount;
-        
+
         /// <summary>
         /// Gets the count of the number of Cards in the SideBoard.  This only includes the Cards which
         /// have a corresponding OCTGN Card selected; those without are not counted.
@@ -98,28 +98,35 @@ namespace Octgn.MTGDeckConverter.Model
 
         [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1600:ElementsMustBeDocumented", Justification = "Property name constant")]
         private const string DeckNamePropertyName = "DeckName";
-        
+
         [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1600:ElementsMustBeDocumented", Justification = "Private backing field")]
         private string _DeckName = string.Empty;
-        
+
         /// <summary>
         /// Gets or sets the name of this Deck.  When set, invalid filename characters are automatically replaced with '_'.
         /// </summary>
         public string DeckName
         {
-            get 
-            { 
+            get
+            {
                 return this._DeckName;
             }
 
             set
             {
-                // http://stackoverflow.com/a/847251
-                string invalidChars = System.Text.RegularExpressions.Regex.Escape(new string(System.IO.Path.GetInvalidFileNameChars()));
-                string invalidReStr = string.Format(@"[{0}]+", invalidChars);
-                string validFilenameValue = System.Text.RegularExpressions.Regex.Replace(value, invalidReStr, "_");
+                if (value != null)
+                {
+                    // http://stackoverflow.com/a/847251
+                    string invalidChars = System.Text.RegularExpressions.Regex.Escape(new string(System.IO.Path.GetInvalidFileNameChars()));
+                    string invalidReStr = string.Format(@"[{0}]+", invalidChars);
+                    string validFilenameValue = System.Text.RegularExpressions.Regex.Replace(value, invalidReStr, "_");
 
-                this.SetValue(ref this._DeckName, validFilenameValue, DeckNamePropertyName);
+                    this.SetValue(ref this._DeckName, validFilenameValue, DeckNamePropertyName);
+                }
+                else
+                {
+                    this.SetValue(ref this._DeckName, string.Empty, DeckNamePropertyName);
+                }
             }
         }
 

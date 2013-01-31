@@ -6,10 +6,10 @@
 ;--------------------------------
 
 ; The name of the installer
-  Name "MTG Deck Converter Installer"
+  Name "MTG Deck Converter v2.0.1"
 
 ; The file to write
-  OutFile "MTGDeckConverterInstaller.exe"
+  OutFile "MTGDeckConverterInstaller v2.0.1.exe"
 
 ; Request application privileges for Windows Vista/7/8
   RequestExecutionLevel user
@@ -22,7 +22,7 @@
 ;--------------------------------
 ;Pages
 
-  !define MUI_TEXT_WELCOME_INFO_TEXT "This wizard will install the MTG Deck Converter plugin for OCTGN.$\n$\nClick Install to start the installation."
+  !define MUI_TEXT_WELCOME_INFO_TEXT "This wizard will install the MTG Deck Converter plugin v2.0.1 for OCTGN.$\n$\nClick Install to start the installation."
   !define MUI_PAGE_CUSTOMFUNCTION_SHOW WelcomeShowCallback
   
   !insertmacro MUI_PAGE_WELCOME
