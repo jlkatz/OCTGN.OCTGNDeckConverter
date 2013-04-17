@@ -54,12 +54,17 @@ namespace DeckBuilderPluginController
         }
 
         /// <summary>
+        /// Backing Field for the currently loaded Deck
+        /// </summary>
+        private IDeck _LoadedDeck;
+
+        /// <summary>
         /// Gets the loaded deck in the Deck Editor
         /// </summary>
         /// <returns>Returns the loaded deck in the Deck Editor</returns>
-        IDeck IDeckBuilderPluginController.GetLoadedDeck()
+        public IDeck GetLoadedDeck()
         {
-            throw new NotImplementedException();
+            return this._LoadedDeck;
         }
 
         /// <summary>
@@ -68,7 +73,7 @@ namespace DeckBuilderPluginController
         /// <param name="deck">The deck to load</param>
         public void LoadDeck(IDeck deck)
         {
-            throw new NotImplementedException();
+            this._LoadedDeck = deck;
         }
     }
 }

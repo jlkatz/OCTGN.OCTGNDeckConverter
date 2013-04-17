@@ -28,12 +28,17 @@ namespace DeckBuilderPluginController
     /// </summary>
     public partial class MainWindow : Window
     {
+        private const string WELCOME_TEXT = "This is a shell to test MTGDeckConverter.  Choose it from the Plugins menu above.";
+        private const string NO_DECK = "The Wizard completed, but no Deck was loaded.";
+
         /// <summary>
         /// Initializes a new instance of the MainWindow class.
         /// </summary>
         public MainWindow()
         {
             this.InitializeComponent();
+
+            this.infoTextBlock.Text = WELCOME_TEXT;
         }
 
         [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1600:ElementsMustBeDocumented", Justification = "Private backing field")]
@@ -75,7 +80,19 @@ namespace DeckBuilderPluginController
         {
             if (sender == this.pluginMenuItem)
             {
+                this.infoTextBlock.Text = WELCOME_TEXT;
                 this.MTGDeckConverterPluginMenuItem.OnClick(this.SimpleDeckBuilderPluginController);
+
+                Octgn.DataNew.Entities.IDeck deck = this.SimpleDeckBuilderPluginController.GetLoadedDeck();
+                if (deck != null)
+                {
+                    this.infoTextBlock.Text = "";
+                    this.deckDisplayer.Content = deck;
+                }
+                else
+                {
+                    this.infoTextBlock.Text = NO_DECK;
+                }
             }
         }
     }
