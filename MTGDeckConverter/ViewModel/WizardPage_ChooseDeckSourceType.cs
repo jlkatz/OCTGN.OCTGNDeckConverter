@@ -10,9 +10,9 @@ using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Text;
 using GalaSoft.MvvmLight.Command;
-using Octgn.MTGDeckConverter.Model;
+using MTGDeckConverter.Model;
 
-namespace Octgn.MTGDeckConverter.ViewModel
+namespace MTGDeckConverter.ViewModel
 {
     /// <summary>
     /// Represents a step in the Import Deck Wizard to be displayed by a View which

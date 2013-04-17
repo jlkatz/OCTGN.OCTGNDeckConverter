@@ -11,7 +11,7 @@ using System.Text;
 using System.Windows;
 using System.Windows.Data;
 
-namespace Octgn.MTGDeckConverter.View
+namespace MTGDeckConverter.View
 {
     /// <summary>
     /// Represents the converter that converts Boolean values to System.Windows.Visibility enumeration values, and can be set to return opposite values.

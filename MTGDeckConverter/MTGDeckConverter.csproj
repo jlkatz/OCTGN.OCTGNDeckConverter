@@ -8,21 +8,18 @@
     <ProjectGuid>{0D71918F-43BA-4B4A-B491-ADD7A372467A}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Octgn.MTGDeckConverter</RootNamespace>
-    <AssemblyName>Octgn.MTGDeckConverter</AssemblyName>
+    <RootNamespace>MTGDeckConverter</RootNamespace>
+    <AssemblyName>MTGDeckConverter</AssemblyName>
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
-    <TargetFrameworkProfile>Client</TargetFrameworkProfile>
+    <TargetFrameworkProfile>
+    </TargetFrameworkProfile>
     <FileAlignment>512</FileAlignment>
     <ProjectTypeGuids>{60dc8134-eba5-43b8-bcc9-bb4bc16c2548};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
     <WarningLevel>4</WarningLevel>
-    <SccProjectName>
-    </SccProjectName>
-    <SccLocalPath>
-    </SccLocalPath>
-    <SccAuxPath>
-    </SccAuxPath>
-    <SccProvider>
-    </SccProvider>
+    <SccProjectName>SAK</SccProjectName>
+    <SccLocalPath>SAK</SccLocalPath>
+    <SccAuxPath>SAK</SccAuxPath>
+    <SccProvider>SAK</SccProvider>
     <PublishUrl>publish\</PublishUrl>
     <Install>true</Install>
     <InstallFrom>Disk</InstallFrom>
@@ -48,7 +45,7 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <RunCodeAnalysis>true</RunCodeAnalysis>
-    <PlatformTarget>x86</PlatformTarget>
+    <PlatformTarget>AnyCPU</PlatformTarget>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -88,25 +85,27 @@
     <StartupObject />
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Microsoft.Practices.ServiceLocation">
+    <Reference Include="log4net, Version=1.2.11.0, Culture=neutral, PublicKeyToken=669e0ddf0bb1aa2a, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>C:\Program Files\Laurent Bugnion (GalaSoft)\Mvvm Light Toolkit\Binaries\WPF4\Microsoft.Practices.ServiceLocation.dll</HintPath>
-      <Private>False</Private>
+      <HintPath>.\log4net.dll</HintPath>
     </Reference>
-    <Reference Include="Octgn.Data, Version=3.0.1.21, Culture=neutral, processorArchitecture=MSIL">
+    <Reference Include="Octgn.Core, Version=3.1.12.67, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>Resources\Octgn.Data.dll</HintPath>
-      <Private>False</Private>
+      <HintPath>.\Octgn.Core.dll</HintPath>
     </Reference>
-    <Reference Include="Octgn.Library, Version=3.0.1.27, Culture=neutral, processorArchitecture=MSIL">
+    <Reference Include="Octgn.DataNew, Version=3.1.12.67, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>.\Octgn.DataNew.dll</HintPath>
+    </Reference>
+    <Reference Include="Octgn.Library, Version=3.1.12.67, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>.\Octgn.Library.dll</HintPath>
-      <Private>False</Private>
     </Reference>
-    <Reference Include="System.Windows.Interactivity">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>C:\Program Files\Laurent Bugnion (GalaSoft)\Mvvm Light Toolkit\Binaries\WPF4\System.Windows.Interactivity.dll</HintPath>
-      <Private>False</Private>
+    <Reference Include="Octgn.ProxyGenerator">
+      <HintPath>.\Octgn.ProxyGenerator.dll</HintPath>
+    </Reference>
+    <Reference Include="System.IO.Abstractions">
+      <HintPath>.\System.IO.Abstractions.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
@@ -114,7 +113,6 @@
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
-    <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="System.Xaml">
       <RequiredTargetFramework>4.0</RequiredTargetFramework>
     </Reference>
@@ -147,7 +145,6 @@
     <Compile Include="ViewModel\InlineDialogVM.cs" />
     <Compile Include="Model\Converter.cs" />
     <Compile Include="ViewModel\InlineDialogPage_MessageVM.cs" />
-    <None Include="ViewModel\PropertyChangedViewModelBase.cs" />
     <Compile Include="ViewModel\MVVMLight\Command\RelayCommand.cs" />
     <Compile Include="ViewModel\MVVMLight\Command\RelayCommandGeneric.cs" />
     <Compile Include="ViewModel\MVVMLight\Helpers\IExecuteWithObject.cs" />
@@ -274,8 +271,12 @@
     <AppDesigner Include="Properties\" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Octgn.Data.dll" />
+    <Content Include="log4net.dll" />
+    <Content Include="Octgn.Core.dll" />
+    <Content Include="Octgn.DataNew.dll" />
     <Content Include="Octgn.Library.dll" />
+    <Content Include="Octgn.ProxyGenerator.dll" />
+    <Content Include="System.IO.Abstractions.dll" />
     <Resource Include="Resources\Regex Card Matching Documentation.txt" />
   </ItemGroup>
   <ItemGroup>

@@ -11,8 +11,9 @@ using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Octgn.Core.DataExtensionMethods;
 
-namespace Octgn.MTGDeckConverter.Model
+namespace MTGDeckConverter.Model
 {
     /// <summary>
     /// This object keeps tracks of the parameters and data for an entire Deck conversion process.  This uses
@@ -204,28 +205,29 @@ namespace Octgn.MTGDeckConverter.Model
         /// <param name="fullPathName">The full path name of the location to save the converted deck.</param>
         public void SaveDeck(string fullPathName)
         {
-            this.CreateDeck().Save(fullPathName);
+            this.CreateDeck().Save(this.ConverterDatabase.GameDefinition, fullPathName);
         }
 
         /// <summary>
         /// Creates and returns an OCTGN format Deck who's contents are the cards which were converted in the Wizard.
         /// </summary>
         /// <returns>an OCTGN format Deck who's contents are the cards which were converted in the Wizard.</returns>
-        public Octgn.Data.Deck CreateDeck()
+        public Octgn.DataNew.Entities.Deck CreateDeck()
         {
-            Octgn.Data.Deck deck = new Octgn.Data.Deck(this.ConverterDatabase.GameDefinition);
+            Octgn.DataNew.Entities.Deck deck = this.ConverterDatabase.GameDefinition.CreateDeck();
 
             // [0] = "Main"
             // [1] = "Sideboard"
             // [2] = "Command Zone"
             // [3] = "Planes/Schemes"
-            Octgn.Data.Deck.Section mainDeckSection = deck.Sections.First(s => s.Name.Equals("Main", StringComparison.InvariantCultureIgnoreCase));
-            Octgn.Data.Deck.Section sideboardSection = deck.Sections.First(s => s.Name.Equals("Sideboard", StringComparison.InvariantCultureIgnoreCase));
+            Octgn.DataNew.Entities.ISection mainDeckSection = deck.Sections.First(s => s.Name.Equals("Main", StringComparison.InvariantCultureIgnoreCase));
+            Octgn.DataNew.Entities.ISection sideboardSection = deck.Sections.First(s => s.Name.Equals("Sideboard", StringComparison.InvariantCultureIgnoreCase));
 
-            List<Tuple<Octgn.Data.Deck.Section, IEnumerable<ConverterMapping>>> pairSectionAndMappingsList = new List<Tuple<Octgn.Data.Deck.Section, IEnumerable<ConverterMapping>>>()
+            List<Tuple<Octgn.DataNew.Entities.ISection, IEnumerable<ConverterMapping>>> pairSectionAndMappingsList = 
+                new List<Tuple<Octgn.DataNew.Entities.ISection, IEnumerable<ConverterMapping>>>()
             {
-                new Tuple<Octgn.Data.Deck.Section, IEnumerable<ConverterMapping>>(mainDeckSection, this.ConverterDeck.MainDeck),
-                new Tuple<Octgn.Data.Deck.Section, IEnumerable<ConverterMapping>>(sideboardSection, this.ConverterDeck.SideBoard),
+                new Tuple<Octgn.DataNew.Entities.ISection, IEnumerable<ConverterMapping>>(mainDeckSection, this.ConverterDeck.MainDeck),
+                new Tuple<Octgn.DataNew.Entities.ISection, IEnumerable<ConverterMapping>>(sideboardSection, this.ConverterDeck.SideBoard),
             };
 
             foreach (var pair in pairSectionAndMappingsList)
@@ -234,15 +236,10 @@ namespace Octgn.MTGDeckConverter.Model
                 {
                     if (converterMapping.SelectedOCTGNCard != null)
                     {
-                        pair.Item1.Cards.Add
-                        (
-                            new Octgn.Data.Deck.Element
-                            {
-                                Card = this.ConverterDatabase.GameDefinition.GetCardById(converterMapping.SelectedOCTGNCard.CardID),
-                                Quantity = (byte)converterMapping.Quantity
-                            }
-
-                        );
+                        Octgn.DataNew.Entities.Card octgnCard = this.ConverterDatabase.GameDefinition.AllCards().First(c => c.Id == converterMapping.SelectedOCTGNCard.CardID);
+                        Octgn.DataNew.Entities.MultiCard octgnMultiCard = octgnCard.ToMultiCard(converterMapping.Quantity);
+                        Octgn.DataNew.Entities.ISection octgnDeckSection = pair.Item1;
+                        octgnDeckSection.Cards.AddCard(octgnMultiCard);
                     }
                 }
             }

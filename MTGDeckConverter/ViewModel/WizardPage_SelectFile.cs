@@ -11,7 +11,7 @@ using System.Linq;
 using System.Text;
 using GalaSoft.MvvmLight.Command;
 
-namespace Octgn.MTGDeckConverter.ViewModel
+namespace MTGDeckConverter.ViewModel
 {
     /// <summary>
     /// Represents a step in the Import Deck Wizard to be displayed by a View which

@@ -17,9 +17,9 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
-using Octgn.MTGDeckConverter.Model;
+using MTGDeckConverter.Model;
 
-namespace Octgn.MTGDeckConverter.View
+namespace MTGDeckConverter.View
 {
     /// <summary>
     /// Interaction logic for WizardPage_CompareCards.xaml

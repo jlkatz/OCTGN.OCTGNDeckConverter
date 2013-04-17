@@ -10,9 +10,9 @@ using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Text;
 using System.Windows.Media.Imaging;
-using Octgn.MTGDeckConverter.Model;
+using MTGDeckConverter.Model;
 
-namespace Octgn.MTGDeckConverter.ViewModel
+namespace MTGDeckConverter.ViewModel
 {
     /// <summary>
     /// Represents dialog content to be displayed by a View which prompts the user 

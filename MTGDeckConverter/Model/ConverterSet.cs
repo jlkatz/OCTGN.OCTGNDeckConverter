@@ -3,7 +3,6 @@
 // Copyright (c) 2013 Justin L Katz. All rights reserved.
 // </copyright>
 // -----------------------------------------------------------------------
-
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -11,7 +10,7 @@ using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Text;
 
-namespace Octgn.MTGDeckConverter.Model
+namespace MTGDeckConverter.Model
 {
     /// <summary>
     /// Contains the Octgn information about a Set, and a reference to the Octgn.Data.Set object
@@ -26,7 +25,7 @@ namespace Octgn.MTGDeckConverter.Model
         /// found in the Set.
         /// </summary>
         /// <param name="octgnSet">The Octgn Set</param>
-        public ConverterSet(Octgn.Data.Set octgnSet)
+        public ConverterSet(Octgn.DataNew.Entities.Set octgnSet)
         {
             if (octgnSet == null) 
             {
@@ -44,7 +43,7 @@ namespace Octgn.MTGDeckConverter.Model
         /// <summary>
         /// Gets the referenced Octgn Set object
         /// </summary>
-        public Octgn.Data.Set OctgnSet
+        public Octgn.DataNew.Entities.Set OctgnSet
         {
             get;
             private set;

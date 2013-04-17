@@ -11,6 +11,16 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "installer", "installer", "{
 	EndProjectSection
 EndProject
 Global
+	GlobalSection(SourceCodeControl) = preSolution
+		SccNumberOfProjects = 3
+		SccLocalPath0 = .
+		SccProjectUniqueName1 = MTGDeckConverter\\MTGDeckConverter.csproj
+		SccLocalPath1 = .
+		SccProjectFilePathRelativizedFromConnection1 = MTGDeckConverter\\
+		SccProjectUniqueName2 = DeckBuilderPluginController\\DeckBuilderPluginController.csproj
+		SccLocalPath2 = .
+		SccProjectFilePathRelativizedFromConnection2 = DeckBuilderPluginController\\
+	EndGlobalSection
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
 		Debug|x86 = Debug|x86

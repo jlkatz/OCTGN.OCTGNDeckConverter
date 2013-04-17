@@ -6,9 +6,9 @@
 
 using System.Diagnostics.CodeAnalysis;
 using System.Windows;
-using Octgn.MTGDeckConverter.ViewModel;
+using MTGDeckConverter.ViewModel;
 
-namespace Octgn.MTGDeckConverter
+namespace MTGDeckConverter
 {
     /// <summary>
     /// Interaction logic for MainWindow.xaml

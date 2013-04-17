@@ -18,8 +18,8 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
-using Octgn.Library.Plugin;
-using Octgn.MTGDeckConverter;
+using MTGDeckConverter;
+using Octgn.Core.Plugin;
 
 namespace DeckBuilderPluginController
 {

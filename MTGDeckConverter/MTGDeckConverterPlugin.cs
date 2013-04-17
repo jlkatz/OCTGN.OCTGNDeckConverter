@@ -8,9 +8,10 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using Octgn.Library.Plugin;
+using Octgn.Core.DataManagers;
+using Octgn.Core.Plugin;
 
-namespace Octgn.MTGDeckConverter
+namespace MTGDeckConverter
 {
     /// <summary>
     /// Implements IDeckBuilderPlugin so it can be used as a Plugin for OCTGN.
@@ -31,8 +32,8 @@ namespace Octgn.MTGDeckConverter
         /// <summary>
         /// Happens when the Deck Editor is opened.
         /// </summary>
-        /// <param name="games">Game repository.</param>
-        public void OnLoad(Octgn.Data.GamesRepository games)
+        /// <param name="gameManager">Game Manager</param>
+        public void OnLoad(GameManager gameManager)
         {
             // Nothing for now
         }
@@ -65,8 +66,8 @@ namespace Octgn.MTGDeckConverter
         public Version RequiredByOctgnVersion
         {
             get 
-            { 
-                return Version.Parse("3.0.1.27"); 
+            {
+                return Version.Parse("3.1.0.0"); 
             }
         }
 
