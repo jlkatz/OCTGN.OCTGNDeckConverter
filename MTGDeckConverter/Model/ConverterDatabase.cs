@@ -218,10 +218,21 @@ namespace MTGDeckConverter.Model
             foreach (Octgn.DataNew.Entities.Set octgnSet in gameDefinition.Sets())
             {
                 sets[octgnSet.Id] = new ConverterSet(octgnSet);
-                foreach (var card in octgnSet.Cards)
+                foreach (Octgn.DataNew.Entities.Card card in octgnSet.Cards)
                 {
+                    // Try to dig the MultiverseID property out of the Octgn.DataNew.Entities.Card
+                    // During testing, all properties seemed nested under the first KeyValuePair in card.Properties
                     int multiverseID = 0;
-                    int.TryParse(card.Properties[multiverseIdPropertyDef].ToString(), out multiverseID);
+                    if (card.Properties.Count > 0)
+                    {
+                        KeyValuePair<string, Octgn.DataNew.Entities.CardPropertySet> firstCardPropertyKVP = card.Properties.First();
+                        object multiverseIdString = null;
+                        if (firstCardPropertyKVP.Value.Properties.TryGetValue(multiverseIdPropertyDef, out multiverseIdString))
+                        {
+                            int.TryParse(multiverseIdString.ToString(), out multiverseID);
+                        }
+                    }
+
                     sets[octgnSet.Id].AddNewConverterCard
                     (
                         card.Id,

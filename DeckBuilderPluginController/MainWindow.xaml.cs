@@ -28,7 +28,14 @@ namespace DeckBuilderPluginController
     /// </summary>
     public partial class MainWindow : Window
     {
+        /// <summary>
+        /// Text to show when the test GUI is first loaded
+        /// </summary>
         private const string WELCOME_TEXT = "This is a shell to test MTGDeckConverter.  Choose it from the Plugins menu above.";
+        
+        /// <summary>
+        /// Text to show when no deck was loaded (which might happen due to an error)
+        /// </summary>
         private const string NO_DECK = "The Wizard completed, but no Deck was loaded.";
 
         /// <summary>
@@ -86,7 +93,7 @@ namespace DeckBuilderPluginController
                 Octgn.DataNew.Entities.IDeck deck = this.SimpleDeckBuilderPluginController.GetLoadedDeck();
                 if (deck != null)
                 {
-                    this.infoTextBlock.Text = "";
+                    this.infoTextBlock.Text = string.Empty;
                     this.deckDisplayer.Content = deck;
                 }
                 else
