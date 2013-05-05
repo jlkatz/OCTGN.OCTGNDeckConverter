@@ -70,6 +70,7 @@ namespace MTGDeckConverter
                 mainWindow.ShowDialog();
 
                 // Clean up the Singleton items, regardless of whether the Wizard did anything or not
+                Model.ConverterDatabase.SingletonInstance.UpdateSetsExcludedFromSearches();
                 Model.SettingsManager.SingletonInstance.SaveSettingsManager();
                 Model.ConverterDatabase.SingletonInstance.Cleanup();
             }

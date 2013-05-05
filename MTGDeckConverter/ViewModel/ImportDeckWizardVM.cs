@@ -225,6 +225,13 @@ namespace MTGDeckConverter.ViewModel
                             () =>
                             {
                                 this.InlineDialog = new InlineDialogVM(new InlineDialogPage_ChooseIncludedSetsVM());
+
+                                this.InlineDialog.CallWhenCompletedMethod = delegate(InlineDialogVM inlineDialogVM)
+                                {
+                                    // Save settings immediately, so that the chosen sets to exclude is remembered upon quitting.
+                                    ConverterDatabase.SingletonInstance.UpdateSetsExcludedFromSearches();
+                                    Model.SettingsManager.SingletonInstance.SaveSettingsManager();
+                                };
                             }
 
                         )

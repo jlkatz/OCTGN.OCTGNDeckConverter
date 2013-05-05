@@ -172,6 +172,15 @@ namespace MTGDeckConverter.Model
         }
 
         /// <summary>
+        /// Updates the SetsExcludedFromSearches collection to reflect the latest choices for excluded sets made by the user
+        /// </summary>
+        public void UpdateSetsExcludedFromSearches()
+        {
+            SettingsManager.SingletonInstance.SetsExcludedFromSearches.Clear();
+            SettingsManager.SingletonInstance.SetsExcludedFromSearches.AddRange(this.GetSetsExcludedFromSearches());
+        }
+
+        /// <summary>
         /// Returns True if ConverterDatabase is already initialized, or it finished initializing before timing out.  
         /// Returns False if timed out without completing initialization.
         /// </summary>
@@ -263,8 +272,7 @@ namespace MTGDeckConverter.Model
         public void Cleanup()
         {
             // Update the list of excluded sets before exiting
-            SettingsManager.SingletonInstance.SetsExcludedFromSearches.Clear();
-            SettingsManager.SingletonInstance.SetsExcludedFromSearches.AddRange(this.GetSetsExcludedFromSearches());
+            this.UpdateSetsExcludedFromSearches();
         }
     }
 }
