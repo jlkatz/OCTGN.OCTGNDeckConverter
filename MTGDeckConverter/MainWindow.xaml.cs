@@ -84,7 +84,7 @@ namespace MTGDeckConverter
                 {
                     var assembly = System.Reflection.Assembly.GetExecutingAssembly();
                     var version = assembly.GetName().Version;
-                    this._WindowTitle = "MTG Deck Converter (for OCTGN 3) v" + version.Major + "." + version.Minor + "." + version.Build;
+                    this._WindowTitle = "MTG Deck Converter (for OCTGN 3.1) v" + version.Major + "." + version.Minor + "." + version.Build;
 
                     // Uncomment when making in-development builds.
                     ////this._WindowTitle = this._WindowTitle + " (Development Build)";
