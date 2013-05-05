@@ -10,7 +10,7 @@ using System.ComponentModel;
 using System.Linq;
 using System.Text;
 
-namespace Octgn.MTGDeckConverter.Model
+namespace MTGDeckConverter.Model
 {
     /// <summary>
     /// A base class for object which implement INotifyPropertyChanged with some helper methods

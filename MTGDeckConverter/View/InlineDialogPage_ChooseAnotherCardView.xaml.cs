@@ -17,10 +17,10 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
-using Octgn.MTGDeckConverter.Model;
-using Octgn.MTGDeckConverter.ViewModel;
+using MTGDeckConverter.Model;
+using MTGDeckConverter.ViewModel;
 
-namespace Octgn.MTGDeckConverter.View
+namespace MTGDeckConverter.View
 {
     /// <summary>
     /// Interaction logic for InlineDialogPage_ChooseAnotherCardView.xaml

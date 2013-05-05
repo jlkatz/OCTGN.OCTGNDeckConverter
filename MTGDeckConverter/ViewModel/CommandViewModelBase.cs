@@ -12,7 +12,7 @@ using System.Linq;
 using System.Text;
 using System.Windows.Input;
 
-namespace Octgn.MTGDeckConverter.ViewModel
+namespace MTGDeckConverter.ViewModel
 {
     /// <summary>
     /// TODO: Update summary.

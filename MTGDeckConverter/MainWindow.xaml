@@ -1,5 +1,5 @@
 ﻿<Window 
-    x:Class="Octgn.MTGDeckConverter.MainWindow"
+    x:Class="MTGDeckConverter.MainWindow"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
@@ -10,8 +10,8 @@
     Width="1024"
     x:Name="mainWindow"
     Title="{Binding ElementName=mainWindow, Path=WindowTitle}"
-    xmlns:viewModel="clr-namespace:Octgn.MTGDeckConverter.ViewModel"
-    xmlns:view="clr-namespace:Octgn.MTGDeckConverter.View"
+    xmlns:viewModel="clr-namespace:MTGDeckConverter.ViewModel"
+    xmlns:view="clr-namespace:MTGDeckConverter.View"
     >
     <Window.Style>
         <Style TargetType="{x:Type Window}" BasedOn="{StaticResource Window}">

@@ -11,7 +11,7 @@ using System.Linq;
 using System.Text;
 using System.Xml;
 
-namespace Octgn.MTGDeckConverter.Model
+namespace MTGDeckConverter.Model
 {
     /// <summary>
     /// Contains the settings for the MTGDeckConverter program in a Singleton instance.  

@@ -10,7 +10,7 @@ using System.Linq;
 using System.Text;
 using System.Xml;
 
-namespace Octgn.MTGDeckConverter.Model
+namespace MTGDeckConverter.Model
 {
     /// <summary>
     /// Provides helper static functions for XML operations

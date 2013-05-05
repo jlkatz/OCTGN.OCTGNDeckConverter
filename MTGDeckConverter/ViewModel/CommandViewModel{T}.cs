@@ -10,7 +10,7 @@ using System.Linq;
 using System.Text;
 using GalaSoft.MvvmLight.Command;
 
-namespace Octgn.MTGDeckConverter.ViewModel
+namespace MTGDeckConverter.ViewModel
 {    
     /// <summary>
     /// Represents an actionable item displayed by a View.

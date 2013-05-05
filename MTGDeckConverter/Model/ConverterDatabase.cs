@@ -3,18 +3,17 @@
 // Copyright (c) 2013 Justin L Katz. All rights reserved.
 // </copyright>
 // -----------------------------------------------------------------------
+using System;
+using System.Collections.Generic;
+using System.ComponentModel;
+using System.Diagnostics.CodeAnalysis;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using Octgn.Core.DataExtensionMethods;
 
-namespace Octgn.MTGDeckConverter.Model
+namespace MTGDeckConverter.Model
 {
-    using System;
-    using System.Collections.Generic;
-    using System.ComponentModel;
-    using System.Diagnostics.CodeAnalysis;
-    using System.Linq;
-    using System.Text;
-    using System.Threading.Tasks;
-using Octgn.Library.Plugin;
-
     /// <summary>
     /// Singleton object which contains the Octgn.Data.Game definition for MTG, a Dictionary of all the Sets
     /// available with the corresponding ConverterSet.  When first instantiated, it asynchronously fetches
@@ -43,7 +42,7 @@ using Octgn.Library.Plugin;
         /// the user can immediately begin entering their deck info.
         /// </summary>
         /// <param name="mtgGame">The OCTGN Game to be used to build cards from.  It must be MTG.</param>
-        public void Initialize(Data.Game mtgGame)
+        public void Initialize(Octgn.DataNew.Entities.Game mtgGame)
         {
             if (mtgGame == null)
             {
@@ -104,7 +103,7 @@ using Octgn.Library.Plugin;
         /// <summary>
         /// Gets the OCTGN GameDefinition for MTG
         /// </summary>
-        public Octgn.Data.Game GameDefinition
+        public Octgn.DataNew.Entities.Game GameDefinition
         {
             get;
             private set;
@@ -159,10 +158,17 @@ using Octgn.Library.Plugin;
         /// <returns>A collection of Guids which represent Octgn Sets to be excluded.</returns>
         public IEnumerable<Guid> GetSetsExcludedFromSearches()
         {
-            return
-                from s in this.Sets
-                where !s.Value.IncludeInSearches
-                select s.Key;
+            if (this.IsInitialized)
+            {
+                return
+                    from s in this.Sets
+                    where !s.Value.IncludeInSearches
+                    select s.Key;
+            }
+            else
+            {
+                return new List<Guid>();
+            }
         }
 
         /// <summary>
@@ -197,39 +203,43 @@ using Octgn.Library.Plugin;
         /// </summary>
         /// <param name="gameDefinition">The MTG Game Definition object to use to read sets from</param>
         /// <returns>A Dictionary of Octgn Set Guids and corresponding ConverterSet objects</returns>
-        private static Dictionary<Guid, ConverterSet> BuildCardDatabase(Octgn.Data.Game gameDefinition)
+        private static Dictionary<Guid, ConverterSet> BuildCardDatabase(Octgn.DataNew.Entities.Game gameDefinition)
         {
             if (gameDefinition == null)
             {
-                throw new ArgumentNullException(); 
+                throw new ArgumentNullException();
             }
+
+            Octgn.DataNew.Entities.PropertyDef multiverseIdPropertyDef = 
+                gameDefinition.CustomProperties.First(p => p.Name.Equals("MultiVerseId", StringComparison.InvariantCultureIgnoreCase));
 
             Dictionary<Guid, ConverterSet> sets = new Dictionary<Guid, ConverterSet>();
 
-            foreach (Octgn.Data.Set octgnSet in gameDefinition.Sets)
+            foreach (Octgn.DataNew.Entities.Set octgnSet in gameDefinition.Sets())
             {
                 sets[octgnSet.Id] = new ConverterSet(octgnSet);
-            }
+                foreach (Octgn.DataNew.Entities.Card card in octgnSet.Cards)
+                {
+                    // Try to dig the MultiverseID property out of the Octgn.DataNew.Entities.Card
+                    // During testing, all properties seemed nested under the first KeyValuePair in card.Properties
+                    int multiverseID = 0;
+                    if (card.Properties.Count > 0)
+                    {
+                        KeyValuePair<string, Octgn.DataNew.Entities.CardPropertySet> firstCardPropertyKVP = card.Properties.First();
+                        object multiverseIdString = null;
+                        if (firstCardPropertyKVP.Value.Properties.TryGetValue(multiverseIdPropertyDef, out multiverseIdString))
+                        {
+                            int.TryParse(multiverseIdString.ToString(), out multiverseID);
+                        }
+                    }
 
-            System.Data.DataTable allcards = gameDefinition.SelectCards(new string[] { "[Name] LIKE '%%'" });
-            System.Data.DataColumn cardIDColumn = allcards.Columns["id"];
-            System.Data.DataColumn setIDColumn = allcards.Columns["set_id"];
-            System.Data.DataColumn nameColumn = allcards.Columns["name"];
-            System.Data.DataColumn multiverseIDColumn = allcards.Columns["MultiverseId"];
-            foreach (System.Data.DataRow row in allcards.Rows)
-            {
-                Guid setGuid = Guid.Parse(row[setIDColumn].ToString());
-                Guid cardGuid = Guid.Parse(row[cardIDColumn].ToString());
-                string name = row[nameColumn].ToString().Trim();
-                int multiverseID = 0;
-                int.TryParse(row[multiverseIDColumn].ToString(), out multiverseID);
-
-                sets[setGuid].AddNewConverterCard
-                (
-                    cardGuid,
-                    name,
-                    multiverseID
-                );
+                    sets[octgnSet.Id].AddNewConverterCard
+                    (
+                        card.Id,
+                        card.Name,
+                        multiverseID
+                    );
+                }
             }
 
             foreach (KeyValuePair<Guid, ConverterSet> kvp in sets)
