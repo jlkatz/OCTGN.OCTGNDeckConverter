@@ -4,7 +4,7 @@
 // </copyright>
 // -----------------------------------------------------------------------
 
-namespace Octgn.MTGDeckConverter.Model
+namespace MTGDeckConverter.Model
 {
     using System;
     using System.Collections.Generic;
@@ -742,9 +742,9 @@ namespace Octgn.MTGDeckConverter.Model
         /// <returns>The Card Name with extra trailing garbage removed</returns>
         private static string RegexMatch_RemoveNameExtraGarbage(string name)
         {
-            var bob = ConvertEngine.Regex_RemoveNameExtraGarbage.Match(name);
-            return bob.Success ?
-                bob.Groups[1].Value :
+            Match m = ConvertEngine.Regex_RemoveNameExtraGarbage.Match(name);
+            return m.Success ?
+                m.Groups[1].Value :
                 name;
         }
 

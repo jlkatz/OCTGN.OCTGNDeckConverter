@@ -8,8 +8,9 @@ using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Text;
-using Octgn.Data;
-using Octgn.Library.Plugin;
+using Octgn.Core.DataManagers;
+using Octgn.Core.Plugin;
+using Octgn.DataNew.Entities;
 
 namespace DeckBuilderPluginController
 {
@@ -18,24 +19,16 @@ namespace DeckBuilderPluginController
     /// </summary>
     public class SimpleDeckBuilderPluginController : IDeckBuilderPluginController
     {
-        [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1600:ElementsMustBeDocumented", Justification = "Private backing field")]
-        private readonly GamesRepository _Games = new GamesRepository();
-
         /// <summary>
-        /// Gets the games repository of installed games.
+        /// Gets the GameManager which knows about installed games.
         /// </summary>
-        public GamesRepository Games
+        public GameManager Games
         {
             get
             {
-                return this._Games;
+                return GameManager.Get();
             }
         }
-
-        /// <summary>
-        /// Backing Field for the currently loaded Deck
-        /// </summary>
-        private Deck _LoadedDeck;
 
         /// <summary>
         /// Backing Field for the currently loaded Game
@@ -61,21 +54,26 @@ namespace DeckBuilderPluginController
         }
 
         /// <summary>
-        /// Loads a deck into the Deck Editor
+        /// Backing Field for the currently loaded Deck
         /// </summary>
-        /// <param name="deck">The deck to load</param>
-        public void LoadDeck(Deck deck)
-        {
-            this._LoadedDeck = deck;
-        }
+        private IDeck _LoadedDeck;
 
         /// <summary>
         /// Gets the loaded deck in the Deck Editor
         /// </summary>
         /// <returns>Returns the loaded deck in the Deck Editor</returns>
-        public Deck GetLoadedDeck()
+        public IDeck GetLoadedDeck()
         {
             return this._LoadedDeck;
+        }
+
+        /// <summary>
+        /// Loads a deck into the Deck Editor
+        /// </summary>
+        /// <param name="deck">The deck to load</param>
+        public void LoadDeck(IDeck deck)
+        {
+            this._LoadedDeck = deck;
         }
     }
 }

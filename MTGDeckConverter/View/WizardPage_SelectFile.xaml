@@ -1,5 +1,5 @@
 ﻿<UserControl 
-    x:Class="Octgn.MTGDeckConverter.View.WizardPage_SelectFile"
+    x:Class="MTGDeckConverter.View.WizardPage_SelectFile"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 

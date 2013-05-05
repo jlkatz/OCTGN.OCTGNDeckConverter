@@ -11,9 +11,10 @@ using System.Linq;
 using System.Text;
 using System.Windows.Media.Imaging;
 using GalaSoft.MvvmLight.Command;
-using Octgn.MTGDeckConverter.Model;
+using MTGDeckConverter.Model;
+using Octgn.Core.DataExtensionMethods;
 
-namespace Octgn.MTGDeckConverter.ViewModel
+namespace MTGDeckConverter.ViewModel
 {
     /// <summary>
     /// The ViewModel which drives the Import Deck Wizard.  This is responsible for determining
@@ -558,8 +559,8 @@ namespace Octgn.MTGDeckConverter.ViewModel
 
             try
             {
-                Octgn.Data.CardModel octgnCardModel = ConverterDatabase.SingletonInstance.GameDefinition.GetCardById(cardID);
-                bim.UriSource = Octgn.Data.CardModel.GetPictureUri(ConverterDatabase.SingletonInstance.GameDefinition, octgnCardModel.Set.Id, octgnCardModel.ImageUri);
+                Octgn.DataNew.Entities.Card octgnCard = ConverterDatabase.SingletonInstance.GameDefinition.AllCards().First(c => c.Id == cardID);
+                bim.UriSource = new Uri(octgnCard.GetPicture());
                 bim.EndInit();
             }
             catch (Exception)
@@ -567,7 +568,7 @@ namespace Octgn.MTGDeckConverter.ViewModel
                 bim = new BitmapImage();
                 bim.CacheOption = BitmapCacheOption.OnLoad;
                 bim.BeginInit();
-                bim.UriSource = new Uri(@"pack://application:,,,/Octgn;component/Resources/Front.jpg");
+                bim.UriSource = new Uri(ConverterDatabase.SingletonInstance.GameDefinition.CardFront);
                 bim.EndInit();
             }
 

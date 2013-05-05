@@ -11,7 +11,7 @@ using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Text;
 
-namespace Octgn.MTGDeckConverter.Model
+namespace MTGDeckConverter.Model
 {
     /// <summary>
     /// Represents a parsed Card, Quantity, and possibly Set.  It contains a collection of potential

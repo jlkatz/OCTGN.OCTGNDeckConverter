@@ -8,9 +8,10 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using Octgn.Library.Plugin;
+using Octgn.Core.Plugin;
+using Octgn.DataNew.Entities;
 
-namespace Octgn.MTGDeckConverter
+namespace MTGDeckConverter
 {
     /// <summary>
     /// Implements IPluginMenuItem so it can be used as a Plugin for OCTGN.
@@ -37,7 +38,7 @@ namespace Octgn.MTGDeckConverter
         public void OnClick(IDeckBuilderPluginController controller)
         {
             // Attempt to get the MTG Game from the IDeckBuilderPluginController
-            Data.Game mtgGame = MTGDeckConverterPluginMenuItem.GetGameDefinition(controller);
+            Game mtgGame = MTGDeckConverterPluginMenuItem.GetGameDefinition(controller);
 
             if (mtgGame != null)
             {
@@ -67,6 +68,10 @@ namespace Octgn.MTGDeckConverter
 
                 // This will block until the Main Window is closed
                 mainWindow.ShowDialog();
+
+                // Clean up the Singleton items, regardless of whether the Wizard did anything or not
+                Model.SettingsManager.SingletonInstance.SaveSettingsManager();
+                Model.ConverterDatabase.SingletonInstance.Cleanup();
             }
             else
             {
@@ -76,18 +81,14 @@ namespace Octgn.MTGDeckConverter
                     "Game Definition Not Found"
                 );
             }
-
-            // Clean up the Singleton items, regardless of whether the Wizard did anything or not
-            Model.SettingsManager.SingletonInstance.SaveSettingsManager();
-            Model.ConverterDatabase.SingletonInstance.Cleanup();
         }
 
         /// <summary>
         /// Attempts to retrieve and return a reference to the MTG Game Definition from the IDeckBuilderPluginController.
         /// </summary>
         /// <param name="controller">The controller which is using this plugin.  Usually it is OCTGN</param>
-        /// <returns>Octgn.Data.Game object for MTG if installed, null otherwise.</returns>
-        private static Octgn.Data.Game GetGameDefinition(IDeckBuilderPluginController controller)
+        /// <returns>Octgn Game object for MTG if installed, null otherwise.</returns>
+        private static Game GetGameDefinition(IDeckBuilderPluginController controller)
         {
             if (controller == null)
             {

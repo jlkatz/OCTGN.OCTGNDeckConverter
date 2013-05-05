@@ -10,7 +10,7 @@ using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Text;
 
-namespace Octgn.MTGDeckConverter.ViewModel
+namespace MTGDeckConverter.ViewModel
 {
     /// <summary>
     /// A base class for all Wizard page ViewModels.  Provides navigation framework.

@@ -9,7 +9,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace Octgn.MTGDeckConverter.ViewModel
+namespace MTGDeckConverter.ViewModel
 {
     /// <summary>
     /// Represents dialog content to be displayed by a View which shows the user

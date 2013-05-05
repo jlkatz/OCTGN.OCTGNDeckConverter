@@ -18,8 +18,8 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
-using Octgn.Library.Plugin;
-using Octgn.MTGDeckConverter;
+using MTGDeckConverter;
+using Octgn.Core.Plugin;
 
 namespace DeckBuilderPluginController
 {
@@ -29,11 +29,23 @@ namespace DeckBuilderPluginController
     public partial class MainWindow : Window
     {
         /// <summary>
+        /// Text to show when the test GUI is first loaded
+        /// </summary>
+        private const string WELCOME_TEXT = "This is a shell to test MTGDeckConverter.  Choose it from the Plugins menu above.";
+        
+        /// <summary>
+        /// Text to show when no deck was loaded (which might happen due to an error)
+        /// </summary>
+        private const string NO_DECK = "The Wizard completed, but no Deck was loaded.";
+
+        /// <summary>
         /// Initializes a new instance of the MainWindow class.
         /// </summary>
         public MainWindow()
         {
             this.InitializeComponent();
+
+            this.infoTextBlock.Text = WELCOME_TEXT;
         }
 
         [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1600:ElementsMustBeDocumented", Justification = "Private backing field")]
@@ -75,7 +87,19 @@ namespace DeckBuilderPluginController
         {
             if (sender == this.pluginMenuItem)
             {
+                this.infoTextBlock.Text = WELCOME_TEXT;
                 this.MTGDeckConverterPluginMenuItem.OnClick(this.SimpleDeckBuilderPluginController);
+
+                Octgn.DataNew.Entities.IDeck deck = this.SimpleDeckBuilderPluginController.GetLoadedDeck();
+                if (deck != null)
+                {
+                    this.infoTextBlock.Text = string.Empty;
+                    this.deckDisplayer.Content = deck;
+                }
+                else
+                {
+                    this.infoTextBlock.Text = NO_DECK;
+                }
             }
         }
     }

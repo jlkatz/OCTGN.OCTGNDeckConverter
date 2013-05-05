@@ -18,7 +18,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 
-namespace Octgn.MTGDeckConverter.View
+namespace MTGDeckConverter.View
 {
     /// <summary>
     /// Interaction logic for InlineDialogView.xaml

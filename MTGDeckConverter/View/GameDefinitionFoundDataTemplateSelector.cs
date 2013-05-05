@@ -10,9 +10,9 @@ using System.Linq;
 using System.Text;
 using System.Windows;
 using System.Windows.Controls;
-using Octgn.MTGDeckConverter.Model;
+using MTGDeckConverter.Model;
 
-namespace Octgn.MTGDeckConverter.View
+namespace MTGDeckConverter.View
 {
     /// <summary>
     /// Provides a way to choose a DataTemplate based on whether the ConverterDatabase was able to find the GameDefinition or not.
