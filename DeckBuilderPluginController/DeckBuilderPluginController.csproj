@@ -149,9 +149,9 @@
     <AppDesigner Include="Properties\" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\MTGDeckConverter\MTGDeckConverter.csproj">
+    <ProjectReference Include="..\OCTGNDeckConverter\OCTGNDeckConverter.csproj">
       <Project>{0D71918F-43BA-4B4A-B491-ADD7A372467A}</Project>
-      <Name>MTGDeckConverter</Name>
+      <Name>OCTGNDeckConverter</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

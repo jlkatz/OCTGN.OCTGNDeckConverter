@@ -19,7 +19,7 @@
             <MenuItem Header="Plugins">
                 <MenuItem 
                     x:Name="pluginMenuItem"
-                    Header="{Binding ElementName=root, Path=MTGDeckConverterPluginMenuItem.Name}" 
+                    Header="{Binding ElementName=root, Path=OCTGNDeckConverterPluginMenuItem.Name}" 
                     Click="MenuItem_Click"
                     />
             </MenuItem>

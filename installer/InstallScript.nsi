@@ -6,10 +6,10 @@
 ;--------------------------------
 
 ; The name of the installer
-  Name "MTG Deck Converter v2.1.0"
+  Name "OCTGN Deck Converter v3.0.0"
 
 ; The file to write
-  OutFile "MTGDeckConverterInstaller v2.1.0.exe"
+  OutFile "OCTGNDeckConverterInstaller v3.0.0.exe"
 
 ; Request application privileges for Windows Vista/7/8
   RequestExecutionLevel user
@@ -22,7 +22,7 @@
 ;--------------------------------
 ;Pages
 
-  !define MUI_TEXT_WELCOME_INFO_TEXT "This wizard will install the MTG Deck Converter plugin v2.1.0 for OCTGN.$\n$\nClick Install to start the installation."
+  !define MUI_TEXT_WELCOME_INFO_TEXT "This wizard will install the OCTGN Deck Converter plugin v3.0.0 for OCTGN.$\n$\nClick Install to start the installation."
   !define MUI_PAGE_CUSTOMFUNCTION_SHOW WelcomeShowCallback
   
   !insertmacro MUI_PAGE_WELCOME
@@ -39,10 +39,10 @@
 Section "" ;No components page, name is not important
 
   ; Set output path to the installation directory.
-  SetOutPath $DOCUMENTS\Octgn\Plugins\MTGDeckConverter
+  SetOutPath $DOCUMENTS\Octgn\Plugins\OCTGNDeckConverter
   
   ; Put file there
-  File ..\MTGDeckConverter\bin\Release\MTGDeckConverter.dll
+  File ..\OCTGNDeckConverter\bin\Release\OCTGNDeckConverter.dll
   
 SectionEnd ; end the section
 

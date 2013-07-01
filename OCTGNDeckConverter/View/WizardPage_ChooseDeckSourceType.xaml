@@ -1,0 +1,106 @@
+﻿<UserControl 
+    x:Class="OCTGNDeckConverter.View.WizardPage_ChooseDeckSourceType"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+    mc:Ignorable="d" 
+    d:DesignHeight="600" d:DesignWidth="800"
+    xmlns:model="clr-namespace:OCTGNDeckConverter.Model"
+    xmlns:viewModel="clr-namespace:OCTGNDeckConverter.ViewModel"
+    xmlns:view="clr-namespace:OCTGNDeckConverter.View"
+    >
+    <UserControl.Resources>
+        <view:BoolToVisibilityConverter x:Key="BoolToVisibilityConverter" />
+    </UserControl.Resources>
+    
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+        
+        <Border
+            Grid.Row="0"
+            Margin="50"
+            Background="#33FFFFFF"
+            Padding="25"
+            >
+            <StackPanel>
+                <TextBlock 
+                    Text="{Binding Path=ImportDeckWizardVM.WelcomeMessage}" 
+                    Margin="0, 0, 0, 20"
+                    FontSize="18px"
+                    TextWrapping="Wrap"
+                    Visibility="{Binding Path=IsStartPage, Converter={StaticResource BoolToVisibilityConverter}}"
+                    />
+                <TextBlock 
+                    FontSize="18px"
+                    TextWrapping="Wrap"
+                    Text="Choose how you will provide the deck to import:"
+                    />
+            </StackPanel>
+        </Border>
+        
+        <ContentControl Content="{Binding}"
+            Grid.Row="1"
+            Margin="10"
+            >
+            <ContentControl.Resources>
+
+                <DataTemplate x:Key="Found">
+                    <UniformGrid Rows="1" MaxHeight="170">
+                        <Button 
+                            Content="File on my computer" 
+                            Command="{Binding Path=ChooseDeckSourceTypeCommand}" 
+                            CommandParameter="{x:Static model:DeckSourceTypes.File}"
+                            Margin="10"
+                            FontSize="18"
+                            FontWeight="Bold"
+                            />
+
+                        <Button 
+                            Content="Webpage" 
+                            Command="{Binding Path=ChooseDeckSourceTypeCommand}" 
+                            CommandParameter="{x:Static model:DeckSourceTypes.Webpage}"
+                            Margin="10"
+                            FontSize="18"
+                            FontWeight="Bold"
+                            />
+
+                        <Button 
+                            Content="Text from clipboard" 
+                            Command="{Binding Path=ChooseDeckSourceTypeCommand}" 
+                            CommandParameter="{x:Static model:DeckSourceTypes.Text}"
+                            Margin="10"
+                            FontSize="18"
+                            FontWeight="Bold"
+                            />
+                    </UniformGrid>
+                </DataTemplate>
+                
+                <DataTemplate x:Key="NotFound">
+                    <Border Background="Red">
+                        <TextBlock>The Game Definition could not be found, check that it is installed in OCTGN correctly.</TextBlock>
+                    </Border>
+                </DataTemplate>
+
+            </ContentControl.Resources>
+                    
+            <ContentControl.ContentTemplateSelector>
+                <view:GameDefinitionFoundDataTemplateSelector
+                    FoundTemplate="{StaticResource Found}"
+                    NotFoundTemplate="{StaticResource NotFound}"
+                    />
+            </ContentControl.ContentTemplateSelector>
+                    
+        </ContentControl>
+
+        <view:OptionsMenu 
+            Grid.Row="0" 
+            HorizontalAlignment="Right"
+            VerticalAlignment="Top" 
+            DataContext="{Binding Path=ImportDeckWizardVM}" 
+            />
+    </Grid>
+</UserControl>

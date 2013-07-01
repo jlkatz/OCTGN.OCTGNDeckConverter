@@ -18,8 +18,8 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
-using MTGDeckConverter;
 using Octgn.Core.Plugin;
+using OCTGNDeckConverter;
 
 namespace DeckBuilderPluginController
 {
@@ -31,7 +31,7 @@ namespace DeckBuilderPluginController
         /// <summary>
         /// Text to show when the test GUI is first loaded
         /// </summary>
-        private const string WELCOME_TEXT = "This is a shell to test MTGDeckConverter.  Choose it from the Plugins menu above.";
+        private const string WELCOME_TEXT = "This is a shell to test OCTGNDeckConverter.  Choose it from the Plugins menu above.";
         
         /// <summary>
         /// Text to show when no deck was loaded (which might happen due to an error)
@@ -48,7 +48,9 @@ namespace DeckBuilderPluginController
             this.infoTextBlock.Text = WELCOME_TEXT;
         }
 
-        [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1600:ElementsMustBeDocumented", Justification = "Private backing field")]
+        /// <summary>
+        /// Private backing field
+        /// </summary>
         private SimpleDeckBuilderPluginController _SimpleDeckBuilderPluginController = new SimpleDeckBuilderPluginController();
 
         /// <summary>
@@ -59,23 +61,25 @@ namespace DeckBuilderPluginController
             get { return this._SimpleDeckBuilderPluginController; }
         }
 
-        [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1600:ElementsMustBeDocumented", Justification = "Private backing field")]
-        private MTGDeckConverterPlugin _MTGDeckConverterPlugin = new MTGDeckConverterPlugin();
+        /// <summary>
+        /// Private backing field
+        /// </summary>
+        private OCTGNDeckConverterPlugin _OCTGNDeckConverterPlugin = new OCTGNDeckConverterPlugin();
 
         /// <summary>
-        /// Gets the MTGDeckConverterPlugin to be used for testing
+        /// Gets the OCTGNDeckConverterPlugin to be used for testing
         /// </summary>
-        public MTGDeckConverterPlugin MTGDeckConverterPlugin
+        public OCTGNDeckConverterPlugin OCTGNDeckConverterPlugin
         {
-            get { return this._MTGDeckConverterPlugin; }
+            get { return this._OCTGNDeckConverterPlugin; }
         }
 
         /// <summary>
-        /// Gets the MTGDeckConverterPluginMenuItem to be used for testing
+        /// Gets the OCTGNDeckConverterPluginMenuItem to be used for testing
         /// </summary>
-        public IPluginMenuItem MTGDeckConverterPluginMenuItem
+        public IPluginMenuItem OCTGNDeckConverterPluginMenuItem
         {
-            get { return this.MTGDeckConverterPlugin.MenuItems.First(); }
+            get { return this.OCTGNDeckConverterPlugin.MenuItems.First(); }
         }
 
         /// <summary>
@@ -88,7 +92,7 @@ namespace DeckBuilderPluginController
             if (sender == this.pluginMenuItem)
             {
                 this.infoTextBlock.Text = WELCOME_TEXT;
-                this.MTGDeckConverterPluginMenuItem.OnClick(this.SimpleDeckBuilderPluginController);
+                this.OCTGNDeckConverterPluginMenuItem.OnClick(this.SimpleDeckBuilderPluginController);
 
                 Octgn.DataNew.Entities.IDeck deck = this.SimpleDeckBuilderPluginController.GetLoadedDeck();
                 if (deck != null)
