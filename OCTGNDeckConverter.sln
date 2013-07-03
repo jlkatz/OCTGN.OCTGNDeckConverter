@@ -1,6 +1,6 @@
 ﻿
-Microsoft Visual Studio Solution File, Format Version 11.00
-# Visual Studio 2010
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 2012
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OCTGNDeckConverter", "OCTGNDeckConverter\OCTGNDeckConverter.csproj", "{0D71918F-43BA-4B4A-B491-ADD7A372467A}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DeckBuilderPluginController", "DeckBuilderPluginController\DeckBuilderPluginController.csproj", "{5871AA2F-EA70-44E6-BF70-C7567AC843D2}"
@@ -11,13 +11,6 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "installer", "installer", "{
 	EndProjectSection
 EndProject
 Global
-	GlobalSection(SourceCodeControl) = preSolution
-		SccNumberOfProjects = 2
-		SccLocalPath0 = .
-		SccProjectUniqueName1 = DeckBuilderPluginController\\DeckBuilderPluginController.csproj
-		SccLocalPath1 = .
-		SccProjectFilePathRelativizedFromConnection1 = DeckBuilderPluginController\\
-	EndGlobalSection
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
 		Debug|x86 = Debug|x86
