@@ -265,6 +265,35 @@ namespace OCTGNDeckConverter.Model
                 }
             }
 
+            // Auto-inserting notes into the deck has been removed because it 
+            // is annoying when it pops up every time you load a deck.
+            //var assembly = System.Reflection.Assembly.GetExecutingAssembly();
+            //var version = assembly.GetName().Version;
+            //StringBuilder deckNotes = new StringBuilder();
+            //deckNotes.AppendLine("Imported with Splat's OCTGN Deck Converter v" + version.Major + "." + version.Minor + "." + version.Build);
+            //deckNotes.AppendLine(@"http://octgn.gamersjudgement.com/wordpress/mtg/deck-editor-plugins/");
+            //deckNotes.AppendLine();
+            //deckNotes.Append("Source: ");
+            //deckNotes.AppendLine(this.DeckSourceType.Value.ToString());
+
+            //switch(this.DeckSourceType.Value)
+            //{
+            //    case DeckSourceTypes.File:
+            //        deckNotes.Append("File: ");
+            //        deckNotes.AppendLine(this.DeckFullPathName);
+            //        break;
+
+            //    case DeckSourceTypes.Webpage:
+            //        deckNotes.Append("URL: ");
+            //        deckNotes.AppendLine(this.DeckURL);
+            //        break;
+            //}
+
+            //deckNotes.Append("Name: ");
+            //deckNotes.AppendLine(this.ConverterDeck.DeckName);
+            //deck.Notes = deckNotes.ToString();
+
+            deck.Notes = string.Empty;
             return deck;
         }
 

@@ -10,6 +10,7 @@ using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Text;
 using System.Windows.Media.Imaging;
+using Octgn.Core.DataExtensionMethods;
 
 namespace OCTGNDeckConverter.ViewModel
 {
@@ -26,6 +27,59 @@ namespace OCTGNDeckConverter.ViewModel
         public WizardPage_CompareCards(ImportDeckWizardVM importDeckWizardVM)
             : base(importDeckWizardVM)
         { 
+        }
+
+        private GalaSoft.MvvmLight.Command.RelayCommand _ExportCardPictures;
+        public GalaSoft.MvvmLight.Command.RelayCommand ExportCardPictures
+        {
+            get
+            {
+                if (this._ExportCardPictures == null)
+                {
+                    this._ExportCardPictures = new GalaSoft.MvvmLight.Command.RelayCommand
+                    (
+                        () =>
+                        {
+                            System.Windows.Forms.FolderBrowserDialog dlg = new System.Windows.Forms.FolderBrowserDialog();
+                            System.Windows.Forms.DialogResult result = dlg.ShowDialog();
+                            if (result == System.Windows.Forms.DialogResult.OK)
+                            {
+                                foreach (Model.ConverterSection cs in this.ImportDeckWizardVM.Converter.ConverterDeck.ConverterSections)
+                                {
+                                    foreach (Model.ConverterMapping cm in cs.SectionMappings)
+                                    {
+                                        if (cm.SelectedOCTGNCard != null)
+                                        {
+                                            Octgn.DataNew.Entities.Card octgnCard = this.ImportDeckWizardVM.Converter.ConverterGame.Game.AllCards().First(c => c.Id == cm.SelectedOCTGNCard.CardID);
+                                            string sourceFileName = octgnCard.GetPicture();
+                                            string extension = System.IO.Path.GetExtension(sourceFileName);
+                                                    
+                                            for (int i = 0; i < cm.Quantity; i++)
+                                            {
+                                                string destFileName = System.IO.Path.Combine(dlg.SelectedPath, cm.SelectedOCTGNCard.Name + extension);
+                                                int d = 1;
+                                                while (System.IO.File.Exists(destFileName))
+                                                {
+                                                    destFileName = System.IO.Path.Combine(dlg.SelectedPath, cm.SelectedOCTGNCard.Name + " (" + d + ")" + extension);
+                                                    d++;
+                                                }
+
+                                                try
+                                                {
+                                                    System.IO.File.Copy(sourceFileName, destFileName);
+                                                }
+                                                catch (Exception)
+                                                { }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    );
+                }
+                return this._ExportCardPictures;
+            }
         }
 
         #region Public Properties
