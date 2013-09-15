@@ -76,7 +76,7 @@ namespace OCTGNDeckConverter.ViewModel
         /// </summary>
         public override string Title
         {
-            get { return "Choose Included Sets When Searching for Cards"; }
+            get { return "Choose Included Sets When Searching for Cards (" + this._ConverterGame.Game.Name + ")"; }
         }
     }
 }

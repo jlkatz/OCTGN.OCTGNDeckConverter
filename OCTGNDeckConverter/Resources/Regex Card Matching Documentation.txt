@@ -49,16 +49,20 @@ Note: (?!\s+\[) tells it to ignore mwBase style set brackets  '   ['
 
 
 ==================================================================
-General Format (Name #x): ^\s*([a-zA-Z].+)\s+(\d+)\s*[xX]
+General Format (Name #x) or (Name x#): ^\s*([a-zA-Z].+)\s+[xX]*\s*(\d+)
 Group [1]: Card Name
 Group [2]: Quantity
-(Applies to some websites)
+(Applies to some websites, notably cardgamedb.com)
 ==================================================================
 [Matches]
+Card Name X34
+Card Name x3
+Card Name     3
+Card Name (set name) X34
+Card Name (set name) x3
+Card Name  (set name)    3
 Card Name 34X
 Card Name 3x
-Card Name     32 x
-Card Name     3 x
 Card Name     3
 
 [Non-Matches]
@@ -73,7 +77,16 @@ Card Name     3
 34X     card Name
   34X	Card Name with Tab and Leading Space
 34 Xenograph
+
+[MATCHES WITH ERROR] - There cannot be a space between the number and X
+Card Name    x 32
+Card Name    x 3
+Card Name (set name)    x 32
+Card Name  (set name)   x 3
+Card Name     32 x
+Card Name     3 x
 ==================================================================
+
 
 ==================================================================
 General Sideboard: ^\s*[sS][bB][:]\s+(\d+)\s*[xX]?(?!\s+\[)\s+([a-zA-Z].+)
@@ -107,7 +120,7 @@ SB : 4 Card Name
 
 
 ==================================================================
-MWS Main Deck: ^\s*(\d)+\s+\[(.*?)\]\s+(.+)
+MWS Main Deck: ^\s*(\d+)\s+\[(.*?)\]\s+(.+)
 Group [1]: Quantity
 Group [2]: Set
 Group [3]: Card Name
@@ -122,7 +135,7 @@ Group [3]: Card Name
 
 
 ==================================================================
-MWS Sideboard: ^\s*[sS][bB][:]\s+(\d)+\s+\[(.*?)\]\s+(.+)
+MWS Sideboard: ^\s*[sS][bB][:]\s+(\d+)\s+\[(.*?)\]\s+(.+)
 Group [1]: Quantity
 Group [2]: Set
 Group [3]: Card Name

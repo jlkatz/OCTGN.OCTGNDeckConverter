@@ -106,10 +106,10 @@ namespace OCTGNDeckConverter.Model
                         }
                     }
 
-                    List<Tuple<string, IEnumerable<string>>> sectionLines = new List<Tuple<string, IEnumerable<string>>>();
+                    Dictionary<string, IEnumerable<string>> sectionLines = new Dictionary<string, IEnumerable<string>>();
 
-                    sectionLines.Add(new Tuple<string, IEnumerable<string>>("Main", mainDeckLines));
-                    sectionLines.Add(new Tuple<string, IEnumerable<string>>("Sideboard", sideboardLines));
+                    sectionLines.Add("Main", mainDeckLines);
+                    sectionLines.Add("Sideboard", sideboardLines);
 
                     converterDeck = ConvertEngine.ConvertDeckWithSeparateSections(sectionLines, deckSectionNames);
                 }
@@ -150,6 +150,29 @@ namespace OCTGNDeckConverter.Model
         }
 
         /// <summary>
+        /// Converts a URL for a known website into a ConverterDeck which has all ConverterMappings populated with potential cards from the converterSets
+        /// </summary>
+        /// <param name="url">The URL of the Deck</param>
+        /// <param name="converterSets">List of all ConverterSets. Only those with flag IncludeInSearches will be used.</param>
+        /// <param name="deckSectionNames">List of the name of each section for the deck being converted.</param>
+        /// <returns>Returns a ConverterDeck which has all ConverterMappings populated with potential cards from the converterSets</returns>
+        public static ConverterDeck ConvertLoTRURL(string url, Dictionary<Guid, ConverterSet> converterSets, IEnumerable<string> deckSectionNames)
+        {
+            ConverterDeck converterDeck =
+                url.ToLower().Contains("cardgamedb.com") ? ConvertEngine.ConvertURL_cardgamedb_com_LoTR(url, deckSectionNames) :
+                null;
+
+            if (converterDeck == null)
+            {
+                throw new InvalidOperationException("There was a problem importing the deck from the given url, or the website has not been implemented yet");
+            }
+
+            converterDeck.PopulateConverterMappings(converterSets);
+
+            return converterDeck;
+        }
+
+        /// <summary>
         /// Converts user input text into a ConverterDeck which has all ConverterMappings populated with potential cards from the converterSets
         /// </summary>
         /// <param name="sectionsText">A collection of section names (keys), and the user input text of all cards in the section (values)</param>
@@ -158,17 +181,17 @@ namespace OCTGNDeckConverter.Model
         /// <returns>Returns a ConverterDeck which has all ConverterMappings populated with potential cards from the converterSets</returns>
         public static ConverterDeck ConvertText(Dictionary<string, string> sectionsText, Dictionary<Guid, ConverterSet> converterSets, IEnumerable<string> deckSectionNames)
         {
-            List<Tuple<string, IEnumerable<string>>> sectionsLines = new List<Tuple<string, IEnumerable<string>>>();
+            Dictionary<string, IEnumerable<string>> sectionsLines = new Dictionary<string, IEnumerable<string>>();
 
             // Key = Section Name
             // Value = Section card lines as a blob of text
             foreach (KeyValuePair<string, string> section in sectionsText)
             {
-                sectionsLines.Add(new Tuple<string, IEnumerable<string>>
+                sectionsLines.Add
                 (
                     section.Key, 
                     ConvertEngine.SplitLines(section.Value)
-                ));
+                );
             }
 
             ConverterDeck converterDeck = ConvertEngine.ConvertDeckWithSeparateSections(sectionsLines, deckSectionNames);
@@ -324,47 +347,35 @@ namespace OCTGNDeckConverter.Model
                     // The line is not a Comment?
                     if (ConvertEngine.RegexMatch_Comment(line) == null)
                     {
-                        // The line is a regular main deck Card/Quantity entry, without any Set info?  Record it
-                        ConverterMapping potentialRegularMainDeckCard = RegexMatch_RegularCard(line);
-                        ConverterMapping potentialRegularCardQuantityAfterName = RegexMatch_RegularCardQuantityAfterName(line);
-                        if (potentialRegularMainDeckCard != null)
+                        // Ordering: The most specific pattern is listed first, and each more generalized pattern follows
+                        if (RegexMatch_MWSSideBoardCard(line) != null)
                         {
-                            mtgMainDeckConverterSection.AddConverterMapping(potentialRegularMainDeckCard);
+                            // The line is a MWS sideboard "SB: Quantity [SET] Card" entry
+                            mtgSideboardConverterSection.AddConverterMapping(RegexMatch_MWSSideBoardCard(line));
                         }
-                        else if (potentialRegularCardQuantityAfterName != null)
+                        else if (RegexMatch_MWSMainDeckCard(line) != null)
                         {
-                            mtgMainDeckConverterSection.AddConverterMapping(potentialRegularCardQuantityAfterName);
+                            // The line is a MWS main deck "Quantity [SET] Card" entry
+                            mtgMainDeckConverterSection.AddConverterMapping(RegexMatch_MWSMainDeckCard(line));
+                        }
+                        else if (RegexMatch_RegularMTGSideBoardCard(line) != null)
+                        {
+                            // The line is a regular sideboard "Quantity Card" entry, without any Set info
+                            mtgSideboardConverterSection.AddConverterMapping(RegexMatch_RegularMTGSideBoardCard(line));
+                        }
+                        else if (RegexMatch_RegularCard(line) != null)
+                        {
+                            // The line is a regular main deck "Quantity Card" entry, without any Set info
+                            mtgMainDeckConverterSection.AddConverterMapping(RegexMatch_RegularCard(line));
+                        }
+                        else if (RegexMatch_RegularCardQuantityAfterName(line) != null)
+                        {
+                            // The line is a regular main deck "Card Quantity" entry, without any Set info
+                            mtgMainDeckConverterSection.AddConverterMapping(RegexMatch_RegularCardQuantityAfterName(line));
                         }
                         else
                         {
-                            // The line is a regular sideboard Card/Quantity entry, without any Set info?  Record it
-                            ConverterMapping potentialRegularSideBoardCard = RegexMatch_RegularMTGSideBoardCard(line);
-                            if (potentialRegularSideBoardCard != null)
-                            {
-                                mtgSideboardConverterSection.AddConverterMapping(potentialRegularSideBoardCard);
-                            }
-                            else
-                            {
-                                // The line is a MWS main deck Card/Quantity entry with Set info?  Record it
-                                ConverterMapping potentialMWSMainDeckCard = RegexMatch_MWSMainDeckCard(line);
-                                if (potentialMWSMainDeckCard != null)
-                                {
-                                    mtgMainDeckConverterSection.AddConverterMapping(potentialMWSMainDeckCard);
-                                }
-                                else
-                                {
-                                    // The line is a MWS sideboard Card/Quantity entry, without any Set info?  Record it
-                                    ConverterMapping potentialMWSSideBoardCard = RegexMatch_MWSSideBoardCard(line);
-                                    if (potentialMWSSideBoardCard != null)
-                                    {
-                                        mtgSideboardConverterSection.AddConverterMapping(potentialMWSSideBoardCard);
-                                    }
-                                    else
-                                    {
-                                        // The line is not a valid card entry
-                                    }
-                                }
-                            }
+                            // The line is not a valid card entry
                         }
                     }
                 }
@@ -375,19 +386,19 @@ namespace OCTGNDeckConverter.Model
         }
 
         /// <summary>
-        /// Reads the file which has Sideboard cards in a section below the MainDeck cards, and returns a ConverterDeck which is populated with all cards and deck name.
+        /// Reads each line in each section, and returns a ConverterDeck which is populated with all cards and deck name.
         /// </summary>
         /// <param name="sectionLines">A collection of deck sections with Item1 as Name, and Item2 as a collection of lines of text which are cards</param>
         /// <param name="deckSectionNames">List of the name of each section for the deck being converted.</param>
         /// <returns>A ConverterDeck object populated with all cards and deck name</returns>
-        private static ConverterDeck ConvertDeckWithSeparateSections(IEnumerable<Tuple<string, IEnumerable<string>>> sectionLines, IEnumerable<string> deckSectionNames)
+        private static ConverterDeck ConvertDeckWithSeparateSections(Dictionary<string, IEnumerable<string>> sectionLines, IEnumerable<string> deckSectionNames)
         {
             ConverterDeck converterDeck = new ConverterDeck(deckSectionNames);
 
-            foreach (Tuple<string, IEnumerable<string>> section in sectionLines)
+            foreach (KeyValuePair<string, IEnumerable<string>> section in sectionLines)
             {
-                ConverterSection converterSection = converterDeck.ConverterSections.First(cs => cs.SectionName.Equals(section.Item1, StringComparison.InvariantCultureIgnoreCase));
-                foreach (string line in section.Item2)
+                ConverterSection converterSection = converterDeck.ConverterSections.First(cs => cs.SectionName.Equals(section.Key, StringComparison.InvariantCultureIgnoreCase));
+                foreach (string line in section.Value)
                 {
                     // The line is the Deck Name?  Record it.
                     string potentialDeckName = ConvertEngine.RegexMatch_DeckName(line);
@@ -488,6 +499,72 @@ namespace OCTGNDeckConverter.Model
             }
 
             return converterDeck;
+        }
+        
+        /// <summary>
+        /// Converts a LoTR URL from cardgamedb.com into a ConverterDeck which is populated with all cards and deck name.
+        /// </summary>
+        /// <param name="url">The URL of the Deck</param>
+        /// <param name="deckSectionNames">List of the name of each section for the deck being converted.</param>
+        /// <returns>A ConverterDeck which is populated with all cards and deck name</returns>
+        private static ConverterDeck ConvertURL_cardgamedb_com_LoTR(string url, IEnumerable<string> deckSectionNames)
+        {
+            object htmlWebInstance = HtmlAgilityPackWrapper.HtmlWeb_CreateInstance();
+            object htmlDocumentInstance = HtmlAgilityPackWrapper.HtmlWeb_InvokeMethod_Load(htmlWebInstance, url);
+            object htmlDocument_DocumentNode = HtmlAgilityPackWrapper.HtmlDocument_GetProperty_DocumentNode(htmlDocumentInstance);
+
+            // Find the div with class name 'category_block block_wrap clear'
+            object deckDivHtmlNode = HtmlAgilityPackWrapper.HtmlNode_InvokeMethod_SelectSingleNode(htmlDocument_DocumentNode, "//div[@class='category_block block_wrap clear']");
+
+            // Find the table inside deckDiv, because one of the rows contains all of the cards
+            object deckTableHtmlNode = HtmlAgilityPackWrapper.HtmlNode_InvokeMethod_SelectSingleNode(deckDivHtmlNode, "table");
+
+            ////Find all 'tr' nodes, because one of them contains all of the cards
+            System.Collections.IEnumerable deckTRHtmlNodes = HtmlAgilityPackWrapper.HtmlNode_InvokeMethod_SelectNodes(deckTableHtmlNode, "tr");
+
+            foreach (object tableRowHtmlNode in deckTRHtmlNodes)
+            {
+                // Get the second td node
+                object secondTDHtmlNode = HtmlAgilityPackWrapper.HtmlNode_InvokeMethod_SelectSingleNode(tableRowHtmlNode, @"td[2]");
+
+                // Check if the TD contains 'Total Cards ('
+                string innerText = HtmlAgilityPackWrapper.HtmlNode_GetProperty_InnerText(secondTDHtmlNode);
+
+                if (innerText.Contains("Total Cards ("))
+                {
+                    Dictionary<string, IEnumerable<string>> deckSectionLines = new Dictionary<string, IEnumerable<string>>();
+                    List<string> currentSectionLines = null;
+                    string currentLineCardName = null;
+
+                    foreach (object childNode in HtmlAgilityPackWrapper.HtmlNode_GetProperty_ChildNodes(secondTDHtmlNode))
+                    {
+                        string nodeName = HtmlAgilityPackWrapper.HtmlNode_GetProperty_Name(childNode);
+                        if (nodeName.Equals("strong"))
+                        {
+                            string sectionText = HtmlAgilityPackWrapper.HtmlNode_GetProperty_InnerText(childNode);
+                            string deckSectionName = deckSectionNames.FirstOrDefault(dsn => sectionText.ToLowerInvariant().Contains(dsn.ToLowerInvariant()));
+                            if (deckSectionName != null)
+                            {
+                                currentSectionLines = new List<string>();
+                                deckSectionLines.Add(deckSectionName, currentSectionLines);
+                            }
+                        }
+                        else if (nodeName.Equals("a"))
+                        {
+                            currentLineCardName = HtmlAgilityPackWrapper.HtmlNode_GetProperty_InnerText(childNode);
+                        }
+                        else if (nodeName.Equals("#text"))
+                        {
+                            currentSectionLines.Add(currentLineCardName + " " + HtmlAgilityPackWrapper.HtmlNode_GetProperty_InnerText(childNode));
+                            currentLineCardName = null;
+                        }
+                    }
+
+                    return ConvertDeckWithSeparateSections(deckSectionLines, deckSectionNames);
+                }
+            }
+
+            throw new NotImplementedException();
         }
 
         /// <summary>
@@ -605,7 +682,7 @@ namespace OCTGNDeckConverter.Model
         /// <summary>
         /// Regex pattern for determining if the text is a regular Card, but with the quantity after the name, and extracting the Name and Quantity
         /// </summary>
-        private static Regex Regex_RegularCardQuantityAfterName = new Regex(@"^\s*([a-zA-Z].+)\s+(\d+)\s*[xX]", RegexOptions.IgnoreCase);
+        private static Regex Regex_RegularCardQuantityAfterName = new Regex(@"^\s*([a-zA-Z].+)\s+[xX]*\s*(\d+)", RegexOptions.IgnoreCase);
 
         /// <summary>
         /// Regex pattern for determining if the text is a regular MTG Sideboard-Card, and extracting the Name and Quantity
@@ -615,12 +692,12 @@ namespace OCTGNDeckConverter.Model
         /// <summary>
         /// Regex pattern for determining if the text is a Magic Workstation Main-Deck-Card, and extracting the Name, Set, and Quantity
         /// </summary>
-        private static Regex Regex_MWSMainDeckCard = new Regex(@"^\s*(\d)+\s+\[(.*?)\]\s+(.+)", RegexOptions.IgnoreCase);
+        private static Regex Regex_MWSMainDeckCard = new Regex(@"^\s*(\d+)\s+\[(.*?)\]\s+(.+)", RegexOptions.IgnoreCase);
 
         /// <summary>
         /// Regex pattern for determining if the text is a Magic Workstation Sideboard-Card, and extracting the Name, Set, and Quantity
         /// </summary>
-        private static Regex Regex_MWSSideBoardCard = new Regex(@"^\s*[sS][bB][:]\s+(\d)+\s+\[(.*?)\]\s+(.+)", RegexOptions.IgnoreCase);
+        private static Regex Regex_MWSSideBoardCard = new Regex(@"^\s*[sS][bB][:]\s+(\d+)\s+\[(.*?)\]\s+(.+)", RegexOptions.IgnoreCase);
 
         /// <summary>
         /// Regex pattern for determining if the text begins with Sideboard.  This signifies that subsequent cards all reside in the Sideboard.
@@ -663,6 +740,7 @@ namespace OCTGNDeckConverter.Model
         /// <returns>ConverterMapping with info from the line if properly formatted</returns>
         private static ConverterMapping RegexMatch_RegularCardQuantityAfterName(string line)
         {
+            // Format: (Name #x)
             Match m = ConvertEngine.Regex_RegularCardQuantityAfterName.Match(line);
             if (m.Success)
             {

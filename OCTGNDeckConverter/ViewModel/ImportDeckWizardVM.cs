@@ -516,8 +516,17 @@ namespace OCTGNDeckConverter.ViewModel
             {
                 if (this.Converter.ConverterGame.Game.Id == Converter.MTGGameGuid)
                 {
-                    // The chosen game was MTG, so allow the user to choose the deck source type
-                    return new WizardPage_ChooseDeckSourceType(this, skippedChooseGame);
+                    // The chosen game was MTG, so allow the user to choose the deck source type by URL or File on disk or text
+                    return new WizardPage_ChooseDeckSourceType(this, true, true, skippedChooseGame);
+                }
+                else if
+                (
+                    this.Converter.ConverterGame.Game.Id == Converter.LoTRGameGuid ||
+                    this.Converter.ConverterGame.Game.Id == Converter.LoTRGameGuid
+                )
+                {
+                    // The chosen game is available on some website, so allow URL or text
+                    return new WizardPage_ChooseDeckSourceType(this, false, true, skippedChooseGame);
                 }
                 else
                 {

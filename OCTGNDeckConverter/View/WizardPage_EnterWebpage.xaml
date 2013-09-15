@@ -44,13 +44,41 @@
                     TextWrapping="Wrap"
                     Text="The currently supported websites to import are:"
                     />
-                <TextBlock><Hyperlink NavigateUri="http://www.ccgdecks.com" RequestNavigate="Hyperlink_RequestNavigate">http://www.ccgdecks.com</Hyperlink></TextBlock>
-                <TextBlock><Hyperlink NavigateUri="http://www.deckcheck.de" RequestNavigate="Hyperlink_RequestNavigate">http://www.deckcheck.de</Hyperlink></TextBlock>
-                <TextBlock><Hyperlink NavigateUri="http://www.essentialmagic.com" RequestNavigate="Hyperlink_RequestNavigate">http://www.essentialmagic.com</Hyperlink></TextBlock>
-                <TextBlock><Hyperlink NavigateUri="http://www.starcitygames.com" RequestNavigate="Hyperlink_RequestNavigate">http://www.starcitygames.com</Hyperlink></TextBlock>
-                <TextBlock><Hyperlink NavigateUri="http://www.tcgplayer.com" RequestNavigate="Hyperlink_RequestNavigate">http://www.tcgplayer.com</Hyperlink></TextBlock>
-                <TextBlock><Hyperlink NavigateUri="http://www.tappedout.net" RequestNavigate="Hyperlink_RequestNavigate">http://www.tappedout.net</Hyperlink></TextBlock>
-                <TextBlock><Hyperlink NavigateUri="http://www.decklists.net" RequestNavigate="Hyperlink_RequestNavigate">http://www.decklists.net</Hyperlink></TextBlock>
+
+                <ContentControl Content="{Binding Path=ImportDeckWizardVM.Converter.ConverterGame.Game.Id}"
+                    Grid.Row="1"
+                    Margin="10"
+                    >
+                    <ContentControl.Resources>
+
+                        <DataTemplate x:Key="MTG">
+                            <StackPanel>
+                                <TextBlock><Hyperlink NavigateUri="http://www.ccgdecks.com" RequestNavigate="Hyperlink_RequestNavigate">http://www.ccgdecks.com</Hyperlink></TextBlock>
+                                <TextBlock><Hyperlink NavigateUri="http://www.deckcheck.de" RequestNavigate="Hyperlink_RequestNavigate">http://www.deckcheck.de</Hyperlink></TextBlock>
+                                <TextBlock><Hyperlink NavigateUri="http://www.essentialmagic.com" RequestNavigate="Hyperlink_RequestNavigate">http://www.essentialmagic.com</Hyperlink></TextBlock>
+                                <TextBlock><Hyperlink NavigateUri="http://www.starcitygames.com" RequestNavigate="Hyperlink_RequestNavigate">http://www.starcitygames.com</Hyperlink></TextBlock>
+                                <TextBlock><Hyperlink NavigateUri="http://www.tcgplayer.com" RequestNavigate="Hyperlink_RequestNavigate">http://www.tcgplayer.com</Hyperlink></TextBlock>
+                                <TextBlock><Hyperlink NavigateUri="http://www.tappedout.net" RequestNavigate="Hyperlink_RequestNavigate">http://www.tappedout.net</Hyperlink></TextBlock>
+                                <TextBlock><Hyperlink NavigateUri="http://www.decklists.net" RequestNavigate="Hyperlink_RequestNavigate">http://www.decklists.net</Hyperlink></TextBlock>
+                            </StackPanel>
+                        </DataTemplate>
+
+                        <DataTemplate x:Key="LoTR">
+                            <StackPanel>
+                                <TextBlock><Hyperlink NavigateUri="http://www.cardgamedb.com" RequestNavigate="Hyperlink_RequestNavigate">http://www.cardgamedb.com</Hyperlink></TextBlock>
+                            </StackPanel>
+                        </DataTemplate>
+
+                    </ContentControl.Resources>
+                    
+                    <ContentControl.ContentTemplateSelector>
+                        <view:GameDefinitionDataTemplateSelector
+                            MTGTemplate="{StaticResource MTG}"
+                            LoTRTemplate="{StaticResource LoTR}"
+                            />
+                    </ContentControl.ContentTemplateSelector>
+                    
+                </ContentControl>
             </StackPanel>
         </Border>
         

@@ -45,13 +45,13 @@
                 Text="Compare each imported Card against the matched OCTGN Card.  Make changes, then click Save." 
                 />
             
-            <Button
+            <!--<Button
                 Grid.Row="0"
                 HorizontalAlignment="Right"
                 VerticalAlignment="Bottom"
                 Command="{Binding Path=ExportCardPictures}"
                 Content="Export Pictures"
-                />
+                />-->
 
             <TabControl 
                 Grid.Row="1"

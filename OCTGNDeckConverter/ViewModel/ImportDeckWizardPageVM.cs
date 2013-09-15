@@ -73,13 +73,21 @@ namespace OCTGNDeckConverter.ViewModel
         /// Gets a value indicating whether a View should show the Start Over command or not
         /// </summary>
         public abstract bool ShowStartOverCommand { get; }
-        
+
+        /// <summary>
+        /// Gets the Subtitle for this Page that should be shown by a View
+        /// </summary>
+        public virtual string Subtitle
+        {
+            get { return string.Empty; }
+        }
+
         /// <summary>
         /// Gets the Title for this Page that should be shown by a View
         /// </summary>
-        public virtual string Title 
-        { 
-            get { return string.Empty; } 
+        public virtual string Title
+        {
+            get { return string.Empty; }
         }
     }
 }

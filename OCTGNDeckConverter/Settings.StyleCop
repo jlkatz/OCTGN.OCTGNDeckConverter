@@ -1,10 +1,13 @@
 <StyleCopSettings Version="105">
   <GlobalSettings>
     <CollectionProperty Name="RecognizedWords">
+      <Value>ascii</Value>
       <Value>bool</Value>
+      <Value>cardgamedb</Value>
       <Value>ccgdecks</Value>
       <Value>deckcheck</Value>
       <Value>decklists</Value>
+      <Value>dll</Value>
       <Value>essentialmagic</Value>
       <Value>guid</Value>
       <Value>int</Value>

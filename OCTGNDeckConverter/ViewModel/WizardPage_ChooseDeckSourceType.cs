@@ -29,11 +29,15 @@ namespace OCTGNDeckConverter.ViewModel
         /// Initializes a new instance of the WizardPage_ChooseDeckSourceType class.
         /// </summary>
         /// <param name="importDeckWizardVM">The parent Wizard that will use this Page</param>
+        /// <param name="allowFileSource">A value indicating whether this page should allow choosing the deck source from a file or not</param>
+        /// <param name="allowWebpageSource">A value indicating whether this page should allow choosing the deck source from a webpage or not</param>
         /// <param name="isStartPage">A value indicating whether this page is the first page shown to the user or not</param>
-        public WizardPage_ChooseDeckSourceType(ImportDeckWizardVM importDeckWizardVM, bool isStartPage)
+        public WizardPage_ChooseDeckSourceType(ImportDeckWizardVM importDeckWizardVM, bool allowFileSource, bool allowWebpageSource, bool isStartPage)
             : base(importDeckWizardVM)
         {
             this._IsStartPage = isStartPage;
+            this.AllowFileSource = allowFileSource;
+            this.AllowWebpageSource = allowWebpageSource;
         }
 
         #region Commands
@@ -72,6 +76,28 @@ namespace OCTGNDeckConverter.ViewModel
         
         #endregion Commands
 
+        #region Public Properties
+
+        /// <summary>
+        /// Gets a value indicating whether this page should allow choosing the deck source from a file or not
+        /// </summary>
+        public bool AllowFileSource
+        {
+            get;
+            private set;
+        }
+
+        /// <summary>
+        /// Gets a value indicating whether this page should allow choosing the deck source from a webpage or not
+        /// </summary>
+        public bool AllowWebpageSource
+        {
+            get;
+            private set;
+        }
+
+        #endregion Public Properties
+
         #region WizardPageVM Overrides
 
         /// <summary>
@@ -96,6 +122,14 @@ namespace OCTGNDeckConverter.ViewModel
         public override bool ShowStartOverCommand
         {
             get { return !this.IsStartPage; }
+        }
+
+        /// <summary>
+        /// Gets the Subtitle for this Page that should be shown by a View
+        /// </summary>
+        public override string Subtitle
+        {
+            get { return this.ImportDeckWizardVM.Converter.ConverterGame.Game.Name; }
         }
 
         /// <summary>

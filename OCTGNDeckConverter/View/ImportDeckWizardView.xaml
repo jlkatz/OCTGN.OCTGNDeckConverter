@@ -31,20 +31,33 @@
             </Grid.Style>
             
             <Grid.RowDefinitions>
-                <RowDefinition Height="35"/>
+                <RowDefinition Height="40"/>
                 <RowDefinition Name="ContentRow" Height="*"/>
                 <RowDefinition Height="Auto" />
             </Grid.RowDefinitions>
 
             <!-- HEADER -->
-            <TextBlock 
-                Grid.Row="0"
-                Padding="5,0,5,0"
-                FontWeight="Bold"
-                FontSize="18"
-                Text="{Binding Path=CurrentWizardPageVM.Title}" 
+            <Grid 
+                Grid.Row="0" 
+                Margin="5,0,5,0"
                 VerticalAlignment="Center"
-                />
+                >
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                </Grid.RowDefinitions>
+                <TextBlock 
+                    Grid.Row="0"
+                    FontWeight="Bold"
+                    FontSize="18"
+                    Text="{Binding Path=CurrentWizardPageVM.Title}" 
+                    />
+                <TextBlock 
+                    Grid.Row="1"
+                    FontSize="12"
+                    Text="{Binding Path=CurrentWizardPageVM.Subtitle}" 
+                    />
+            </Grid>
 
             <!-- CONTENT -->
             <Border

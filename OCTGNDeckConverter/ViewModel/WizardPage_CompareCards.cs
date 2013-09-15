@@ -29,58 +29,58 @@ namespace OCTGNDeckConverter.ViewModel
         { 
         }
 
-        private GalaSoft.MvvmLight.Command.RelayCommand _ExportCardPictures;
-        public GalaSoft.MvvmLight.Command.RelayCommand ExportCardPictures
-        {
-            get
-            {
-                if (this._ExportCardPictures == null)
-                {
-                    this._ExportCardPictures = new GalaSoft.MvvmLight.Command.RelayCommand
-                    (
-                        () =>
-                        {
-                            System.Windows.Forms.FolderBrowserDialog dlg = new System.Windows.Forms.FolderBrowserDialog();
-                            System.Windows.Forms.DialogResult result = dlg.ShowDialog();
-                            if (result == System.Windows.Forms.DialogResult.OK)
-                            {
-                                foreach (Model.ConverterSection cs in this.ImportDeckWizardVM.Converter.ConverterDeck.ConverterSections)
-                                {
-                                    foreach (Model.ConverterMapping cm in cs.SectionMappings)
-                                    {
-                                        if (cm.SelectedOCTGNCard != null)
-                                        {
-                                            Octgn.DataNew.Entities.Card octgnCard = this.ImportDeckWizardVM.Converter.ConverterGame.Game.AllCards().First(c => c.Id == cm.SelectedOCTGNCard.CardID);
-                                            string sourceFileName = octgnCard.GetPicture();
-                                            string extension = System.IO.Path.GetExtension(sourceFileName);
+        ////private GalaSoft.MvvmLight.Command.RelayCommand _ExportCardPictures;
+        ////public GalaSoft.MvvmLight.Command.RelayCommand ExportCardPictures
+        ////{
+        ////    get
+        ////    {
+        ////        if (this._ExportCardPictures == null)
+        ////        {
+        ////            this._ExportCardPictures = new GalaSoft.MvvmLight.Command.RelayCommand
+        ////            (
+        ////                () =>
+        ////                {
+        ////                    System.Windows.Forms.FolderBrowserDialog dlg = new System.Windows.Forms.FolderBrowserDialog();
+        ////                    System.Windows.Forms.DialogResult result = dlg.ShowDialog();
+        ////                    if (result == System.Windows.Forms.DialogResult.OK)
+        ////                    {
+        ////                        foreach (Model.ConverterSection cs in this.ImportDeckWizardVM.Converter.ConverterDeck.ConverterSections)
+        ////                        {
+        ////                            foreach (Model.ConverterMapping cm in cs.SectionMappings)
+        ////                            {
+        ////                                if (cm.SelectedOCTGNCard != null)
+        ////                                {
+        ////                                    Octgn.DataNew.Entities.Card octgnCard = this.ImportDeckWizardVM.Converter.ConverterGame.Game.AllCards().First(c => c.Id == cm.SelectedOCTGNCard.CardID);
+        ////                                    string sourceFileName = octgnCard.GetPicture();
+        ////                                    string extension = System.IO.Path.GetExtension(sourceFileName);
                                                     
-                                            for (int i = 0; i < cm.Quantity; i++)
-                                            {
-                                                string destFileName = System.IO.Path.Combine(dlg.SelectedPath, cm.SelectedOCTGNCard.Name + extension);
-                                                int d = 1;
-                                                while (System.IO.File.Exists(destFileName))
-                                                {
-                                                    destFileName = System.IO.Path.Combine(dlg.SelectedPath, cm.SelectedOCTGNCard.Name + " (" + d + ")" + extension);
-                                                    d++;
-                                                }
+        ////                                    for (int i = 0; i < cm.Quantity; i++)
+        ////                                    {
+        ////                                        string destFileName = System.IO.Path.Combine(dlg.SelectedPath, cm.SelectedOCTGNCard.Name + extension);
+        ////                                        int d = 1;
+        ////                                        while (System.IO.File.Exists(destFileName))
+        ////                                        {
+        ////                                            destFileName = System.IO.Path.Combine(dlg.SelectedPath, cm.SelectedOCTGNCard.Name + " (" + d + ")" + extension);
+        ////                                            d++;
+        ////                                        }
 
-                                                try
-                                                {
-                                                    System.IO.File.Copy(sourceFileName, destFileName);
-                                                }
-                                                catch (Exception)
-                                                { }
-                                            }
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                    );
-                }
-                return this._ExportCardPictures;
-            }
-        }
+        ////                                        try
+        ////                                        {
+        ////                                            System.IO.File.Copy(sourceFileName, destFileName);
+        ////                                        }
+        ////                                        catch (Exception)
+        ////                                        { }
+        ////                                    }
+        ////                                }
+        ////                            }
+        ////                        }
+        ////                    }
+        ////                }
+        ////            );
+        ////        }
+        ////        return this._ExportCardPictures;
+        ////    }
+        ////}
 
         #region Public Properties
         
@@ -160,6 +160,14 @@ namespace OCTGNDeckConverter.ViewModel
         public override bool ShowStartOverCommand
         {
             get { return true; }
+        }
+
+        /// <summary>
+        /// Gets the Subtitle for this Page that should be shown by a View
+        /// </summary>
+        public override string Subtitle
+        {
+            get { return this.ImportDeckWizardVM.Converter.ConverterGame.Game.Name; }
         }
 
         /// <summary>

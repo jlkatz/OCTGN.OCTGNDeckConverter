@@ -115,6 +115,14 @@ namespace OCTGNDeckConverter.ViewModel
         }
 
         /// <summary>
+        /// Gets the Subtitle for this Page that should be shown by a View
+        /// </summary>
+        public override string Subtitle
+        {
+            get { return this.ImportDeckWizardVM.Converter.ConverterGame.Game.Name; }
+        }
+
+        /// <summary>
         /// Gets the Title for this Page that should be shown by a View
         /// </summary>
         public override string Title

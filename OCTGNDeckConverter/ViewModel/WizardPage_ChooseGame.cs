@@ -27,8 +27,6 @@ namespace OCTGNDeckConverter.ViewModel
 
         #region Commands
 
-        #region Choose DeckSourceType Command
-
         /// <summary>
         /// The private backing field for ChooseGameCommand
         /// </summary>
@@ -57,8 +55,7 @@ namespace OCTGNDeckConverter.ViewModel
                 return this._ChooseGameCommand;
             }
         }
-        #endregion Choose DeckSourceType Command
-        
+
         #endregion Commands
 
         #region WizardPageVM Overrides

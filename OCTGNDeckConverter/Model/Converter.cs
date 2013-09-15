@@ -27,6 +27,11 @@ namespace OCTGNDeckConverter.Model
         public static readonly Guid MTGGameGuid = Guid.Parse("A6C8D2E8-7CD8-11DD-8F94-E62B56D89593");
 
         /// <summary>
+        /// Guid identifier for the OCTGN LoTR Game
+        /// </summary>
+        public static readonly Guid LoTRGameGuid = Guid.Parse("a21af4e8-be4b-4cda-a6b6-534f9717391f");
+
+        /// <summary>
         /// Initializes a new instance of the Converter class.
         /// Creates a new blank Converter ready to convert from anything
         /// </summary>
@@ -200,6 +205,22 @@ namespace OCTGNDeckConverter.Model
                             throw new NotImplementedException();
                     }
                 }
+                else if (this.ConverterGame.Game.Id == Converter.LoTRGameGuid)
+                {
+                    switch (this.DeckSourceType.Value)
+                    {
+                        case DeckSourceTypes.Webpage:
+                            this.ConverterDeck = ConvertEngine.ConvertLoTRURL(this.DeckURL, this.ConverterGame.Sets, this.ConverterGame.DeckSectionNames);
+                            break;
+
+                        case DeckSourceTypes.Text:
+                            this.ConverterDeck = ConvertEngine.ConvertText(this.SectionsText, this.ConverterGame.Sets, this.ConverterGame.DeckSectionNames);
+                            break;
+
+                        default:
+                            throw new NotImplementedException();
+                    }
+                }
                 else
                 {
                     switch (this.DeckSourceType.Value)
@@ -267,31 +288,31 @@ namespace OCTGNDeckConverter.Model
 
             // Auto-inserting notes into the deck has been removed because it 
             // is annoying when it pops up every time you load a deck.
-            //var assembly = System.Reflection.Assembly.GetExecutingAssembly();
-            //var version = assembly.GetName().Version;
-            //StringBuilder deckNotes = new StringBuilder();
-            //deckNotes.AppendLine("Imported with Splat's OCTGN Deck Converter v" + version.Major + "." + version.Minor + "." + version.Build);
-            //deckNotes.AppendLine(@"http://octgn.gamersjudgement.com/wordpress/mtg/deck-editor-plugins/");
-            //deckNotes.AppendLine();
-            //deckNotes.Append("Source: ");
-            //deckNotes.AppendLine(this.DeckSourceType.Value.ToString());
+            ////var assembly = System.Reflection.Assembly.GetExecutingAssembly();
+            ////var version = assembly.GetName().Version;
+            ////StringBuilder deckNotes = new StringBuilder();
+            ////deckNotes.AppendLine("Imported with Splat's OCTGN Deck Converter v" + version.Major + "." + version.Minor + "." + version.Build);
+            ////deckNotes.AppendLine(@"http://octgn.gamersjudgement.com/wordpress/mtg/deck-editor-plugins/");
+            ////deckNotes.AppendLine();
+            ////deckNotes.Append("Source: ");
+            ////deckNotes.AppendLine(this.DeckSourceType.Value.ToString());
 
-            //switch(this.DeckSourceType.Value)
-            //{
-            //    case DeckSourceTypes.File:
-            //        deckNotes.Append("File: ");
-            //        deckNotes.AppendLine(this.DeckFullPathName);
-            //        break;
+            ////switch(this.DeckSourceType.Value)
+            ////{
+            ////    case DeckSourceTypes.File:
+            ////        deckNotes.Append("File: ");
+            ////        deckNotes.AppendLine(this.DeckFullPathName);
+            ////        break;
 
-            //    case DeckSourceTypes.Webpage:
-            //        deckNotes.Append("URL: ");
-            //        deckNotes.AppendLine(this.DeckURL);
-            //        break;
-            //}
+            ////    case DeckSourceTypes.Webpage:
+            ////        deckNotes.Append("URL: ");
+            ////        deckNotes.AppendLine(this.DeckURL);
+            ////        break;
+            ////}
 
-            //deckNotes.Append("Name: ");
-            //deckNotes.AppendLine(this.ConverterDeck.DeckName);
-            //deck.Notes = deckNotes.ToString();
+            ////deckNotes.Append("Name: ");
+            ////deckNotes.AppendLine(this.ConverterDeck.DeckName);
+            ////deck.Notes = deckNotes.ToString();
 
             deck.Notes = string.Empty;
             return deck;
