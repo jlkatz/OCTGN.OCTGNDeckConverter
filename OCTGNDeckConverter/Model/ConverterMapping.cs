@@ -49,7 +49,7 @@ namespace OCTGNDeckConverter.Model
         public string CardSet
         {
             get;
-            private set;
+            set;
         }
 
         /// <summary>
@@ -203,7 +203,7 @@ namespace OCTGNDeckConverter.Model
 
                         // Compare all names.  If one card has less names than the other, then just compare indexes where 
                         // both names are present because sometimes another format only includes the first name
-                        bool isMatch = true;
+                        bool isNameMatch = true;
                         for (int i = 0; i < numIndexToCompare; i++)
                         {
                             // Remove extra whitespace
@@ -220,12 +220,43 @@ namespace OCTGNDeckConverter.Model
 
                             if (!converterCardName.Equals(converterMappingName, StringComparison.InvariantCultureIgnoreCase))
                             {
-                                isMatch = false;
+                                isNameMatch = false;
                                 break;
                             }
                         }
 
-                        if (isMatch)
+                        bool isSetMatch = true;
+                        if (isNameMatch && !string.IsNullOrWhiteSpace(this.CardSet))
+                        {
+                            // LoTR - Pay attention to Set
+                            if (converterSet.OctgnSet.GameId == Converter.LoTRGameGuid)
+                            {
+                                string converterCardSet = converterCard.Set;
+                                string converterMappingSet = this.CardSet;
+
+                                converterCardSet = converterCardSet.Replace("î", "i");
+                                converterMappingSet = converterMappingSet.Replace("î", "i");
+
+                                converterCardSet = converterCardSet.Replace("ú", "u");
+                                converterMappingSet = converterMappingSet.Replace("ú", "u");
+
+                                converterCardSet = converterCardSet.Replace(":", string.Empty);
+                                converterMappingSet = converterMappingSet.Replace(":", string.Empty);
+
+                                converterCardSet = converterCardSet.Replace("-", " ");
+                                converterMappingSet = converterMappingSet.Replace("-", " ");
+
+                                converterCardSet = converterCardSet.Replace("'", string.Empty);
+                                converterMappingSet = converterMappingSet.Replace("'", string.Empty);
+
+                                if (!converterCardSet.Equals(converterMappingSet, StringComparison.InvariantCultureIgnoreCase))
+                                {
+                                    isSetMatch = false;
+                                }
+                            }
+                        }
+
+                        if (isNameMatch && isSetMatch)
                         {
                             this.AddPotentialOCTGNCard(converterCard);
                         }

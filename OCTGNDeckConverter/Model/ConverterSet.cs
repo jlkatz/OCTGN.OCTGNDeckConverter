@@ -31,7 +31,6 @@ namespace OCTGNDeckConverter.Model
             {
                 throw new ArgumentNullException(); 
             }
-            
             this.OctgnSet = octgnSet;
             this.IncludeInSearches = true;
         }

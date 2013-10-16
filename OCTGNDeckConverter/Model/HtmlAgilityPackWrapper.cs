@@ -75,6 +75,7 @@ namespace OCTGNDeckConverter.Model
                     HtmlAgilityPackWrapper.InitializeHtmlWeb();
                     HtmlAgilityPackWrapper.InitializeHtmlDocument();
                     HtmlAgilityPackWrapper.InitializeHtmlNode();
+                    HtmlAgilityPackWrapper.InitializeHtmlAttribute();
 
                     HtmlAgilityPackWrapper._IsInitialized = true;
                 }
@@ -218,6 +219,11 @@ namespace OCTGNDeckConverter.Model
         private static PropertyInfo[] _HtmlNodeProperties;
 
         /// <summary>
+        /// Private backing field for the HtmlNode.Attributes property
+        /// </summary>
+        private static PropertyInfo _HtmlNode_Property_Attributes;
+
+        /// <summary>
         /// Private backing field for the HtmlNode.ChildNodes property
         /// </summary>
         private static PropertyInfo _HtmlNode_Property_ChildNodes;
@@ -244,6 +250,7 @@ namespace OCTGNDeckConverter.Model
             HtmlAgilityPackWrapper._HtmlNode_Method_SelectSingleNode = HtmlAgilityPackWrapper._HtmlNodeMethods.First(t => t.Name.Equals("SelectSingleNode"));
 
             HtmlAgilityPackWrapper._HtmlNodeProperties = HtmlAgilityPackWrapper._HtmlNodeType.GetProperties();
+            HtmlAgilityPackWrapper._HtmlNode_Property_Attributes = HtmlAgilityPackWrapper._HtmlNodeProperties.First(t => t.Name.Equals("Attributes"));
             HtmlAgilityPackWrapper._HtmlNode_Property_ChildNodes = HtmlAgilityPackWrapper._HtmlNodeProperties.First(t => t.Name.Equals("ChildNodes"));
             HtmlAgilityPackWrapper._HtmlNode_Property_InnerText = HtmlAgilityPackWrapper._HtmlNodeProperties.First(t => t.Name.Equals("InnerText"));
             HtmlAgilityPackWrapper._HtmlNode_Property_Name = HtmlAgilityPackWrapper._HtmlNodeProperties.First(t => t.Name.Equals("Name"));
@@ -283,6 +290,23 @@ namespace OCTGNDeckConverter.Model
 
             HtmlAgilityPackWrapper.InitializeIfNeeded();
             return HtmlAgilityPackWrapper._HtmlNode_Method_SelectSingleNode.Invoke(htmlNodeInstance, new object[] { xpath });
+        }
+
+        /// <summary>
+        /// Returns the HtmlNode.Attributes property of the HtmlNode instance as an IEnumerable.
+        /// Although the items in the returned collection are type object, they are actually HtmlAttribute.
+        /// </summary>
+        /// <param name="htmlNodeInstance">The instance of HtmlNode to get the property from</param>
+        /// <returns>The HtmlNode.Attributes property of the HtmlNode instance as an IEnumerable</returns>
+        internal static System.Collections.IEnumerable HtmlNode_GetProperty_Attributes(object htmlNodeInstance)
+        {
+            if (!HtmlAgilityPackWrapper._HtmlNodeType.IsAssignableFrom(htmlNodeInstance.GetType()))
+            {
+                throw new InvalidOperationException(HtmlAgilityPackWrapper._HtmlNodeType + " is not assignable from htmlNodeInstance (" + htmlNodeInstance.GetType() + ")");
+            }
+
+            HtmlAgilityPackWrapper.InitializeIfNeeded();
+            return (System.Collections.IEnumerable)HtmlAgilityPackWrapper._HtmlNode_Property_Attributes.GetValue(htmlNodeInstance, null);
         }
 
         /// <summary>
@@ -340,5 +364,73 @@ namespace OCTGNDeckConverter.Model
         }
 
         #endregion HtmlNode
+
+        #region HtmlAttribute
+
+        /// <summary>
+        /// Private backing field for the HtmlAttribute type
+        /// </summary>
+        private static Type _HtmlAttributeType;
+
+        /// <summary>
+        /// Private backing field for the collection of HtmlAttribute properties
+        /// </summary>
+        private static PropertyInfo[] _HtmlAttributeProperties;
+
+        /// <summary>
+        /// Private backing field for the HtmlAttribute.Name property
+        /// </summary>
+        private static PropertyInfo _HtmlAttribute_Property_Name;
+
+        /// <summary>
+        /// Private backing field for the HtmlAttribute.Value property
+        /// </summary>
+        private static PropertyInfo _HtmlAttribute_Property_Value;
+
+        /// <summary>
+        /// Initializes everything the wrapper needs for HtmlNode type
+        /// </summary>
+        private static void InitializeHtmlAttribute()
+        {
+            HtmlAgilityPackWrapper._HtmlAttributeType = HtmlAgilityPackWrapper._HTMLAgilityPackTypes.First(t => t.Name.Equals("HtmlAttribute"));
+
+            HtmlAgilityPackWrapper._HtmlAttributeProperties = HtmlAgilityPackWrapper._HtmlAttributeType.GetProperties();
+            HtmlAgilityPackWrapper._HtmlAttribute_Property_Name = HtmlAgilityPackWrapper._HtmlAttributeProperties.First(t => t.Name.Equals("Name"));
+            HtmlAgilityPackWrapper._HtmlAttribute_Property_Value = HtmlAgilityPackWrapper._HtmlAttributeProperties.First(t => t.Name.Equals("Value"));
+        }
+
+        /// <summary>
+        /// Returns the HtmlAttribute.Name property of the HtmlAttribute instance as a string.
+        /// </summary>
+        /// <param name="htmlAttributeInstance">The instance of HtmlAttribute to get the property from</param>
+        /// <returns>The HtmlAttribute.Name property of the HtmlAttribute instance as a string</returns>
+        public static string HtmlAttribute_GetProperty_Name(object htmlAttributeInstance)
+        {
+            if (!HtmlAgilityPackWrapper._HtmlAttributeType.IsAssignableFrom(htmlAttributeInstance.GetType()))
+            {
+                throw new InvalidOperationException(HtmlAgilityPackWrapper._HtmlAttributeType + " is not assignable from htmlAttributeInstance (" + htmlAttributeInstance.GetType() + ")");
+            }
+
+            HtmlAgilityPackWrapper.InitializeIfNeeded();
+            return (string)HtmlAgilityPackWrapper._HtmlAttribute_Property_Name.GetValue(htmlAttributeInstance, null);
+        }
+
+        /// <summary>
+        /// Returns the HtmlAttribute.Value property of the HtmlAttribute instance as a string.
+        /// </summary>
+        /// <param name="htmlAttributeInstance">The instance of HtmlAttribute to get the property from</param>
+        /// <returns>The HtmlAttribute.Value property of the HtmlAttribute instance as a string</returns>
+        public static string HtmlAttribute_GetProperty_Value(object htmlAttributeInstance)
+        {
+            if (!HtmlAgilityPackWrapper._HtmlAttributeType.IsAssignableFrom(htmlAttributeInstance.GetType()))
+            {
+                throw new InvalidOperationException(HtmlAgilityPackWrapper._HtmlAttributeType + " is not assignable from htmlAttributeInstance (" + htmlAttributeInstance.GetType() + ")");
+            }
+
+            HtmlAgilityPackWrapper.InitializeIfNeeded();
+            return (string)HtmlAgilityPackWrapper._HtmlAttribute_Property_Value.GetValue(htmlAttributeInstance, null);
+        }
+
+        #endregion HtmlAttribute
     }
 }

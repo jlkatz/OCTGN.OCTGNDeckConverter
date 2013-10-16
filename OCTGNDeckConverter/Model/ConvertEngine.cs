@@ -532,9 +532,10 @@ namespace OCTGNDeckConverter.Model
 
                 if (innerText.Contains("Total Cards ("))
                 {
-                    Dictionary<string, IEnumerable<string>> deckSectionLines = new Dictionary<string, IEnumerable<string>>();
-                    List<string> currentSectionLines = null;
+                    Dictionary<string, IEnumerable<Tuple<string, string>>> deckSectionLinesAndSets = new Dictionary<string, IEnumerable<Tuple<string, string>>>();
+                    List<Tuple<string, string>> currentSectionLinesAndSets = null;
                     string currentLineCardName = null;
+                    string currentSetName = null;
 
                     foreach (object childNode in HtmlAgilityPackWrapper.HtmlNode_GetProperty_ChildNodes(secondTDHtmlNode))
                     {
@@ -545,22 +546,64 @@ namespace OCTGNDeckConverter.Model
                             string deckSectionName = deckSectionNames.FirstOrDefault(dsn => sectionText.ToLowerInvariant().Contains(dsn.ToLowerInvariant()));
                             if (deckSectionName != null)
                             {
-                                currentSectionLines = new List<string>();
-                                deckSectionLines.Add(deckSectionName, currentSectionLines);
+                                currentSectionLinesAndSets = new List<Tuple<string, string>>();
+                                deckSectionLinesAndSets.Add(deckSectionName, currentSectionLinesAndSets);
                             }
                         }
                         else if (nodeName.Equals("a"))
                         {
                             currentLineCardName = HtmlAgilityPackWrapper.HtmlNode_GetProperty_InnerText(childNode);
+                            var htmlAttributeList = HtmlAgilityPackWrapper.HtmlNode_GetProperty_Attributes(childNode);
+                            var hrefAttribute = htmlAttributeList.Cast<object>().First(attr => HtmlAgilityPackWrapper.HtmlAttribute_GetProperty_Name(attr).Equals(@"href", StringComparison.InvariantCultureIgnoreCase));
+                            
+                            // This is the entire string inside the href attribute of the 'a' link for this card
+                            string hrefValue = HtmlAgilityPackWrapper.HtmlAttribute_GetProperty_Value(hrefAttribute);
+
+                            string[] hrefValuesSplit = hrefValue.Split(new char[] { '/' });
+
+                            // The set name should be the second to last group after splitting on '/'
+                            string rawSetName = hrefValuesSplit[hrefValuesSplit.Length - 2];
+
+                            // Special case - Sets for The Hobbit have "the-hobbit" in the parent directory
+                            if (hrefValuesSplit[hrefValuesSplit.Length - 3].Equals("the-hobbit"))
+                            {
+                                rawSetName = hrefValuesSplit[hrefValuesSplit.Length - 3] + " " + rawSetName;
+                            }
+
+                            // Special case - 'core' should be renamed to 'core-set'
+                            if (rawSetName.Equals("core"))
+                            {
+                                rawSetName = "core-set";
+                            }
+
+                            currentSetName = rawSetName.Replace('-', ' ');
                         }
                         else if (nodeName.Equals("#text"))
                         {
-                            currentSectionLines.Add(currentLineCardName + " " + HtmlAgilityPackWrapper.HtmlNode_GetProperty_InnerText(childNode));
+                            currentSectionLinesAndSets.Add(new Tuple<string, string>
+                            (
+                                currentLineCardName + " " + HtmlAgilityPackWrapper.HtmlNode_GetProperty_InnerText(childNode), 
+                                currentSetName
+                            ));
+
                             currentLineCardName = null;
+                            currentSetName = null;
+                        }
+                    }
+                    
+                    ConverterDeck converterDeck = new ConverterDeck(deckSectionNames);
+                    foreach (KeyValuePair<string, IEnumerable<Tuple<string, string>>> section in deckSectionLinesAndSets)
+                    {
+                        ConverterSection converterSection = converterDeck.ConverterSections.First(cs => cs.SectionName.Equals(section.Key, StringComparison.InvariantCultureIgnoreCase));
+                        foreach (Tuple<string, string> lineAndSection in section.Value)
+                        {
+                            ConverterMapping converterMapping = RegexMatch_RegularCardQuantityAfterName(lineAndSection.Item1);
+                            converterMapping.CardSet = lineAndSection.Item2;
+                            converterSection.AddConverterMapping(converterMapping);
                         }
                     }
 
-                    return ConvertDeckWithSeparateSections(deckSectionLines, deckSectionNames);
+                    return converterDeck;
                 }
             }
 
