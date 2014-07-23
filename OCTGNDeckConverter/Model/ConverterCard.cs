@@ -31,7 +31,7 @@ namespace OCTGNDeckConverter.Model
             }
 
             this.CardID = cardID;
-            this.Name = name;
+            this.Name = name.Trim(new Char[] { '{', '}', '[', ']', '<', '>', '_', '^', '*', ' '});
             this.Set = set;
             this.MultiverseID = multiverseID;
         }
