@@ -22,14 +22,19 @@ namespace OCTGNDeckConverter.Model
     public class Converter : INotifyPropertyChangedBase
     {
         /// <summary>
-        /// Guid identifier for the OCTGN MTG Game
+        /// Guid identifier for the OCTGN CoC Game
         /// </summary>
-        public static readonly Guid MTGGameGuid = Guid.Parse("A6C8D2E8-7CD8-11DD-8F94-E62B56D89593");
+        public static readonly Guid CoCGameGuid = Guid.Parse("43054c18-2362-43e0-a434-72f8d0e8477c");
 
         /// <summary>
         /// Guid identifier for the OCTGN LoTR Game
         /// </summary>
         public static readonly Guid LoTRGameGuid = Guid.Parse("a21af4e8-be4b-4cda-a6b6-534f9717391f");
+
+        /// <summary>
+        /// Guid identifier for the OCTGN MTG Game
+        /// </summary>
+        public static readonly Guid MTGGameGuid = Guid.Parse("A6C8D2E8-7CD8-11DD-8F94-E62B56D89593");
 
         /// <summary>
         /// Initializes a new instance of the Converter class.

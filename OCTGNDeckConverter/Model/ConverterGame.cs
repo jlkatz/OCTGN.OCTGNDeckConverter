@@ -236,10 +236,19 @@ namespace OCTGNDeckConverter.Model
                         }
                     }
 
+                    string name = card.Name;
+
+                    // CoC uses special characters at the beginning of the card name to represent properties such as Unique and Steadfast.
+                    // These characters should not be included as part of the name for comparison.
+                    if (game.Id == Converter.CoCGameGuid)
+                    {
+                        name = name.Trim(new Char[] { '{', '}', '[', ']', '<', '>', '_', '^', '*', ' ' });
+                    }
+
                     sets[octgnSet.Id].AddNewConverterCard
                     (
                         card.Id,
-                        card.Name,
+                        name,
                         multiverseID
                     );
                 }
