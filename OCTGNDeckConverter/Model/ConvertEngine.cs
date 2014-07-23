@@ -6,6 +6,7 @@
 
 namespace OCTGNDeckConverter.Model
 {
+    using Newtonsoft.Json;
     using System;
     using System.Collections.Generic;
     using System.Linq;
@@ -513,101 +514,44 @@ namespace OCTGNDeckConverter.Model
             object htmlDocumentInstance = HtmlAgilityPackWrapper.HtmlWeb_InvokeMethod_Load(htmlWebInstance, url);
             object htmlDocument_DocumentNode = HtmlAgilityPackWrapper.HtmlDocument_GetProperty_DocumentNode(htmlDocumentInstance);
 
-            // Find the div with class name 'category_block block_wrap clear'
-            object deckDivHtmlNode = HtmlAgilityPackWrapper.HtmlNode_InvokeMethod_SelectSingleNode(htmlDocument_DocumentNode, "//div[@class='category_block block_wrap clear']");
+            // Find the block of javascript that contains the raw deck JSON
+            object rawDeckJavascriptNode = HtmlAgilityPackWrapper.HtmlNode_InvokeMethod_SelectSingleNode(htmlDocument_DocumentNode, "//script[contains(text(), 'var rawdeck =')]");
+            string rawDeckJavascriptText = HtmlAgilityPackWrapper.HtmlNode_GetProperty_InnerText(rawDeckJavascriptNode);
 
-            // Find the table inside deckDiv, because one of the rows contains all of the cards
-            object deckTableHtmlNode = HtmlAgilityPackWrapper.HtmlNode_InvokeMethod_SelectSingleNode(deckDivHtmlNode, "table");
+            // The string is javascript, and the variable 'rawdeck' is assigned a big string which is the JSON data
+            string[] rawDeckJavascriptLines = rawDeckJavascriptText.Split(new string[] { "\r\n", "\n" }, StringSplitOptions.None);
+            string rawDeckLine = rawDeckJavascriptLines.First(l => l.Contains("var rawdeck ="));
 
-            ////Find all 'tr' nodes, because one of them contains all of the cards
-            System.Collections.IEnumerable deckTRHtmlNodes = HtmlAgilityPackWrapper.HtmlNode_InvokeMethod_SelectNodes(deckTableHtmlNode, "tr");
+            // Trim everything except the JSON
+            int openingCurlyBraceIndex = rawDeckLine.IndexOf('{');
+            int closingCurlyBraceIndex = rawDeckLine.LastIndexOf('}');
+            string rawDeckJSONString = rawDeckLine.Substring(openingCurlyBraceIndex, closingCurlyBraceIndex - openingCurlyBraceIndex + 1);
 
-            foreach (object tableRowHtmlNode in deckTRHtmlNodes)
+            dynamic rawDeckJSON = JsonConvert.DeserializeObject(rawDeckJSONString);
+
+            ConverterDeck converterDeck = new ConverterDeck(deckSectionNames);
+
+            foreach (dynamic card in rawDeckJSON.hero)
             {
-                // Get the second td node
-                object secondTDHtmlNode = HtmlAgilityPackWrapper.HtmlNode_InvokeMethod_SelectSingleNode(tableRowHtmlNode, @"td[2]");
-
-                // Check if the TD contains 'Total Cards ('
-                string innerText = HtmlAgilityPackWrapper.HtmlNode_GetProperty_InnerText(secondTDHtmlNode);
-
-                if (innerText.Contains("Total Cards ("))
-                {
-                    Dictionary<string, IEnumerable<Tuple<string, string>>> deckSectionLinesAndSets = new Dictionary<string, IEnumerable<Tuple<string, string>>>();
-                    List<Tuple<string, string>> currentSectionLinesAndSets = null;
-                    string currentLineCardName = null;
-                    string currentSetName = null;
-
-                    foreach (object childNode in HtmlAgilityPackWrapper.HtmlNode_GetProperty_ChildNodes(secondTDHtmlNode))
-                    {
-                        string nodeName = HtmlAgilityPackWrapper.HtmlNode_GetProperty_Name(childNode);
-                        if (nodeName.Equals("strong"))
-                        {
-                            string sectionText = HtmlAgilityPackWrapper.HtmlNode_GetProperty_InnerText(childNode);
-                            string deckSectionName = deckSectionNames.FirstOrDefault(dsn => sectionText.ToLowerInvariant().Contains(dsn.ToLowerInvariant()));
-                            if (deckSectionName != null)
-                            {
-                                currentSectionLinesAndSets = new List<Tuple<string, string>>();
-                                deckSectionLinesAndSets.Add(deckSectionName, currentSectionLinesAndSets);
-                            }
-                        }
-                        else if (nodeName.Equals("a"))
-                        {
-                            currentLineCardName = HtmlAgilityPackWrapper.HtmlNode_GetProperty_InnerText(childNode);
-                            var htmlAttributeList = HtmlAgilityPackWrapper.HtmlNode_GetProperty_Attributes(childNode);
-                            var hrefAttribute = htmlAttributeList.Cast<object>().First(attr => HtmlAgilityPackWrapper.HtmlAttribute_GetProperty_Name(attr).Equals(@"href", StringComparison.InvariantCultureIgnoreCase));
-                            
-                            // This is the entire string inside the href attribute of the 'a' link for this card
-                            string hrefValue = HtmlAgilityPackWrapper.HtmlAttribute_GetProperty_Value(hrefAttribute);
-
-                            string[] hrefValuesSplit = hrefValue.Split(new char[] { '/' });
-
-                            // The set name should be the second to last group after splitting on '/'
-                            string rawSetName = hrefValuesSplit[hrefValuesSplit.Length - 2];
-
-                            // Special case - Sets for The Hobbit have "the-hobbit" in the parent directory
-                            if (hrefValuesSplit[hrefValuesSplit.Length - 3].Equals("the-hobbit"))
-                            {
-                                rawSetName = hrefValuesSplit[hrefValuesSplit.Length - 3] + " " + rawSetName;
-                            }
-
-                            // Special case - 'core' should be renamed to 'core-set'
-                            if (rawSetName.Equals("core"))
-                            {
-                                rawSetName = "core-set";
-                            }
-
-                            currentSetName = rawSetName.Replace('-', ' ');
-                        }
-                        else if (nodeName.Equals("#text"))
-                        {
-                            currentSectionLinesAndSets.Add(new Tuple<string, string>
-                            (
-                                currentLineCardName + " " + HtmlAgilityPackWrapper.HtmlNode_GetProperty_InnerText(childNode), 
-                                currentSetName
-                            ));
-
-                            currentLineCardName = null;
-                            currentSetName = null;
-                        }
-                    }
-                    
-                    ConverterDeck converterDeck = new ConverterDeck(deckSectionNames);
-                    foreach (KeyValuePair<string, IEnumerable<Tuple<string, string>>> section in deckSectionLinesAndSets)
-                    {
-                        ConverterSection converterSection = converterDeck.ConverterSections.First(cs => cs.SectionName.Equals(section.Key, StringComparison.InvariantCultureIgnoreCase));
-                        foreach (Tuple<string, string> lineAndSection in section.Value)
-                        {
-                            ConverterMapping converterMapping = RegexMatch_RegularCardQuantityAfterName(lineAndSection.Item1);
-                            converterMapping.CardSet = lineAndSection.Item2;
-                            converterSection.AddConverterMapping(converterMapping);
-                        }
-                    }
-
-                    return converterDeck;
-                }
+                ConverterSection converterSection = converterDeck.ConverterSections.First(cs => cs.SectionName.Equals("hero", StringComparison.InvariantCultureIgnoreCase));
+                ConverterMapping converterMapping = new ConverterMapping(
+                    (string)card.name,
+                    (string)card.setname,
+                    int.Parse((string)card.quantity));
+                converterSection.AddConverterMapping(converterMapping);
             }
 
-            throw new NotImplementedException();
+            foreach (dynamic card in rawDeckJSON.cards)
+            {
+                ConverterSection converterSection = converterDeck.ConverterSections.First(cs => cs.SectionName.Equals((string)card.type, StringComparison.InvariantCultureIgnoreCase));
+                ConverterMapping converterMapping = new ConverterMapping(
+                    (string)card.name,
+                    (string)card.setname,
+                    int.Parse((string)card.quantity));
+                converterSection.AddConverterMapping(converterMapping);
+            }
+
+            return converterDeck;
         }
 
         /// <summary>

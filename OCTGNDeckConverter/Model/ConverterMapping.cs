@@ -189,6 +189,43 @@ namespace OCTGNDeckConverter.Model
         /// <param name="converterSets">The list of ConverterSets to search in for potential matches</param>
         public void PopulateWithPotentialCards(Dictionary<Guid, ConverterSet> converterSets)
         {
+            // Names and sets contain many accents or other special characters.  Replace them
+            // all with 'normal' letters for comparison, since many sources use them instead.
+            List<dynamic> replacementChars = new List<dynamic>()
+            {
+                new { Actual = "Æ", Normalized = "Ae" },
+
+                new { Actual = "Â", Normalized = "A" },
+                new { Actual = "Á", Normalized = "A" },
+                new { Actual = "â", Normalized = "a" },
+                new { Actual = "á", Normalized = "a" },
+                
+                new { Actual = "Ê", Normalized = "E" },
+                new { Actual = "É", Normalized = "E" },
+                new { Actual = "ê", Normalized = "e" },
+                new { Actual = "é", Normalized = "e" },
+                
+                new { Actual = "Î", Normalized = "I" },
+                new { Actual = "Í", Normalized = "I" },
+                new { Actual = "î", Normalized = "i" },
+                new { Actual = "í", Normalized = "i" },
+                
+                new { Actual = "Ô", Normalized = "O" },
+                new { Actual = "Ó", Normalized = "O" },
+                new { Actual = "ô", Normalized = "o" },
+                new { Actual = "ó", Normalized = "o" },
+                
+                new { Actual = "Û", Normalized = "U" },
+                new { Actual = "Ú", Normalized = "U" },
+                new { Actual = "û", Normalized = "u" },
+                new { Actual = "ú", Normalized = "u" },
+
+                new { Actual = '’', Normalized = '\'' },
+                new { Actual = ":", Normalized = string.Empty },
+                new { Actual = "-", Normalized = string.Empty },
+                new { Actual = "'", Normalized = string.Empty },
+            };
+
             // Some cards have 2+ names, so create an array of all the names in order
             string[] converterMappingNames = this.CardName.Split(new char[] { '/' }, StringSplitOptions.RemoveEmptyEntries);
 
@@ -210,13 +247,11 @@ namespace OCTGNDeckConverter.Model
                             string converterCardName = converterCardNames[i].Trim();
                             string converterMappingName = converterMappingNames[i].Trim();
 
-                            // Remove funny apostrophes (This occurs sometimes when text is copied from a webpage)
-                            converterCardName = converterCardName.Replace('’', '\'');
-                            converterMappingName = converterMappingName.Replace('’', '\'');
-
-                            // Change 'Æ' to "Ae"
-                            converterCardName = converterCardName.Replace("Æ", "Ae");
-                            converterMappingName = converterMappingName.Replace("Æ", "Ae");
+                            foreach (dynamic replacementChar in replacementChars)
+                            {
+                                converterCardName = converterCardName.Replace(replacementChar.Actual, replacementChar.Normalized);
+                                converterMappingName = converterMappingName.Replace(replacementChar.Actual, replacementChar.Normalized);
+                            }
 
                             if (!converterCardName.Equals(converterMappingName, StringComparison.InvariantCultureIgnoreCase))
                             {
@@ -234,20 +269,31 @@ namespace OCTGNDeckConverter.Model
                                 string converterCardSet = converterCard.Set;
                                 string converterMappingSet = this.CardSet;
 
-                                converterCardSet = converterCardSet.Replace("î", "i");
-                                converterMappingSet = converterMappingSet.Replace("î", "i");
+                                // Some sources omit 'The Hobbit - ' in the set name, so remove it from the comparison
+                                if (converterCardSet.StartsWith("The Hobbit", StringComparison.InvariantCultureIgnoreCase))
+                                {
+                                    converterCardSet = converterCardSet.Substring(13);
+                                }
+                                if (converterMappingSet.StartsWith("The Hobbit", StringComparison.InvariantCultureIgnoreCase))
+                                {
+                                    converterMappingSet = converterMappingSet.Substring(13);
+                                }
 
-                                converterCardSet = converterCardSet.Replace("ú", "u");
-                                converterMappingSet = converterMappingSet.Replace("ú", "u");
+                                // Some sources omit 'The ' in the set name, so remove it from the comparison
+                                if (converterCardSet.StartsWith("The ", StringComparison.InvariantCultureIgnoreCase))
+                                {
+                                    converterCardSet = converterCardSet.Substring(4);
+                                }
+                                if (converterMappingSet.StartsWith("The ", StringComparison.InvariantCultureIgnoreCase))
+                                {
+                                    converterMappingSet = converterMappingSet.Substring(4);
+                                }
 
-                                converterCardSet = converterCardSet.Replace(":", string.Empty);
-                                converterMappingSet = converterMappingSet.Replace(":", string.Empty);
-
-                                converterCardSet = converterCardSet.Replace("-", " ");
-                                converterMappingSet = converterMappingSet.Replace("-", " ");
-
-                                converterCardSet = converterCardSet.Replace("'", string.Empty);
-                                converterMappingSet = converterMappingSet.Replace("'", string.Empty);
+                                foreach (dynamic replacementChar in replacementChars)
+                                {
+                                    converterCardSet = converterCardSet.Replace(replacementChar.Actual, replacementChar.Normalized);
+                                    converterMappingSet = converterMappingSet.Replace(replacementChar.Actual, replacementChar.Normalized);
+                                }
 
                                 if (!converterCardSet.Equals(converterMappingSet, StringComparison.InvariantCultureIgnoreCase))
                                 {
