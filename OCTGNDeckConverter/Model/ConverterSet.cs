@@ -86,9 +86,9 @@ namespace OCTGNDeckConverter.Model
         /// <summary>
         /// Gets the List of ConverterCards which belong to this Set
         /// </summary>
-        public ReadOnlyCollection<ConverterCard> ConverterCards
+        public IEnumerable<ConverterCard> ConverterCards
         {
-            get { return this._ConverterCards.AsReadOnly(); }
+            get { return this._ConverterCards; }
         }
 
         #endregion Public Properties
@@ -125,5 +125,10 @@ namespace OCTGNDeckConverter.Model
         }
 
         #endregion Public Methods
+
+        public override string ToString()
+        {
+            return this.OctgnSet.Name;
+        }
     }
 }

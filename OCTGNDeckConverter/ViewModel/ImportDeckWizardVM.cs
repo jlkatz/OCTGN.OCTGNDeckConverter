@@ -174,7 +174,7 @@ namespace OCTGNDeckConverter.ViewModel
                         (cm) => 
                         {
                             this.InlineDialog = new InlineDialogVM(new InlineDialogPage_ChooseAnotherCardVM(cm, this.Converter.ConverterGame));
-                                
+
                             this.InlineDialog.CallWhenCompletedMethod = delegate(InlineDialogVM inlineDialogVM)
                             {
                                 if (inlineDialogVM.WasNotCancelled)

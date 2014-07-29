@@ -71,5 +71,10 @@ namespace OCTGNDeckConverter.Model
             get;
             private set;
         }
+
+        public override string ToString()
+        {
+            return this.Name;
+        }
     }
 }

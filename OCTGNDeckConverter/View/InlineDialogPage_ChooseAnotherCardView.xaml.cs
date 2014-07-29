@@ -36,23 +36,6 @@ namespace OCTGNDeckConverter.View
         }
 
         /// <summary>
-        /// Handles the SelectedItemChanged event on the Choose Another Card TreeView
-        /// </summary>
-        /// <param name="sender">The TreeView firing the event</param>
-        /// <param name="e">The parameter is not used.</param>
-        private void TreeView_SelectedItemChanged(object sender, RoutedPropertyChangedEventArgs<object> e)
-        {
-            if (this.DataContext is InlineDialogPage_ChooseAnotherCardVM)
-            {
-                InlineDialogPage_ChooseAnotherCardVM inlineDialogPageChooseAnotherCardVM = this.DataContext as InlineDialogPage_ChooseAnotherCardVM;
-                TreeView treeView = sender as TreeView;
-                inlineDialogPageChooseAnotherCardVM.SelectedConverterCard = treeView.SelectedItem is ConverterCard ?
-                    treeView.SelectedItem as ConverterCard :
-                    null;
-            }
-        }
-
-        /// <summary>
         /// Handles the MouseEnter event on the TextBlock with corresponding ConverterCard as DataContext
         /// </summary>
         /// <param name="sender">TextBlock the mouse is now hovering over</param>
@@ -78,6 +61,26 @@ namespace OCTGNDeckConverter.View
             {
                 InlineDialogPage_ChooseAnotherCardVM inlineDialogPageChooseAnotherCardVM = this.DataContext as InlineDialogPage_ChooseAnotherCardVM;
                 inlineDialogPageChooseAnotherCardVM.MouseOverConverterCard = null;
+            }
+        }
+
+        /// <summary>
+        /// Handles the SelectedItemChanged event on the Choose Another Card ListBox
+        /// </summary>
+        /// <param name="sender">The ListBox firing the event</param>
+        /// <param name="e">The parameter is not used.</param>
+        private void cardsListBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            if (this.DataContext is InlineDialogPage_ChooseAnotherCardVM)
+            {
+                InlineDialogPage_ChooseAnotherCardVM inlineDialogPageChooseAnotherCardVM = 
+                    this.DataContext as InlineDialogPage_ChooseAnotherCardVM;
+                ListBox listBox = sender as ListBox;
+
+                if (listBox.SelectedItem is ConverterCard)
+                {
+                    inlineDialogPageChooseAnotherCardVM.SelectedConverterCard = listBox.SelectedItem as ConverterCard;
+                }
             }
         }
     }

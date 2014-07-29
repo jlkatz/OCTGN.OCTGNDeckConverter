@@ -10,54 +10,43 @@
     >
     <Grid>
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="2*" />
-            <ColumnDefinition Width="3*" />
+            <ColumnDefinition Width="250" />
+            <ColumnDefinition Width="*" />
         </Grid.ColumnDefinitions>
-        
-        <TreeView 
-            Grid.Column="0"
-            Margin="2.5"
-            ItemsSource="{Binding Path=Sets}"
-            SelectedItemChanged="TreeView_SelectedItemChanged"
-            >
-            <TreeView.Style>
-                <Style TargetType="{x:Type TreeView}">
-                    <Setter Property="Template">
-                        <Setter.Value>
-                            <!-- This is duplicated from OCTGN because 'BasedOn' doesn't seem to work -->
-                            <ControlTemplate TargetType="{x:Type TreeView}">
-                                <Grid>
-                                    <Border x:Name="Border" Background="Black" BorderBrush="{x:Null}" BorderThickness="1" CornerRadius="3,3,3,3">
-                                        <ScrollViewer 
-                                            Style="{DynamicResource NuclearScrollViewer}" 
-                                            Foreground="{DynamicResource {x:Static SystemColors.ActiveCaptionTextBrushKey}}"
-                                            Focusable="False" 
-                                            Padding="4" 
-                                            HorizontalScrollBarVisibility="Auto" 
-                                            VerticalScrollBarVisibility="Auto" 
-                                            CanContentScroll="False" 
-                                            >
-                                            <ItemsPresenter />
-                                        </ScrollViewer>
-                                    </Border>
-                                </Grid>
-                            </ControlTemplate>
-                        </Setter.Value>
-                    </Setter>
-                </Style>
-            </TreeView.Style>
-            <TreeView.ItemTemplate>
-                <HierarchicalDataTemplate ItemsSource="{Binding Path=ConverterCards}">
-                    <TextBlock FontWeight="Bold" Text="{Binding Path=OctgnSet.Name}" />
-                    <HierarchicalDataTemplate.ItemTemplate>
-                        <DataTemplate>
-                            <TextBlock Text="{Binding Path=Name}" MouseEnter="ConverterCard_MouseEnter" MouseLeave="ConverterCard_MouseLeave" />
-                        </DataTemplate>
-                    </HierarchicalDataTemplate.ItemTemplate>
-                </HierarchicalDataTemplate>
-            </TreeView.ItemTemplate>
-        </TreeView>
 
+        <Grid Grid.Column="0">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="*" />
+            </Grid.RowDefinitions>
+            <HeaderedContentControl Header="Sets" Grid.Row="0" Margin="5">
+                <ComboBox 
+                    x:Name="setsComboBox" 
+                    ItemsSource="{Binding Path=Sets}" 
+                    SelectedIndex="0"
+                    />
+            </HeaderedContentControl>
+            <ListBox 
+                x:Name="cardsListBox" 
+                Margin="5"
+                Grid.Row="1"
+                ItemsSource="{Binding ElementName=setsComboBox, Path=SelectedItem.ConverterCards}"
+                SelectionChanged="cardsListBox_SelectionChanged"
+                >
+                <ListBox.ItemContainerStyle>
+                    <Style TargetType="{x:Type ListBoxItem}" BasedOn="{StaticResource {x:Type ListBoxItem}}">
+                        <Setter Property="HorizontalAlignment" Value="Stretch" />
+                        <Setter Property="HorizontalContentAlignment" Value="Stretch" />
+                    </Style>
+                </ListBox.ItemContainerStyle>
+                <ListBox.ItemTemplate>
+                    <DataTemplate>
+                        <TextBlock Text="{Binding Path=Name}" MouseEnter="ConverterCard_MouseEnter" MouseLeave="ConverterCard_MouseLeave" />
+                    </DataTemplate>
+                </ListBox.ItemTemplate>
+            </ListBox>
+        </Grid>
+        
         <GridSplitter
             Grid.Column="0"
             Width="5"
@@ -79,18 +68,14 @@
                 Grid.Column="0"
                 Header="Preview"
                 >
-                <Image 
-                    Source="{Binding Path=MouseOverConverterCardImage}"
-                    />
-                </GroupBox>
+                <Image Source="{Binding Path=MouseOverConverterCardImage}" />
+            </GroupBox>
 
             <GroupBox
                 Grid.Column="1"
                 Header="Selected Card"
                 >
-                <Image 
-                    Source="{Binding Path=SelectedConverterCardImage}"
-                    />
+                <Image Source="{Binding Path=SelectedConverterCardImage}" />
             </GroupBox>
         </Grid>
         
