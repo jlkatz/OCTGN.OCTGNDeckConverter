@@ -627,7 +627,7 @@ namespace OCTGNDeckConverter.Model
             if (m.Success)
             {
                 string deckName = m.Groups[1].Value;
-                return ConvertEngine.ConvertDownloadURL(@"http://tappedout.net/mtg-decks/" + deckName + @"/?format=txt", deckSectionNames);
+                return ConvertEngine.ConvertDownloadURL(@"http://tappedout.net/mtg-decks/" + deckName + @"/?fmt=txt", deckSectionNames);
             }
             else
             {
