@@ -12,6 +12,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Octgn.Core.DataExtensionMethods;
+using OCTGNDeckConverter.Model.ConvertEngine;
 
 namespace OCTGNDeckConverter.Model
 {
@@ -21,21 +22,6 @@ namespace OCTGNDeckConverter.Model
     /// </summary>
     public class Converter : INotifyPropertyChangedBase
     {
-        /// <summary>
-        /// Guid identifier for the OCTGN CoC Game
-        /// </summary>
-        public static readonly Guid CoCGameGuid = Guid.Parse("43054c18-2362-43e0-a434-72f8d0e8477c");
-
-        /// <summary>
-        /// Guid identifier for the OCTGN LoTR Game
-        /// </summary>
-        public static readonly Guid LoTRGameGuid = Guid.Parse("a21af4e8-be4b-4cda-a6b6-534f9717391f");
-
-        /// <summary>
-        /// Guid identifier for the OCTGN MTG Game
-        /// </summary>
-        public static readonly Guid MTGGameGuid = Guid.Parse("A6C8D2E8-7CD8-11DD-8F94-E62B56D89593");
-
         /// <summary>
         /// Initializes a new instance of the Converter class.
         /// Creates a new blank Converter ready to convert from anything
@@ -190,53 +176,22 @@ namespace OCTGNDeckConverter.Model
 
             try
             {
-                if (this.ConverterGame.Game.Id == Converter.MTGGameGuid)
+                switch(this.DeckSourceType.Value)
                 {
-                    switch (this.DeckSourceType.Value)
-                    {
-                        case DeckSourceTypes.File:
-                            this.ConverterDeck = ConvertEngine.ConvertMTGFile(this.DeckFullPathName, this.ConverterGame.Sets, this.ConverterGame.DeckSectionNames);
-                            break;
+                    case DeckSourceTypes.File:
+                        this.ConverterDeck = ConvertEngine.ConvertEngine.SingletonInstance.ConvertFile(this.DeckFullPathName, this.ConverterGame);
+                        break;
 
-                        case DeckSourceTypes.Webpage:
-                            this.ConverterDeck = ConvertEngine.ConvertMTGURL(this.DeckURL, this.ConverterGame.Sets, this.ConverterGame.DeckSectionNames);
-                            break;
+                    case DeckSourceTypes.Webpage:
+                        this.ConverterDeck = ConvertEngine.ConvertEngine.SingletonInstance.ConvertURL(this.DeckURL, this.ConverterGame);
+                        break;
 
-                        case DeckSourceTypes.Text:
-                            this.ConverterDeck = ConvertEngine.ConvertText(this.SectionsText, this.ConverterGame.Sets, this.ConverterGame.DeckSectionNames);
-                            break;
+                    case DeckSourceTypes.Text:
+                        this.ConverterDeck = ConvertEngine.ConvertEngine.SingletonInstance.ConvertText(this.SectionsText, this.ConverterGame);
+                        break;
 
-                        default:
-                            throw new NotImplementedException();
-                    }
-                }
-                else if (this.ConverterGame.Game.Id == Converter.LoTRGameGuid)
-                {
-                    switch (this.DeckSourceType.Value)
-                    {
-                        case DeckSourceTypes.Webpage:
-                            this.ConverterDeck = ConvertEngine.ConvertLoTRURL(this.DeckURL, this.ConverterGame.Sets, this.ConverterGame.DeckSectionNames);
-                            break;
-
-                        case DeckSourceTypes.Text:
-                            this.ConverterDeck = ConvertEngine.ConvertText(this.SectionsText, this.ConverterGame.Sets, this.ConverterGame.DeckSectionNames);
-                            break;
-
-                        default:
-                            throw new NotImplementedException();
-                    }
-                }
-                else
-                {
-                    switch (this.DeckSourceType.Value)
-                    {
-                        case DeckSourceTypes.Text:
-                            this.ConverterDeck = ConvertEngine.ConvertText(this.SectionsText, this.ConverterGame.Sets, this.ConverterGame.DeckSectionNames);
-                            break;
-
-                        default:
-                            throw new NotImplementedException();
-                    }
+                    default:
+                        throw new NotImplementedException();
                 }
             }
             catch (Exception e)

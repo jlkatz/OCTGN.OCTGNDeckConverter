@@ -264,7 +264,7 @@ namespace OCTGNDeckConverter.Model
                         if (isNameMatch && !string.IsNullOrWhiteSpace(this.CardSet))
                         {
                             // LoTR - Pay attention to Set
-                            if (converterSet.OctgnSet.GameId == Converter.LoTRGameGuid)
+                            if (converterSet.OctgnSet.GameId == ConvertEngine.Game.LoTR.GameGuidStatic)
                             {
                                 string converterCardSet = converterCard.Set;
                                 string converterMappingSet = this.CardSet;

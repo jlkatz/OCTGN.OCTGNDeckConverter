@@ -48,11 +48,11 @@ namespace OCTGNDeckConverter.View
             {
                 Guid gameID = (Guid)item;
 
-                if (gameID == Model.Converter.MTGGameGuid)
+                if (gameID == Model.ConvertEngine.Game.MTG.GameGuidStatic)
                 {
                     return this.MTGTemplate;
                 }
-                else if (gameID == Model.Converter.LoTRGameGuid)
+                else if (gameID == Model.ConvertEngine.Game.LoTR.GameGuidStatic)
                 {
                     return this.LoTRTemplate;
                 }

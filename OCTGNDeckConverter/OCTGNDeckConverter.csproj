@@ -117,6 +117,7 @@
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
+    <Reference Include="System.Web" />
     <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml" />
     <Reference Include="Microsoft.CSharp" />
@@ -130,7 +131,26 @@
     <Reference Include="PresentationFramework" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Model\ConvertEngine.cs" />
+    <Compile Include="Model\ConvertEngine\ConvertEngine.cs" />
+    <Compile Include="Model\ConvertEngine\File\Apprentice.cs" />
+    <Compile Include="Model\ConvertEngine\File\Cockatrice.cs" />
+    <Compile Include="Model\ConvertEngine\File\FileConverter.cs" />
+    <Compile Include="Model\ConvertEngine\File\MWS.cs" />
+    <Compile Include="Model\ConvertEngine\File\Octgn.cs" />
+    <Compile Include="Model\ConvertEngine\Game\CoC.cs" />
+    <Compile Include="Model\ConvertEngine\Game\GameConverter.cs" />
+    <Compile Include="Model\ConvertEngine\Game\LoTR.cs" />
+    <Compile Include="Model\ConvertEngine\Game\MTG.cs" />
+    <Compile Include="Model\ConvertEngine\TextConverter.cs" />
+    <Compile Include="Model\ConvertEngine\Webpage\CardGameDB_com.cs" />
+    <Compile Include="Model\ConvertEngine\Webpage\CCGDecks_com.cs" />
+    <Compile Include="Model\ConvertEngine\Webpage\DeckCheck_de.cs" />
+    <Compile Include="Model\ConvertEngine\Webpage\DeckLists_net.cs" />
+    <Compile Include="Model\ConvertEngine\Webpage\EssentialMagic_com.cs" />
+    <Compile Include="Model\ConvertEngine\Webpage\StarCityGames_com.cs" />
+    <Compile Include="Model\ConvertEngine\Webpage\TappedOut_net.cs" />
+    <Compile Include="Model\ConvertEngine\Webpage\TCGPlayer_com.cs" />
+    <Compile Include="Model\ConvertEngine\Webpage\WebpageConverter.cs" />
     <Compile Include="Model\ConverterCard.cs" />
     <Compile Include="Model\ConverterDatabase.cs" />
     <Compile Include="Model\ConverterDeck.cs" />

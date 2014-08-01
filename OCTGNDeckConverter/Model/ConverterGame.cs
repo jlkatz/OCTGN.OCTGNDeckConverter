@@ -240,7 +240,7 @@ namespace OCTGNDeckConverter.Model
 
                     // CoC uses special characters at the beginning of the card name to represent properties such as Unique and Steadfast.
                     // These characters should not be included as part of the name for comparison.
-                    if (game.Id == Converter.CoCGameGuid)
+                    if (game.Id == ConvertEngine.Game.CoC.GameGuidStatic)
                     {
                         name = name.Trim(new Char[] { '{', '}', '[', ']', '<', '>', '_', '^', '*', ' ' });
                     }

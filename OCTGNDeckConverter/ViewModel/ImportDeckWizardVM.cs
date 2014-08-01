@@ -514,15 +514,15 @@ namespace OCTGNDeckConverter.ViewModel
 
             if (!this.Converter.DeckSourceType.HasValue)
             {
-                if (this.Converter.ConverterGame.Game.Id == Converter.MTGGameGuid)
+                if (this.Converter.ConverterGame.Game.Id == Model.ConvertEngine.Game.MTG.GameGuidStatic)
                 {
                     // The chosen game was MTG, so allow the user to choose the deck source type by URL or File on disk or text
                     return new WizardPage_ChooseDeckSourceType(this, true, true, skippedChooseGame);
                 }
                 else if
                 (
-                    this.Converter.ConverterGame.Game.Id == Converter.LoTRGameGuid ||
-                    this.Converter.ConverterGame.Game.Id == Converter.LoTRGameGuid
+                    this.Converter.ConverterGame.Game.Id == Model.ConvertEngine.Game.LoTR.GameGuidStatic ||
+                    this.Converter.ConverterGame.Game.Id == Model.ConvertEngine.Game.LoTR.GameGuidStatic
                 )
                 {
                     // The chosen game is available on some website, so allow URL or text
@@ -534,7 +534,7 @@ namespace OCTGNDeckConverter.ViewModel
                 }
             }
 
-            bool skippedChooseGameAndChooseDeckSource = skippedChooseGame && this.Converter.ConverterGame.Game.Id != Converter.MTGGameGuid;
+            bool skippedChooseGameAndChooseDeckSource = skippedChooseGame && this.Converter.ConverterGame.Game.Id != Model.ConvertEngine.Game.MTG.GameGuidStatic;
 
             if
             (
