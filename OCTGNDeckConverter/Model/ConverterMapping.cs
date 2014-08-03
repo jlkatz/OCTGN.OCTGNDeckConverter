@@ -194,6 +194,7 @@ namespace OCTGNDeckConverter.Model
             List<dynamic> replacementChars = new List<dynamic>()
             {
                 new { Actual = "Æ", Normalized = "Ae" },
+                new { Actual = "æ", Normalized = "ae" },
 
                 new { Actual = '’', Normalized = '\'' },
                 new { Actual = ":", Normalized = string.Empty },

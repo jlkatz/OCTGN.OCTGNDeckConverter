@@ -150,7 +150,7 @@ namespace OCTGNDeckConverter.Model.ConvertEngine
         /// <summary>
         /// Regex pattern for determining if the text is a regular Card, and extracting the Name and Quantity
         /// </summary>
-        private static Regex Regex_RegularCard = new Regex(@"^\s*(\d+)\s*[xX]?(?!\s+\[)\s+([a-zA-Z].+)", RegexOptions.IgnoreCase);
+        private static Regex Regex_RegularCard = new Regex(@"^\s*(\d+)\s*[xX]?(?!\s+\[)\s+([a-zA-Z]|Æ|æ.+)", RegexOptions.IgnoreCase);
 
         /// <summary>
         /// Returns a properly populated ConverterMapping if the line is properly formatted as a Regular Card, null otherwise
@@ -178,7 +178,7 @@ namespace OCTGNDeckConverter.Model.ConvertEngine
         /// <summary>
         /// Regex pattern for determining if the text is a regular Card, but with the quantity after the name, and extracting the Name and Quantity
         /// </summary>
-        private static Regex Regex_RegularCardQuantityAfterName = new Regex(@"^\s*([a-zA-Z].+)\s+[xX]*\s*(\d+)", RegexOptions.IgnoreCase);
+        private static Regex Regex_RegularCardQuantityAfterName = new Regex(@"^\s*([a-zA-Z]|Æ|æ.+)\s+[xX]*\s*(\d+)", RegexOptions.IgnoreCase);
 
         /// <summary>
         /// Returns a properly populated ConverterMapping if the line is properly formatted as a Regular Card, but with the quantity after the name, null otherwise

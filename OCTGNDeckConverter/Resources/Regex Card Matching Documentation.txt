@@ -23,7 +23,7 @@ NO, multiple on a thread http://www.magic-league.com/deck/78636/standard_t2.html
 
 
 ==================================================================
-General Format (# Name): ^\s*(\d+)\s*[xX]?(?!\s+\[)\s+([a-zA-Z].+)
+General Format (# Name): ^\s*(\d+)\s*[xX]?(?!\s+\[)\s+([a-zA-Z]|Æ|æ.+)
 Group [1]: Quantity
 Group [2]: Card Name
 (Applies to Apprentice's Main Deck, MTGO, some websites)
@@ -42,6 +42,7 @@ Note: (?!\s+\[) tells it to ignore mwBase style set brackets  '   ['
 34 Xenograph
 34 X Ray might be the card name, so this fails
 1x Æther Burst
+3 æther burst
 
 [Non-Matches]
 34 - Card Name
@@ -50,7 +51,7 @@ Note: (?!\s+\[) tells it to ignore mwBase style set brackets  '   ['
 
 
 ==================================================================
-General Format (Name #x) or (Name x#): ^\s*([a-zA-Z].+)\s+[xX]*\s*(\d+)
+General Format (Name #x) or (Name x#): ^\s*([a-zA-Z]|Æ|æ.+)\s+[xX]*\s*(\d+)
 Group [1]: Card Name
 Group [2]: Quantity
 (Applies to some websites, notably cardgamedb.com)
@@ -90,7 +91,7 @@ Card Name     3 x
 
 
 ==================================================================
-General Sideboard: ^\s*[sS][bB][:]\s+(\d+)\s*[xX]?(?!\s+\[)\s+([a-zA-Z].+)
+General Sideboard: ^\s*[sS][bB][:]\s+(\d+)\s*[xX]?(?!\s+\[)\s+([a-zA-Z]|Æ|æ.+)
 Group [1]: Quantity
 Group [2]: Card Name
 (Applies to Apprentice)
