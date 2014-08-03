@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Text.RegularExpressions;
 
 namespace OCTGNDeckConverter.Model.ConvertEngine.Game
 {
@@ -28,7 +29,9 @@ namespace OCTGNDeckConverter.Model.ConvertEngine.Game
         {
             // There is only 1 file converter, so automatically use it
             File.FileConverter fileConverter = this.CompatibleFileConverters.First();
-            return fileConverter.Convert(fullPathName, deckSectionNames);
+            ConverterDeck converterDeck = fileConverter.Convert(fullPathName, deckSectionNames);
+            MW.AddMageStatsCard(converterDeck);
+            return converterDeck;
         }
 
         /// <summary>
@@ -53,6 +56,7 @@ namespace OCTGNDeckConverter.Model.ConvertEngine.Game
                 throw new InvalidOperationException("There was a problem importing the deck from the given url, or the website has not been implemented yet");
             }
 
+            MW.AddMageStatsCard(converterDeck);
             return converterDeck;
         }
 
@@ -65,7 +69,9 @@ namespace OCTGNDeckConverter.Model.ConvertEngine.Game
         /// <returns>Returns a ConverterDeck which has all ConverterMappings populated with potential cards from the converterSets</returns>
         protected override ConverterDeck ConvertText(Dictionary<string, string> sectionsText, Dictionary<Guid, ConverterSet> converterSets, IEnumerable<string> deckSectionNames)
         {
-            return TextConverter.ConvertText(sectionsText, converterSets, deckSectionNames);
+            ConverterDeck converterDeck = TextConverter.ConvertText(sectionsText, converterSets, deckSectionNames);
+            MW.AddMageStatsCard(converterDeck);
+            return converterDeck;
         }
 
         /// <summary>
@@ -88,6 +94,45 @@ namespace OCTGNDeckConverter.Model.ConvertEngine.Game
             {
                 new Webpage.ArcaneWonders_com(),
             };
+        }
+
+        /// <summary>
+        /// Adds a Mage Stats card to accompany the Mage card, since it is required in OCTGN
+        /// </summary>
+        private static void AddMageStatsCard(ConverterDeck converterDeck)
+        {
+            ConverterSection mageSection = converterDeck.ConverterSections.First(s => s.SectionName.Equals("Mage", StringComparison.InvariantCultureIgnoreCase));
+
+            if (mageSection.SectionMappings.Any(sm => sm.CardName.EndsWith(" Stats")))
+            {
+                // The corresponding Stats card already appears to be added
+                return;
+            }
+
+            string mageName = mageSection.SectionMappings.First().CardName;
+            
+            if (MW.RegexMatch_WizardSubtype(mageName))
+            {
+                // No matter what the subtype of Wizard is, it should have a 'Wizard Stats' card
+                mageName = "Wizard";
+            }
+
+            mageSection.AddConverterMapping(new ConverterMapping(mageName + " Stats", string.Empty, 1));
+        }
+
+        /// <summary>
+        /// Regex pattern for determining if the text is in the format 'Wizard (anything)'.
+        /// </summary>
+        private static Regex Regex_WizardSubtype = new Regex(@"^\s*[wW][iI][zZ][aA][rR][dD]\s\((.+)\)", RegexOptions.IgnoreCase);
+
+        /// <summary>
+        /// Returns a value indicating whether the text is in the format 'Wizard (anything)' or not
+        /// </summary>
+        /// <param name="line">Line of text to parse</param>
+        /// <returns>a value indicating whether the text is in the format 'Wizard (anything)' or not</returns>
+        public static bool RegexMatch_WizardSubtype(string line)
+        {
+            return MW.Regex_WizardSubtype.Match(line).Success;
         }
     }
 }

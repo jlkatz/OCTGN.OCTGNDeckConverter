@@ -170,7 +170,7 @@ namespace OCTGNDeckConverter.Model.ConvertEngine.File
         /// <summary>
         /// Regex pattern for determining if the text is a regular MTG Sideboard-Card, and extracting the Name and Quantity
         /// </summary>
-        private static Regex Regex_RegularMTGSideboardCard = new Regex(@"^\s*[sS][bB][:]\s+(\d+)\s*[xX]?(?!\s+\[)\s+([a-zA-Z]|Æ|æ.+)", RegexOptions.IgnoreCase);
+        private static Regex Regex_RegularMTGSideboardCard = new Regex(@"^\s*[sS][bB][:]\s+(\d+)\s*[xX]?(?!\s+\[)\s+([a-zA-Z].+|Æ.+|æ.+)", RegexOptions.IgnoreCase);
 
         /// <summary>
         /// Returns a properly populated ConverterMapping if the line is properly formatted as a Regular MTG Sideboard Card, null otherwise
