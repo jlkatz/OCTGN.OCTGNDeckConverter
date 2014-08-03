@@ -46,7 +46,6 @@
                     />
 
                 <ContentControl Content="{Binding Path=ImportDeckWizardVM.Converter.ConverterGame.Game.Id}"
-                    Grid.Row="1"
                     Margin="10"
                     >
                     <ContentControl.Resources>

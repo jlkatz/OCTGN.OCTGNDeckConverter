@@ -33,16 +33,42 @@
                     Visibility="{Binding Path=IsStartPage, Converter={StaticResource BoolToVisibilityConverter}}"
                     />
                 <TextBlock 
+                    Margin="0, 0, 0, 20"
                     FontSize="18px"
                     TextWrapping="Wrap"
-                    Text="The currently supported file types to convert are:&#x0a;
-&#x0a;
-Apprentice (.dec)&#x0a;
-Magic Workstation (.mwDeck)&#x0a;
-Cockatrice (.cod)&#x0a;
-MTGO (.txt)&#x0a;
-OCTGN 2 (.o8d)"
-                    />
+                    Text="The currently supported file types to convert are:" />
+
+                <ContentControl Content="{Binding Path=ImportDeckWizardVM.Converter.ConverterGame.Game.Id}"
+                    Margin="10"
+                    >
+                    <ContentControl.Resources>
+
+                        <DataTemplate x:Key="MTG">
+                            <StackPanel>
+                                <TextBlock FontSize="18px" TextWrapping="Wrap">Apprentice (.dec)</TextBlock>
+                                <TextBlock FontSize="18px" TextWrapping="Wrap">Magic Workstation (.mwDeck)</TextBlock>
+                                <TextBlock FontSize="18px" TextWrapping="Wrap">Cockatrice (.cod)</TextBlock>
+                                <TextBlock FontSize="18px" TextWrapping="Wrap">MTGO (.txt)</TextBlock>
+                                <TextBlock FontSize="18px" TextWrapping="Wrap">OCTGN 2 (.o8d)</TextBlock>
+                            </StackPanel>
+                        </DataTemplate>
+
+                        <DataTemplate x:Key="MW">
+                            <StackPanel>
+                                <TextBlock FontSize="18px" TextWrapping="Wrap">Spell Book Builder (.txt)</TextBlock>
+                            </StackPanel>
+                        </DataTemplate>
+
+                    </ContentControl.Resources>
+
+                    <ContentControl.ContentTemplateSelector>
+                        <view:GameDefinitionDataTemplateSelector
+                            MTGTemplate="{StaticResource MTG}"
+                            MWTemplate="{StaticResource MW}"
+                            />
+                    </ContentControl.ContentTemplateSelector>
+
+                </ContentControl>
             </StackPanel>
         </Border>
         

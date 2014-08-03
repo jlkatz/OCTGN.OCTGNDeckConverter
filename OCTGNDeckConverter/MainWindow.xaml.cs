@@ -89,7 +89,7 @@ namespace OCTGNDeckConverter
                     this._WindowTitle = "OCTGN Deck Converter v" + version.Major + "." + version.Minor + "." + version.Build;
 
                     // Uncomment when making in-development builds.
-                    // this._WindowTitle = this._WindowTitle + " (Development Build)";
+                     this._WindowTitle = this._WindowTitle + " (Development Build)";
                 }
 
                 return this._WindowTitle;
