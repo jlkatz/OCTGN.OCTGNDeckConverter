@@ -5,16 +5,17 @@ using System.Text;
 
 namespace OCTGNDeckConverter.Model.ConvertEngine.Game
 {
-    public class CoC : GameConverter
+    public class MW : GameConverter
     {
-        public static Guid GameGuidStatic = Guid.Parse("43054c18-2362-43e0-a434-72f8d0e8477c");
+        public static Guid GameGuidStatic = Guid.Parse("9acef3d0-efa8-4d3f-a10c-54812baecdda");
 
         /// <summary>
-        /// Gets the Guid identifier for CoC
+        /// Gets the Guid identifier for MW
         /// </summary>
+        
         public override Guid GameGuid
         {
-            get { return CoC.GameGuidStatic; }
+            get { return MW.GameGuidStatic; }
         }
 
         /// <summary>
@@ -25,7 +26,7 @@ namespace OCTGNDeckConverter.Model.ConvertEngine.Game
         /// <returns>Returns a ConverterDeck which has all ConverterMappings defined, but not yet populated with potential matching OCTGN cards</returns>
         protected override ConverterDeck ConvertFile(string fullPathName, IEnumerable<string> deckSectionNames)
         {
-            throw new NotImplementedException("There are no compatible File Converters for CoC yet");
+            throw new NotImplementedException("There are no compatible File Converters for MW yet");
         }
 
         /// <summary>
@@ -36,7 +37,21 @@ namespace OCTGNDeckConverter.Model.ConvertEngine.Game
         /// <returns>Returns a ConverterDeck which has all ConverterMappings defined, but not yet populated with potential matching OCTGN cards</returns>
         protected override ConverterDeck ConvertURL(string url, IEnumerable<string> deckSectionNames)
         {
-            throw new NotImplementedException("There are no compatible URL Converters for CoC yet");
+            ConverterDeck converterDeck = null;
+
+            // Try to find a pre-defined WebpageConverter to handle ConvertFile
+            Webpage.WebpageConverter webpageConverter = this.FindMatchingWebpageConverter(url);
+
+            if (webpageConverter != null)
+            {
+                converterDeck = webpageConverter.Convert(url, deckSectionNames, null);
+            }
+            else
+            {
+                throw new InvalidOperationException("There was a problem importing the deck from the given url, or the website has not been implemented yet");
+            }
+
+            return converterDeck;
         }
 
         /// <summary>
@@ -51,16 +66,24 @@ namespace OCTGNDeckConverter.Model.ConvertEngine.Game
             return TextConverter.ConvertText(sectionsText, converterSets, deckSectionNames);
         }
 
+        /// <summary>
+        /// Generates a collection of FileConverters containing all of the possible File formats for MW
+        /// </summary>
         protected override IEnumerable<File.FileConverter> GenerateCompatibleFileConverters()
         {
-            // There are no compatible File Converters for CoC yet.
+            // There are no compatible File Converters for MW yet.
             return new List<File.FileConverter>();
         }
 
+        /// <summary>
+        /// Generates a collection of WebpageConverters containing all of the possible Websites for MW
+        /// </summary>
         protected override IEnumerable<Webpage.WebpageConverter> GenerateCompatibleWebpageConverters()
         {
-            // There are no compatible File Converters for CoC yet.
-            return new List<Webpage.WebpageConverter>();
+            return new List<Webpage.WebpageConverter>()
+            {
+                new Webpage.ArcaneWonders_com(),
+            };
         }
     }
 }

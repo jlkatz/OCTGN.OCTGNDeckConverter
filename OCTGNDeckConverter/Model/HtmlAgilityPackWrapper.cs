@@ -263,7 +263,7 @@ namespace OCTGNDeckConverter.Model
         /// <param name="htmlNodeInstance">The instance of HtmlNode to invoke SelectNodes(xpath) on</param>
         /// <param name="xpath">The XPath expression.</param>
         /// <returns>The result of calling the HtmlNode.SelectNodes(xpath) method on the HtmlNode instance as an IEnumerable</returns>
-        public static System.Collections.IEnumerable HtmlNode_InvokeMethod_SelectNodes(object htmlNodeInstance, string xpath)
+        public static IEnumerable<object> HtmlNode_InvokeMethod_SelectNodes(object htmlNodeInstance, string xpath)
         {
             if (!HtmlAgilityPackWrapper._HtmlNodeType.IsAssignableFrom(htmlNodeInstance.GetType()))
             {
@@ -271,7 +271,7 @@ namespace OCTGNDeckConverter.Model
             }
 
             HtmlAgilityPackWrapper.InitializeIfNeeded();
-            return (System.Collections.IEnumerable)HtmlAgilityPackWrapper._HtmlNode_Method_SelectNodes.Invoke(htmlNodeInstance, new object[] { xpath });
+            return ((System.Collections.IEnumerable)HtmlAgilityPackWrapper._HtmlNode_Method_SelectNodes.Invoke(htmlNodeInstance, new object[] { xpath })).Cast<object>();
         }
 
         /// <summary>
@@ -298,7 +298,7 @@ namespace OCTGNDeckConverter.Model
         /// </summary>
         /// <param name="htmlNodeInstance">The instance of HtmlNode to get the property from</param>
         /// <returns>The HtmlNode.Attributes property of the HtmlNode instance as an IEnumerable</returns>
-        internal static System.Collections.IEnumerable HtmlNode_GetProperty_Attributes(object htmlNodeInstance)
+        internal static IEnumerable<object> HtmlNode_GetProperty_Attributes(object htmlNodeInstance)
         {
             if (!HtmlAgilityPackWrapper._HtmlNodeType.IsAssignableFrom(htmlNodeInstance.GetType()))
             {
@@ -306,7 +306,7 @@ namespace OCTGNDeckConverter.Model
             }
 
             HtmlAgilityPackWrapper.InitializeIfNeeded();
-            return (System.Collections.IEnumerable)HtmlAgilityPackWrapper._HtmlNode_Property_Attributes.GetValue(htmlNodeInstance, null);
+            return ((System.Collections.IEnumerable)HtmlAgilityPackWrapper._HtmlNode_Property_Attributes.GetValue(htmlNodeInstance, null)).Cast<object>();
         }
 
         /// <summary>

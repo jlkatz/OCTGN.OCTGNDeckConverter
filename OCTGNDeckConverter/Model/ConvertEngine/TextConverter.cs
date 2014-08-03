@@ -157,7 +157,7 @@ namespace OCTGNDeckConverter.Model.ConvertEngine
         /// </summary>
         /// <param name="line">Line of text to parse</param>
         /// <returns>ConverterMapping with info from the line if properly formatted</returns>
-        private static ConverterMapping RegexMatch_RegularCard(string line)
+        public static ConverterMapping RegexMatch_RegularCard(string line)
         {
             Match m = Regex_RegularCard.Match(line);
             if (m.Success)
@@ -185,7 +185,7 @@ namespace OCTGNDeckConverter.Model.ConvertEngine
         /// </summary>
         /// <param name="line">Line of text to parse</param>
         /// <returns>ConverterMapping with info from the line if properly formatted</returns>
-        private static ConverterMapping RegexMatch_RegularCardQuantityAfterName(string line)
+        public static ConverterMapping RegexMatch_RegularCardQuantityAfterName(string line)
         {
             // Format: (Name #x)
             Match m = Regex_RegularCardQuantityAfterName.Match(line);

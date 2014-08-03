@@ -141,7 +141,9 @@
     <Compile Include="Model\ConvertEngine\Game\GameConverter.cs" />
     <Compile Include="Model\ConvertEngine\Game\LoTR.cs" />
     <Compile Include="Model\ConvertEngine\Game\MTG.cs" />
+    <Compile Include="Model\ConvertEngine\Game\MW.cs" />
     <Compile Include="Model\ConvertEngine\TextConverter.cs" />
+    <Compile Include="Model\ConvertEngine\Webpage\ArcaneWonders_com.cs" />
     <Compile Include="Model\ConvertEngine\Webpage\CardGameDB_com.cs" />
     <Compile Include="Model\ConvertEngine\Webpage\CCGDecks_com.cs" />
     <Compile Include="Model\ConvertEngine\Webpage\DeckCheck_de.cs" />

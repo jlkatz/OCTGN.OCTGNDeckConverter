@@ -522,7 +522,7 @@ namespace OCTGNDeckConverter.ViewModel
                 else if
                 (
                     this.Converter.ConverterGame.Game.Id == Model.ConvertEngine.Game.LoTR.GameGuidStatic ||
-                    this.Converter.ConverterGame.Game.Id == Model.ConvertEngine.Game.LoTR.GameGuidStatic
+                    this.Converter.ConverterGame.Game.Id == Model.ConvertEngine.Game.MW.GameGuidStatic
                 )
                 {
                     // The chosen game is available on some website, so allow URL or text
