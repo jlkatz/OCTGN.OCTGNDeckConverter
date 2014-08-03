@@ -135,7 +135,7 @@ namespace OCTGNDeckConverter.Model.ConvertEngine.Webpage
         /// <param name="uri">The URI string to parse for Parameters</param>
         /// <returns>Dictionary of Key-Value strings of the parameters</returns>
         /// <see cref="http://codereview.stackexchange.com/a/1592"/>
-        private static Dictionary<string, string> GetParams(string uri)
+        public static Dictionary<string, string> GetParams(string uri)
         {
             var matches = Regex.Matches(uri, @"[\?&](([^&=]+)=([^&=#]*))", RegexOptions.Compiled);
             return matches.Cast<Match>().ToDictionary
