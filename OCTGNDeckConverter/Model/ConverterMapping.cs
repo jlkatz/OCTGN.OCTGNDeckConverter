@@ -189,36 +189,11 @@ namespace OCTGNDeckConverter.Model
         /// <param name="converterSets">The list of ConverterSets to search in for potential matches</param>
         public void PopulateWithPotentialCards(Dictionary<Guid, ConverterSet> converterSets)
         {
-            // Names and sets contain many accents or other special characters.  Replace them
-            // all with 'normal' letters for comparison, since many sources use them instead.
+            // Names and sets may or may not contain certain characters, like punctuation.  
+            // Replace/remove them for comparison purposes
             List<dynamic> replacementChars = new List<dynamic>()
             {
                 new { Actual = "Æ", Normalized = "Ae" },
-
-                new { Actual = "Â", Normalized = "A" },
-                new { Actual = "Á", Normalized = "A" },
-                new { Actual = "â", Normalized = "a" },
-                new { Actual = "á", Normalized = "a" },
-                
-                new { Actual = "Ê", Normalized = "E" },
-                new { Actual = "É", Normalized = "E" },
-                new { Actual = "ê", Normalized = "e" },
-                new { Actual = "é", Normalized = "e" },
-                
-                new { Actual = "Î", Normalized = "I" },
-                new { Actual = "Í", Normalized = "I" },
-                new { Actual = "î", Normalized = "i" },
-                new { Actual = "í", Normalized = "i" },
-                
-                new { Actual = "Ô", Normalized = "O" },
-                new { Actual = "Ó", Normalized = "O" },
-                new { Actual = "ô", Normalized = "o" },
-                new { Actual = "ó", Normalized = "o" },
-                
-                new { Actual = "Û", Normalized = "U" },
-                new { Actual = "Ú", Normalized = "U" },
-                new { Actual = "û", Normalized = "u" },
-                new { Actual = "ú", Normalized = "u" },
 
                 new { Actual = '’', Normalized = '\'' },
                 new { Actual = ":", Normalized = string.Empty },
@@ -247,6 +222,11 @@ namespace OCTGNDeckConverter.Model
                             string converterCardName = converterCardNames[i].Trim();
                             string converterMappingName = converterMappingNames[i].Trim();
 
+                            // Remove all Diacritics from names for comparison
+                            converterCardName = ConverterMapping.RemoveDiacritics(converterCardName);
+                            converterMappingName = ConverterMapping.RemoveDiacritics(converterMappingName);
+
+                            // Replace all characters specifically designated to aid in comparison
                             foreach (dynamic replacementChar in replacementChars)
                             {
                                 converterCardName = converterCardName.Replace(replacementChar.Actual, replacementChar.Normalized);
@@ -289,12 +269,17 @@ namespace OCTGNDeckConverter.Model
                                     converterMappingSet = converterMappingSet.Substring(4);
                                 }
 
+                                // Remove all Diacritics from names for comparison
+                                converterCardSet = ConverterMapping.RemoveDiacritics(converterCardSet);
+                                converterMappingSet = ConverterMapping.RemoveDiacritics(converterMappingSet);
+
+                                // Replace all characters specifically designated to aid in comparison
                                 foreach (dynamic replacementChar in replacementChars)
                                 {
                                     converterCardSet = converterCardSet.Replace(replacementChar.Actual, replacementChar.Normalized);
                                     converterMappingSet = converterMappingSet.Replace(replacementChar.Actual, replacementChar.Normalized);
                                 }
-
+                                
                                 if (!converterCardSet.Equals(converterMappingSet, StringComparison.InvariantCultureIgnoreCase))
                                 {
                                     isSetMatch = false;
@@ -322,5 +307,20 @@ namespace OCTGNDeckConverter.Model
         }
 
         #endregion Public Methods
+
+        /// <summary>
+        /// Returns a string that has been stripped of diacritics
+        /// </summary>
+        /// <param name="text">The string to remove diacritics from</param>
+        /// <returns>A string that has been stripped of diacritics</returns>
+        /// <remarks>Courtesy of: http://stackoverflow.com/a/368850 </remarks>
+        private static string RemoveDiacritics(string text)
+        {
+            return string.Concat(text.Normalize(NormalizationForm.FormD)
+                .Where(ch => 
+                    System.Globalization.CharUnicodeInfo.GetUnicodeCategory(ch) !=
+                    System.Globalization.UnicodeCategory.NonSpacingMark)
+                ).Normalize(NormalizationForm.FormC);
+        }
     }
 }
