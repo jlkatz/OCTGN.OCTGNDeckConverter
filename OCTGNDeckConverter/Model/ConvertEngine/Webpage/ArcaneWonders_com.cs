@@ -71,6 +71,7 @@ namespace OCTGNDeckConverter.Model.ConvertEngine.Webpage
             ConverterSection currentConverterSection = null;
             foreach (object cardOrSectionSpan in cardAndSectionSpans)
             {
+                // get the class name of the span
                 IEnumerable<object> attributes = HtmlAgilityPackWrapper.HtmlNode_GetProperty_Attributes(cardOrSectionSpan);
                 string className = string.Empty;
                 foreach (object attribute in attributes)
@@ -82,6 +83,7 @@ namespace OCTGNDeckConverter.Model.ConvertEngine.Webpage
                     }
                 }
 
+                // If the class name of the span is 'spellClass', then it denotes a Deck Section.  Find the corresponding ConverterSection
                 if (className.Equals("spellClass", StringComparison.InvariantCultureIgnoreCase))
                 {
                     string currentSpellClass = HtmlAgilityPackWrapper.HtmlNode_GetProperty_InnerText(cardOrSectionSpan);
@@ -89,6 +91,7 @@ namespace OCTGNDeckConverter.Model.ConvertEngine.Webpage
                 }
                 else
                 {
+                    // This span contains a card and quantity, so parse it
                     string quantityAndCardString = HtmlAgilityPackWrapper.HtmlNode_GetProperty_InnerText(cardOrSectionSpan);
                     ConverterMapping converterMapping = TextConverter.RegexMatch_RegularCard(quantityAndCardString);
                     currentConverterSection.AddConverterMapping(converterMapping);

@@ -23,6 +23,22 @@ namespace OCTGNDeckConverter.Model.ConvertEngine.Game
         /// </summary>
         public abstract Guid GameGuid { get; }
 
+        /// <summary>
+        /// Gets a value indicating whether this Game Converter is capable of converting files or not
+        /// </summary>
+        public bool AllowFileSource
+        {
+            get { return this.CompatibleFileConverters.Count > 0; }
+        }
+
+        /// <summary>
+        /// Gets a value indicating whether this Game Converter is capable of converting webpages or not
+        /// </summary>
+        public bool AllowWebpageSource
+        {
+            get { return this.CompatibleWebpageConverters.Count > 0; }
+        }
+
         protected ReadOnlyCollection<File.FileConverter> CompatibleFileConverters
         {
             get { return this.compatibleFileConverters.AsReadOnly(); }

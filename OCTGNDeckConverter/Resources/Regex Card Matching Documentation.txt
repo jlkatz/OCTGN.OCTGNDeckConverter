@@ -41,6 +41,7 @@ Note: (?!\s+\[) tells it to ignore mwBase style set brackets  '   ['
   34X	Card Name with Tab and Leading Space
 34 Xenograph
 34 X Ray might be the card name, so this fails
+1x Æther Burst
 
 [Non-Matches]
 34 - Card Name
@@ -167,7 +168,7 @@ Another line with // comment not at start (Should NOT match)
 
 
 ==================================================================
-Deck Name Line: ^\s*[/][/]\s*[nN][aA][mM][eE][:]\s*(.+)
+MWS Deck Name Line: ^\s*[/][/]\s*[nN][aA][mM][eE][:]\s*(.+)
 Group [1]: Deck Name
 (Applies to MWS, Apprentice)
 ==================================================================
@@ -226,3 +227,51 @@ I Fight to Win (TBC)
 [Non-Matches]
 Normal Name
 ==================================================================
+
+
+==================================================================
+SpellBookBuilder Text Deck Name Line: ^\s*[nN][aA][mM][eE][:]\s*(.+)
+Group [1]: Deck Name
+(Applies to SpellBookBuilder)
+==================================================================
+[Matches]
+Name: Deck Name
+ Name:Deck Name
+
+[Non-Matches]
+Names: Deck Name
+==================================================================
+
+
+==================================================================
+SpellBookBuilder Text Mage Name Line: ^\s*[mM][aA][gG][eE][:]\s*(.+)
+Group [1]: Mage Name
+(Applies to SpellBookBuilder)
+==================================================================
+[Matches]
+Mage: Wizard (Fire)
+Mage: Priest
+ Mage:Priest
+
+[Non-Matches]
+Mages: Priest
+==================================================================
+
+
+==================================================================
+SpellBookBuilder Text Card: ^\s*([^\t|\n]+)\t([^\t|\n]+)\t(\d+)\t(\d+)
+Group [1]: Card Name
+Group [2]: Section
+Group [3]: Quantity
+Group [4]: Cost (game-specific property)
+==================================================================
+[Matches]
+Surging Wave	Attack	1	2
+Battle Forge	Conjuration	2	3
+ Poisoned Blood	Enchantment	2	2
+
+[Non-Matches]
+1	Surging Wave
+Regrowth	1	Enchantment
+==================================================================
+

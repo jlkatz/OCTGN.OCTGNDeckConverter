@@ -69,12 +69,19 @@
                             </StackPanel>
                         </DataTemplate>
 
+                        <DataTemplate x:Key="MW">
+                            <StackPanel>
+                                <TextBlock><Hyperlink NavigateUri="http://forum.arcanewonders.com" RequestNavigate="Hyperlink_RequestNavigate">http://forum.arcanewonders.com</Hyperlink></TextBlock>
+                            </StackPanel>
+                        </DataTemplate>
+
                     </ContentControl.Resources>
                     
                     <ContentControl.ContentTemplateSelector>
                         <view:GameDefinitionDataTemplateSelector
                             MTGTemplate="{StaticResource MTG}"
                             LoTRTemplate="{StaticResource LoTR}"
+                            MWTemplate="{StaticResource MW}"
                             />
                     </ContentControl.ContentTemplateSelector>
                     

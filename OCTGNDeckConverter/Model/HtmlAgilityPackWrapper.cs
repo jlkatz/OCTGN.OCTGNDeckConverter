@@ -298,7 +298,7 @@ namespace OCTGNDeckConverter.Model
         /// </summary>
         /// <param name="htmlNodeInstance">The instance of HtmlNode to get the property from</param>
         /// <returns>The HtmlNode.Attributes property of the HtmlNode instance as an IEnumerable</returns>
-        internal static IEnumerable<object> HtmlNode_GetProperty_Attributes(object htmlNodeInstance)
+        public static IEnumerable<object> HtmlNode_GetProperty_Attributes(object htmlNodeInstance)
         {
             if (!HtmlAgilityPackWrapper._HtmlNodeType.IsAssignableFrom(htmlNodeInstance.GetType()))
             {
@@ -315,7 +315,7 @@ namespace OCTGNDeckConverter.Model
         /// </summary>
         /// <param name="htmlNodeInstance">The instance of HtmlNode to get the property from</param>
         /// <returns>The HtmlNode.ChildNodes property of the HtmlNode instance as an IEnumerable</returns>
-        public static System.Collections.IEnumerable HtmlNode_GetProperty_ChildNodes(object htmlNodeInstance)
+        public static IEnumerable<object> HtmlNode_GetProperty_ChildNodes(object htmlNodeInstance)
         {
             if (!HtmlAgilityPackWrapper._HtmlNodeType.IsAssignableFrom(htmlNodeInstance.GetType()))
             {
@@ -323,7 +323,7 @@ namespace OCTGNDeckConverter.Model
             }
 
             HtmlAgilityPackWrapper.InitializeIfNeeded();
-            return (System.Collections.IEnumerable)HtmlAgilityPackWrapper._HtmlNode_Property_ChildNodes.GetValue(htmlNodeInstance, null);
+            return ((System.Collections.IEnumerable)HtmlAgilityPackWrapper._HtmlNode_Property_ChildNodes.GetValue(htmlNodeInstance, null)).Cast<object>();
         }
 
         /// <summary>

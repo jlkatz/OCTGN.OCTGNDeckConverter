@@ -37,6 +37,15 @@ namespace OCTGNDeckConverter.View
         }
 
         /// <summary>
+        /// Gets or sets the DataTemplate to be used if the GameDefinition is MW.
+        /// </summary>
+        public DataTemplate MWTemplate
+        {
+            get;
+            set;
+        }
+
+        /// <summary>
         /// Returns the DataTemplate corresponding to whether the ConverterDatabase was able to find the Game or not.
         /// </summary>
         /// <param name="item">The parameter is not used.</param>
@@ -55,6 +64,10 @@ namespace OCTGNDeckConverter.View
                 else if (gameID == Model.ConvertEngine.Game.LoTR.GameGuidStatic)
                 {
                     return this.LoTRTemplate;
+                }
+                else if (gameID == Model.ConvertEngine.Game.MW.GameGuidStatic)
+                {
+                    return this.MWTemplate;
                 }
             }
 

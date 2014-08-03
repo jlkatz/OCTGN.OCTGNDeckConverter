@@ -121,7 +121,7 @@ namespace OCTGNDeckConverter.Model.ConvertEngine
             }
         }
 
-        private Game.GameConverter FindMatchingGameConverter(ConverterGame converterGame)
+        public Game.GameConverter FindMatchingGameConverter(ConverterGame converterGame)
         {
             return this.gameConverters.FirstOrDefault(gc => gc.GameGuid == converterGame.Game.Id);
         }

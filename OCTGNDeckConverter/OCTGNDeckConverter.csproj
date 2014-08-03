@@ -137,6 +137,7 @@
     <Compile Include="Model\ConvertEngine\File\FileConverter.cs" />
     <Compile Include="Model\ConvertEngine\File\MWS.cs" />
     <Compile Include="Model\ConvertEngine\File\Octgn.cs" />
+    <Compile Include="Model\ConvertEngine\File\SpellBookBuilderText.cs" />
     <Compile Include="Model\ConvertEngine\Game\CoC.cs" />
     <Compile Include="Model\ConvertEngine\Game\GameConverter.cs" />
     <Compile Include="Model\ConvertEngine\Game\LoTR.cs" />

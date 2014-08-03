@@ -511,30 +511,26 @@ namespace OCTGNDeckConverter.ViewModel
             }
 
             bool skippedChooseGame = Model.ConverterDatabase.SingletonInstance.OctgnGames.Count() == 1;
+            bool skippedChooseDeckSource = false;
 
             if (!this.Converter.DeckSourceType.HasValue)
             {
-                if (this.Converter.ConverterGame.Game.Id == Model.ConvertEngine.Game.MTG.GameGuidStatic)
+                Model.ConvertEngine.Game.GameConverter gameConverterEngine = Model.ConvertEngine.ConvertEngine.SingletonInstance.FindMatchingGameConverter(this.Converter.ConverterGame);
+                bool allowFileSource = gameConverterEngine != null ? gameConverterEngine.AllowFileSource : false;
+                bool allowWebpageSource = gameConverterEngine != null ? gameConverterEngine.AllowWebpageSource : false;
+
+                if (!allowFileSource && !allowWebpageSource)
                 {
-                    // The chosen game was MTG, so allow the user to choose the deck source type by URL or File on disk or text
-                    return new WizardPage_ChooseDeckSourceType(this, true, true, skippedChooseGame);
-                }
-                else if
-                (
-                    this.Converter.ConverterGame.Game.Id == Model.ConvertEngine.Game.LoTR.GameGuidStatic ||
-                    this.Converter.ConverterGame.Game.Id == Model.ConvertEngine.Game.MW.GameGuidStatic
-                )
-                {
-                    // The chosen game is available on some website, so allow URL or text
-                    return new WizardPage_ChooseDeckSourceType(this, false, true, skippedChooseGame);
+                    this.Converter.DeckSourceType = DeckSourceTypes.Text;
+                    skippedChooseDeckSource = true;
                 }
                 else
                 {
-                    this.Converter.DeckSourceType = DeckSourceTypes.Text;
+                    return new WizardPage_ChooseDeckSourceType(this, allowFileSource, allowWebpageSource, skippedChooseGame);
                 }
             }
 
-            bool skippedChooseGameAndChooseDeckSource = skippedChooseGame && this.Converter.ConverterGame.Game.Id != Model.ConvertEngine.Game.MTG.GameGuidStatic;
+            bool skippedChooseGameAndChooseDeckSource = skippedChooseGame && skippedChooseDeckSource;
 
             if
             (

@@ -26,7 +26,9 @@ namespace OCTGNDeckConverter.Model.ConvertEngine.Game
         /// <returns>Returns a ConverterDeck which has all ConverterMappings defined, but not yet populated with potential matching OCTGN cards</returns>
         protected override ConverterDeck ConvertFile(string fullPathName, IEnumerable<string> deckSectionNames)
         {
-            throw new NotImplementedException("There are no compatible File Converters for MW yet");
+            // There is only 1 file converter, so automatically use it
+            File.FileConverter fileConverter = this.CompatibleFileConverters.First();
+            return fileConverter.Convert(fullPathName, deckSectionNames);
         }
 
         /// <summary>
@@ -71,8 +73,10 @@ namespace OCTGNDeckConverter.Model.ConvertEngine.Game
         /// </summary>
         protected override IEnumerable<File.FileConverter> GenerateCompatibleFileConverters()
         {
-            // There are no compatible File Converters for MW yet.
-            return new List<File.FileConverter>();
+            return new List<File.FileConverter>()
+            {
+                new File.SpellBookBuilderText(),
+            };
         }
 
         /// <summary>
