@@ -68,103 +68,158 @@
                 </TabControl.ItemContainerStyle>
                 <TabControl.ContentTemplate>
                     <DataTemplate>
-                        <DataGrid
-                            AutoGenerateColumns="False"
-                            HeadersVisibility="Column"
-                            ItemsSource="{Binding Path=SectionMappings}"
-                            SelectionMode="Single"
-                            >
-                            <DataGrid.RowStyle>
-                                <Style TargetType="DataGridRow">
-                                    <EventSetter Event="MouseEnter" Handler="ConverterDataGridRow_MouseEnter" />
-                                    <EventSetter Event="MouseLeave" Handler="ConverterDataGridRow_MouseLeave" />
-                                    <Style.Triggers>
-                                        <DataTrigger Binding="{Binding Path=PotentialOCTGNCards.Count}" Value="0">
-                                            <Setter Property="Background" Value="Red"/>
-                                        </DataTrigger>
-                                    </Style.Triggers>
-                                </Style>
-                            </DataGrid.RowStyle>
+                        <Grid>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="*" />
+                                <RowDefinition Height="Auto"/>
+                            </Grid.RowDefinitions>
+                        
+                            <DataGrid
+                                Grid.Row="0"
+                                Margin="2.5"
+                                AutoGenerateColumns="False"
+                                HeadersVisibility="Column"
+                                ItemsSource="{Binding Path=SectionMappings}"
+                                SelectionMode="Single"
+                                >
+                                <DataGrid.RowStyle>
+                                    <Style TargetType="DataGridRow">
+                                        <EventSetter Event="MouseEnter" Handler="ConverterDataGridRow_MouseEnter" />
+                                        <EventSetter Event="MouseLeave" Handler="ConverterDataGridRow_MouseLeave" />
+                                        <Style.Triggers>
+                                            <DataTrigger Binding="{Binding Path=PotentialOCTGNCards.Count}" Value="0">
+                                                <Setter Property="Background" Value="Red"/>
+                                            </DataTrigger>
+                                        </Style.Triggers>
+                                    </Style>
+                                </DataGrid.RowStyle>
 
-                            <DataGrid.Columns>
-                                <DataGridTextColumn
-                                    Header="Qty"
-                                    Width="Auto"
-                                    Binding="{Binding Path=Quantity}"
-                                    IsReadOnly="True"
-                                    CanUserReorder="False"
+                                <DataGrid.Columns>
+                                    <DataGridTextColumn
+                                        Header="Qty"
+                                        Width="Auto"
+                                        Binding="{Binding Path=Quantity}"
+                                        IsReadOnly="True"
+                                        CanUserReorder="False"
+                                        >
+                                        <DataGridTextColumn.ElementStyle>
+                                            <Style TargetType="{x:Type TextBlock}">
+                                                <Setter Property="TextAlignment" Value="Center" />
+                                                <Setter Property="VerticalAlignment" Value="Center" />
+                                            </Style>
+                                        </DataGridTextColumn.ElementStyle>
+                                    </DataGridTextColumn>
+
+                                    <DataGridTextColumn
+                                        Header="Imported Card Name"
+                                        Width="2*"
+                                        Binding="{Binding Path=CardName}"
+                                        IsReadOnly="True"
+                                        CanUserReorder="False"
+                                        >
+                                        <DataGridTextColumn.ElementStyle>
+                                            <Style TargetType="{x:Type TextBlock}">
+                                                <Setter Property="VerticalAlignment" Value="Center" />
+                                                <Setter Property="Padding" Value="5,0"/>
+                                            </Style>
+                                        </DataGridTextColumn.ElementStyle>
+                                    </DataGridTextColumn>
+
+                                    <DataGridTemplateColumn
+                                        Header="Matched OCTGN Card" 
+                                        CanUserSort="False"
+                                        CanUserReorder="False"
+                                        Width="3*"
+                                        >
+                                        <DataGridTemplateColumn.CellTemplate>
+                                            <DataTemplate>
+                                                <ComboBox 
+                                                    ItemsSource="{Binding Path=PotentialOCTGNCards}" 
+                                                    SelectedValue="{Binding Path=SelectedOCTGNCard, UpdateSourceTrigger=PropertyChanged}"
+                                                    Style="{StaticResource ComboBoxCardMouseOverStyle}"
+                                                    >
+                                                    <ComboBox.ItemTemplate>
+                                                        <DataTemplate>
+                                                            <StackPanel Orientation="Horizontal">
+                                                                <TextBlock 
+                                                                    Text="{Binding Path=Name}" 
+                                                                    FontWeight="Bold" 
+                                                                    />
+                                                                <TextBlock FontStyle="Italic" Text="{Binding Path=Set, StringFormat='  ({0})'}" />
+                                                            </StackPanel>
+                                                        </DataTemplate>
+                                                    </ComboBox.ItemTemplate>
+                                                </ComboBox>
+                                            </DataTemplate>
+                                        </DataGridTemplateColumn.CellTemplate>
+                                    </DataGridTemplateColumn>
+
+                                    <DataGridTemplateColumn
+                                        CanUserSort="False"
+                                        CanUserReorder="False"
+                                        Width="Auto"
+                                        >
+                                        <DataGridTemplateColumn.CellTemplate>
+                                            <DataTemplate>
+                                                <Button 
+                                                    Content="..." 
+                                                    VerticalAlignment="Center" 
+                                                    Command="{Binding RelativeSource={RelativeSource AncestorType={x:Type TabControl}}, Path=DataContext.ImportDeckWizardVM.ChooseAnotherCardCommand}" 
+                                                    CommandParameter="{Binding Path=.}"
+                                                    />
+                                            </DataTemplate>
+                                        </DataGridTemplateColumn.CellTemplate>
+                                    </DataGridTemplateColumn>
+
+                                </DataGrid.Columns>
+                            </DataGrid>
+
+                            <Border
+                                Margin="2.5,10,2.5,2.5"
+                                MaxHeight="250"
+                                Grid.Row="1">
+                                <Border.Style>
+                                    <Style TargetType="{x:Type Border}">
+                                        <Setter Property="Visibility" Value="Visible" />
+                                        <Style.Triggers>
+                                            <DataTrigger Binding="{Binding Path=IncorrectlyFormattedLines.Count}" Value="0">
+                                                <Setter Property="Visibility" Value="Collapsed" />
+                                            </DataTrigger>
+                                        </Style.Triggers>
+                                    </Style>
+                                </Border.Style>
+
+                                <DataGrid
+                                    AutoGenerateColumns="False"
+                                    HeadersVisibility="Column"
+                                    ItemsSource="{Binding Path=IncorrectlyFormattedLines}"
+                                    SelectionMode="Single"
+                                    VerticalScrollBarVisibility="Visible"
                                     >
-                                    <DataGridTextColumn.ElementStyle>
-                                        <Style TargetType="{x:Type TextBlock}">
-                                            <Setter Property="TextAlignment" Value="Center" />
-                                            <Setter Property="VerticalAlignment" Value="Center" />
+                                    <DataGrid.RowStyle>
+                                        <Style TargetType="DataGridRow">
+                                            <Setter Property="Background" Value="DarkRed"/>
                                         </Style>
-                                    </DataGridTextColumn.ElementStyle>
-                                </DataGridTextColumn>
-
-                                <DataGridTextColumn
-                                    Header="Imported Card Name"
-                                    Width="2*"
-                                    Binding="{Binding Path=CardName}"
-                                    IsReadOnly="True"
-                                    CanUserReorder="False"
-                                    >
-                                    <DataGridTextColumn.ElementStyle>
-                                        <Style TargetType="{x:Type TextBlock}">
-                                            <Setter Property="VerticalAlignment" Value="Center" />
-                                            <Setter Property="Padding" Value="5,0"/>
-                                        </Style>
-                                    </DataGridTextColumn.ElementStyle>
-                                </DataGridTextColumn>
-
-                                <DataGridTemplateColumn
-                                    Header="Matched OCTGN Card" 
-                                    CanUserSort="False"
-                                    CanUserReorder="False"
-                                    Width="3*"
-                                    >
-                                    <DataGridTemplateColumn.CellTemplate>
-                                        <DataTemplate>
-                                            <ComboBox 
-                                                ItemsSource="{Binding Path=PotentialOCTGNCards}" 
-                                                SelectedValue="{Binding Path=SelectedOCTGNCard, UpdateSourceTrigger=PropertyChanged}"
-                                                Style="{StaticResource ComboBoxCardMouseOverStyle}"
-                                                >
-                                                <ComboBox.ItemTemplate>
-                                                    <DataTemplate>
-                                                        <StackPanel Orientation="Horizontal">
-                                                            <TextBlock 
-                                                                Text="{Binding Path=Name}" 
-                                                                FontWeight="Bold" 
-                                                                />
-                                                            <TextBlock FontStyle="Italic" Text="{Binding Path=Set, StringFormat='  ({0})'}" />
-                                                        </StackPanel>
-                                                    </DataTemplate>
-                                                </ComboBox.ItemTemplate>
-                                            </ComboBox>
-                                        </DataTemplate>
-                                    </DataGridTemplateColumn.CellTemplate>
-                                </DataGridTemplateColumn>
-
-                                <DataGridTemplateColumn
-                                    CanUserSort="False"
-                                    CanUserReorder="False"
-                                    Width="Auto"
-                                    >
-                                    <DataGridTemplateColumn.CellTemplate>
-                                        <DataTemplate>
-                                            <Button 
-                                                Content="..." 
-                                                VerticalAlignment="Center" 
-                                                Command="{Binding RelativeSource={RelativeSource AncestorType={x:Type TabControl}}, Path=DataContext.ImportDeckWizardVM.ChooseAnotherCardCommand}" 
-                                                CommandParameter="{Binding Path=.}"
-                                                />
-                                        </DataTemplate>
-                                    </DataGridTemplateColumn.CellTemplate>
-                                </DataGridTemplateColumn>
-
-                            </DataGrid.Columns>
-                        </DataGrid>
+                                    </DataGrid.RowStyle>
+                                    <DataGrid.Columns>
+                                        <DataGridTextColumn
+                                            Header="Incorrectly Formatted Lines"
+                                            Width="*"
+                                            Binding="{Binding Path=.}"
+                                            IsReadOnly="True"
+                                            CanUserReorder="False"
+                                            >
+                                            <DataGridTextColumn.ElementStyle>
+                                                <Style TargetType="{x:Type TextBlock}">
+                                                    <Setter Property="TextAlignment" Value="Left" />
+                                                    <Setter Property="VerticalAlignment" Value="Center" />
+                                                </Style>
+                                            </DataGridTextColumn.ElementStyle>
+                                        </DataGridTextColumn>
+                                    </DataGrid.Columns>
+                                </DataGrid>
+                            </Border>
+                        </Grid>
 
                     </DataTemplate>
                 </TabControl.ContentTemplate>

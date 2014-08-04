@@ -62,10 +62,14 @@ namespace OCTGNDeckConverter.Model.ConvertEngine
                     else
                     {
                         ConverterMapping potentialCard = TextConverter.ParseLineForCardAndQuantity(line);
-                        
+
                         if (potentialCard != null)
                         {
                             converterSection.AddConverterMapping(potentialCard);
+                        }
+                        else
+                        {
+                            converterSection.AddIncorrectlyFormattedLine(line);
                         }
                     }
                 }
@@ -249,7 +253,7 @@ namespace OCTGNDeckConverter.Model.ConvertEngine
                     }
                     else if(Game.MW.RegexMatch_WizardSubtype(name))
                     {
-                        // The parenthesis is defining the Wizard sub-type
+                        // The parenthesis is defining the Wizard sub-type for game MW
                         return name;
                     }
                     else

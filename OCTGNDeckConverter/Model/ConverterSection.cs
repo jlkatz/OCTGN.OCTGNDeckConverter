@@ -124,6 +124,38 @@ namespace OCTGNDeckConverter.Model
         }
 
         /// <summary>
+        /// Private backing field
+        /// </summary>
+        private ObservableCollection<string> incorrectlyFormattedLines = new ObservableCollection<string>();
+
+        /// <summary>
+        /// Private backing field
+        /// </summary>
+        private ReadOnlyObservableCollection<string> incorrectlyFormattedLinesReadOnly;
+
+        public ReadOnlyObservableCollection<string> IncorrectlyFormattedLines
+        {
+            get
+            {
+                if (this.incorrectlyFormattedLinesReadOnly == null)
+                {
+                    this.incorrectlyFormattedLinesReadOnly = new ReadOnlyObservableCollection<string>(this.incorrectlyFormattedLines);
+                }
+
+                return this.incorrectlyFormattedLinesReadOnly;
+            }
+        }
+
+        /// <summary>
+        /// Adds an incorrectly Formatted line of text to the list of IncorrectlyFormattedLines
+        /// </summary>
+        /// <param name="incorrectlyFormattedLine">The incorrectlyFormatted line of text to add</param>
+        public void AddIncorrectlyFormattedLine(string incorrectlyFormattedLine)
+        {
+            this.incorrectlyFormattedLines.Add(incorrectlyFormattedLine);
+        }
+
+        /// <summary>
         /// Updates the SectionCount property with an up-to-date count of the 
         /// number of Cards in the section.  This only includes the Cards which
         /// have a corresponding OCTGN Card selected; those without are not counted.
