@@ -53,13 +53,14 @@
             <TabControl.ContentTemplate>
                 <DataTemplate>
                     <TextBox 
+                        VerticalScrollBarVisibility="Auto"
                         VerticalAlignment="Stretch"
+                        Margin="5"
                         AcceptsReturn="True"
                         AcceptsTab="True"
-                        Margin="5"
                         FontFamily="Courier New"
-                        Text="{Binding Path=Text, UpdateSourceTrigger=PropertyChanged}" 
-                        />
+                        Text="{Binding Path=Text, UpdateSourceTrigger=PropertyChanged}"
+                        />                    
                 </DataTemplate>
             </TabControl.ContentTemplate>
         </TabControl>
