@@ -27,11 +27,47 @@ namespace OCTGNDeckConverter.Model.ConvertEngine.Game
         /// <returns>Returns a ConverterDeck which has all ConverterMappings defined, but not yet populated with potential matching OCTGN cards</returns>
         protected override ConverterDeck ConvertFile(string fullPathName, IEnumerable<string> deckSectionNames)
         {
-            // There is only 1 file converter, so automatically use it
-            File.FileConverter fileConverter = this.CompatibleFileConverters.First();
-            ConverterDeck converterDeck = fileConverter.Convert(fullPathName, deckSectionNames);
+            ConverterDeck converterDeck = null;
+            string contents = System.IO.File.ReadAllText(fullPathName);
+            IEnumerable<string> lines = TextConverter.SplitLines(contents);
+            if (File.SpellBookBuilderText.DoesFileMatchSpellBookBuilderTextDeckFormat(lines))
+            {
+                File.SpellBookBuilderText spellBookBuilderTextConverter = this.CompatibleFileConverters.First() as File.SpellBookBuilderText;
+                converterDeck = spellBookBuilderTextConverter.Convert(fullPathName, deckSectionNames);
+            }
+            else
+            {
+                // The file format didn't match any known MW format, so just try the generic format
+                converterDeck = MW.ConvertGenericFile(lines, deckSectionNames);
+
+            }
             MW.AddMageStatsCard(converterDeck);
             return converterDeck;
+        }
+
+        private static ConverterDeck ConvertGenericFile(IEnumerable<string> lines, IEnumerable<string> deckSectionNames)
+        {
+            Dictionary<string, IEnumerable<string>> sectionLines = new Dictionary<string, IEnumerable<string>>();
+            foreach(string sectionName in deckSectionNames)
+            {
+                sectionLines.Add(sectionName, new List<string>());
+            }
+            IEnumerable<string> currentSection = null;  // The first line needs to be a Section name
+
+            foreach (string line in lines)
+            {
+                string correspondingSectionName = sectionLines.Keys.FirstOrDefault(sl => line.Trim().Equals(sl, StringComparison.InvariantCultureIgnoreCase));
+                if (correspondingSectionName == null)
+                {
+                    ((List<string>)currentSection).Add(line);
+                }
+                else
+                {
+                    currentSection = sectionLines[correspondingSectionName];
+                }
+            }
+
+            return TextConverter.ConvertDeckWithSeparateSections(sectionLines, deckSectionNames);
         }
 
         /// <summary>
