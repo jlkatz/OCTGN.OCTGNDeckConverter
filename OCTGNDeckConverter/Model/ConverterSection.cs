@@ -156,6 +156,16 @@ namespace OCTGNDeckConverter.Model
         }
 
         /// <summary>
+        /// Returns a value indicating whether removing the specified incorrectly formatted line was successful or not
+        /// </summary>
+        /// <param name="incorrectlyFormattedLine">The incorrectlyFormatted line of text to remove</param>
+        /// <returns>a value indicating whether removing the specified incorrectly formatted line was successful or not</returns>
+        public bool RemoveIncorrectlyFormattedLine(string incorrectlyFormattedLine)
+        {
+            return this.incorrectlyFormattedLines.Remove(incorrectlyFormattedLine);
+        }
+
+        /// <summary>
         /// Updates the SectionCount property with an up-to-date count of the 
         /// number of Cards in the section.  This only includes the Cards which
         /// have a corresponding OCTGN Card selected; those without are not counted.

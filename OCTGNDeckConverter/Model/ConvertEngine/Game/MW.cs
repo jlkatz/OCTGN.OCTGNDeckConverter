@@ -145,15 +145,19 @@ namespace OCTGNDeckConverter.Model.ConvertEngine.Game
                 return;
             }
 
-            string mageName = mageSection.SectionMappings.First().CardName;
-            
-            if (MW.RegexMatch_WizardSubtype(mageName))
-            {
-                // No matter what the subtype of Wizard is, it should have a 'Wizard Stats' card
-                mageName = "Wizard";
-            }
+            ConverterMapping firstMage = mageSection.SectionMappings.FirstOrDefault();
+            if (firstMage != null)
+            { 
+                string mageName = firstMage.CardName;
 
-            mageSection.AddConverterMapping(new ConverterMapping(mageName + " Stats", string.Empty, 1));
+                if (MW.RegexMatch_WizardSubtype(mageName))
+                {
+                    // No matter what the subtype of Wizard is, it should have a 'Wizard Stats' card
+                    mageName = "Wizard";
+                }
+
+                mageSection.AddConverterMapping(new ConverterMapping(mageName + " Stats", string.Empty, 1));
+            }
         }
 
         /// <summary>

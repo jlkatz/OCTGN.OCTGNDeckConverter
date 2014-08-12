@@ -134,6 +134,24 @@ namespace OCTGNDeckConverter.Model
                 {
                     converterMapping.PopulateWithPotentialCards(converterSets);
                 }
+
+                // Try matching each incorrectly formatted line, and assume a quantity of 1
+                List<string> linesWithoutQuantityButMatchingName = new List<string>();
+                foreach (string incorrectlyFormattedLine in converterSection.IncorrectlyFormattedLines)
+                {
+                    ConverterMapping cm = new ConverterMapping(incorrectlyFormattedLine, string.Empty, 1);
+                    cm.PopulateWithPotentialCards(converterSets);
+                    if (cm.PotentialOCTGNCards.Count > 0)
+                    {
+                        converterSection.AddConverterMapping(cm);
+                        linesWithoutQuantityButMatchingName.Add(incorrectlyFormattedLine);
+                    }
+                }
+
+                foreach(string line in linesWithoutQuantityButMatchingName)
+                {
+                    converterSection.RemoveIncorrectlyFormattedLine(line);
+                }
             }
         }
 
