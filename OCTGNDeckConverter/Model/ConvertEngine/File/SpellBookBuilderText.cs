@@ -23,7 +23,17 @@ namespace OCTGNDeckConverter.Model.ConvertEngine.File
         {
             string contents = System.IO.File.ReadAllText(fullPathName);
             IEnumerable<string> lines = TextConverter.SplitLines(contents);
+            return this.Convert(lines, deckSectionNames);
+        }
 
+        /// <summary>
+        /// Reads the lines of text which is in the SpellBookBuilder Text format, and returns a ConverterDeck which is populated with all cards and deck name.
+        /// </summary>
+        /// <param name="lines">The lines of text of the Deck file to convert</param>
+        /// <param name="deckSectionNames">List of the name of each section for the deck being converted.</param>
+        /// <returns>A ConverterDeck object populated with all cards and deck name</returns>
+        public ConverterDeck Convert(IEnumerable<string> lines, IEnumerable<string> deckSectionNames)
+        {
             string deckName = lines.FirstOrDefault(l => SpellBookBuilderText.RegexMatch_DeckName(l) != null);
 
             string mage;

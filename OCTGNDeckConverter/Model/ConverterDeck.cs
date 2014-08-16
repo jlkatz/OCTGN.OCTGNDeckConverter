@@ -148,6 +148,7 @@ namespace OCTGNDeckConverter.Model
                     }
                 }
 
+                // Incorrectly formatted lines which were found to match a card name should be removed from incorrect list.
                 foreach(string line in linesWithoutQuantityButMatchingName)
                 {
                     converterSection.RemoveIncorrectlyFormattedLine(line);

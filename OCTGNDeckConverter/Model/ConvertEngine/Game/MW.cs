@@ -33,13 +33,12 @@ namespace OCTGNDeckConverter.Model.ConvertEngine.Game
             if (File.SpellBookBuilderText.DoesFileMatchSpellBookBuilderTextDeckFormat(lines))
             {
                 File.SpellBookBuilderText spellBookBuilderTextConverter = this.CompatibleFileConverters.First() as File.SpellBookBuilderText;
-                converterDeck = spellBookBuilderTextConverter.Convert(fullPathName, deckSectionNames);
+                converterDeck = spellBookBuilderTextConverter.Convert(lines, deckSectionNames);
             }
             else
             {
                 // The file format didn't match any known MW format, so just try the generic format
                 converterDeck = MW.ConvertGenericFile(lines, deckSectionNames);
-
             }
             MW.AddMageStatsCard(converterDeck);
             return converterDeck;
@@ -105,7 +104,20 @@ namespace OCTGNDeckConverter.Model.ConvertEngine.Game
         /// <returns>Returns a ConverterDeck which has all ConverterMappings populated with potential cards from the converterSets</returns>
         protected override ConverterDeck ConvertText(Dictionary<string, string> sectionsText, Dictionary<Guid, ConverterSet> converterSets, IEnumerable<string> deckSectionNames)
         {
-            ConverterDeck converterDeck = TextConverter.ConvertText(sectionsText, converterSets, deckSectionNames);
+            ConverterDeck converterDeck = null;
+
+            // If the text is in SpellBookBuilderText format, convert it with that.  Otherwise, convert using normal text format
+            IEnumerable<string> lines = sectionsText.SelectMany(st => TextConverter.SplitLines(st.Value));
+            if (File.SpellBookBuilderText.DoesFileMatchSpellBookBuilderTextDeckFormat(lines))
+            {
+                File.SpellBookBuilderText spellBookBuilderTextConverter = this.CompatibleFileConverters.First() as File.SpellBookBuilderText;
+                converterDeck = spellBookBuilderTextConverter.Convert(lines, deckSectionNames);
+            }
+            else
+            {
+                converterDeck = TextConverter.ConvertText(sectionsText, converterSets, deckSectionNames);
+            }
+
             MW.AddMageStatsCard(converterDeck);
             return converterDeck;
         }
