@@ -156,6 +156,7 @@ namespace OCTGNDeckConverter.Model.ConvertEngine.Game
                 new Webpage.DeckCheck_de(),
                 new Webpage.DeckLists_net(),
                 new Webpage.EssentialMagic_com(),
+                new Webpage.MTGDecks_net(),
                 new Webpage.MTGVault_com(),
                 new Webpage.MTGTop8_com(),
                 new Webpage.StarCityGames_com(),

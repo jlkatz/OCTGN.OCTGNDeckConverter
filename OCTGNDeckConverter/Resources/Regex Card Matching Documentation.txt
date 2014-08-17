@@ -8,10 +8,10 @@ NO http://www.magicdeckvortex.com/DDB/miracle_infect.htm
 NO http://www.moxdiamond.com/Magic-The-Gathering/Deck/7121/Contagion.html
 NO http://www.mtgcity.com/deck.asp?DeckId=35168
 NO http://www.mtgdeckbuilder.net/Decks/ViewDeck/292439
-Almost http://www.mtgdecks.net/decks/view/38600
+http://www.mtgdecks.net/decks/view/38600
 NO, multiple on a thread http://forums.mtgsalvation.com/showthread.php?t=450017
-Almost http://www.mtgtop8.com/event?e=3520
-no http://www.mtgvault.com/ViewDeck.aspx?DeckID=135287
+http://www.mtgtop8.com/event?e=3520
+http://www.mtgvault.com/ViewDeck.aspx?DeckID=135287
 no http://pdcmagic.com/gatherling/deck.php?mode=view&id=21366
 http://sales.starcitygames.com//deckdatabase/displaydeck.php?DeckID=48733
 http://magic.tcgplayer.com/db/deck.asp?deck_id=1048475
