@@ -1,0 +1,37 @@
+1 Angel of Serenity
+1 Azorius Justiciar
+1 Bazaar Krovod
+1 Brushstrider
+2 Concordia Pegasus
+1 Dispel
+2 Druid's Deliverance
+1 Fall of the Gavel
+2 Fencing Ace
+1 Forest
+1 Heroes' Reunion
+2 Horncaller's Chant
+3 Keening Apparition
+1 Knightly Valor
+1 Minotaur Aggressor
+1 Phantom General
+2 Plains
+1 Racecourse Fury
+1 Savage Surge
+1 Security Blockade
+1 Selesnya Sentry
+1 Sundering Growth
+2 Survey the Wreckage
+1 Tavern Swindler
+1 Temple Garden
+1 Tenement Crasher
+2 Trained Caracal
+2 Urban Burgeoning
+1 Vandalblast
+1 Volatile Rig
+1 Wild Beastmaster
+1 Rogue's Passage
+
+Sideboard
+1 Catacomb Slug
+1 Chorus of Might
+1 Common Bond

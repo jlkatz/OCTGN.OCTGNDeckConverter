@@ -33,7 +33,7 @@ namespace OCTGNDeckConverter.ViewModel
         private RelayCommand<Octgn.DataNew.Entities.Game> _ChooseGameCommand;
 
         /// <summary>
-        /// Gets the Command who's parameter dictates what the Deck Source Type will be
+        /// Gets the Command who's parameter dictates what the Game to import to will be
         /// </summary>
         public RelayCommand<Octgn.DataNew.Entities.Game> ChooseGameCommand
         {

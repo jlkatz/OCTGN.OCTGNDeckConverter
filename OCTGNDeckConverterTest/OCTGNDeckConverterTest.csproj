@@ -34,7 +34,38 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x86'">
+    <DebugSymbols>true</DebugSymbols>
+    <OutputPath>bin\x86\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <DebugType>full</DebugType>
+    <PlatformTarget>x86</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x86'">
+    <OutputPath>bin\x86\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <Optimize>true</Optimize>
+    <DebugType>pdbonly</DebugType>
+    <PlatformTarget>x86</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Octgn.Core">
+      <HintPath>..\OCTGNDeckConverter\Octgn.Core.dll</HintPath>
+    </Reference>
+    <Reference Include="Octgn.DataNew">
+      <HintPath>..\OCTGNDeckConverter\Octgn.DataNew.dll</HintPath>
+    </Reference>
+    <Reference Include="Octgn.Library">
+      <HintPath>..\OCTGNDeckConverter\Octgn.Library.dll</HintPath>
+    </Reference>
+    <Reference Include="Octgn.ProxyGenerator">
+      <HintPath>..\OCTGNDeckConverter\Octgn.ProxyGenerator.dll</HintPath>
+    </Reference>
+    <Reference Include="PresentationCore" />
     <Reference Include="System" />
     <Reference Include="System.Core">
       <RequiredTargetFramework>3.5</RequiredTargetFramework>
@@ -53,8 +84,51 @@
     </Otherwise>
   </Choose>
   <ItemGroup>
-    <Compile Include="UnitTest1.cs" />
+    <Compile Include="ArcaneWonders_com.cs" />
+    <Compile Include="CardGameDB_com.cs" />
+    <Compile Include="CCGDecks_com.cs" />
+    <Compile Include="DeckFileResourceHelpers.cs" />
+    <Compile Include="DeckLists_net.cs" />
+    <Compile Include="EssentialMagic_com.cs" />
+    <Compile Include="ExpectedDeckSection.cs" />
+    <Compile Include="LoTRBase.cs" />
+    <Compile Include="MTG.cs" />
+    <Compile Include="MTGBase.cs" />
+    <Compile Include="MW.cs" />
+    <Compile Include="MWBase.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="StarCityGames_com.cs" />
+    <Compile Include="TappedOut_net.cs" />
+    <Compile Include="TCGPlayer_com.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\DeckBuilderPluginController\DeckBuilderPluginController.csproj">
+      <Project>{5871aa2f-ea70-44e6-bf70-c7567ac843d2}</Project>
+      <Name>DeckBuilderPluginController</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\OCTGNDeckConverter\OCTGNDeckConverter.csproj">
+      <Project>{0d71918f-43ba-4b4a-b491-add7a372467a}</Project>
+      <Name>OCTGNDeckConverter</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="DeckFiles\[Apprentice][MTG]CardWithAEName.dec" />
+    <EmbeddedResource Include="DeckFiles\[Apprentice][MTG]DeckInMultipleFormats1.dec" />
+    <EmbeddedResource Include="DeckFiles\[Apprentice][MTG]DeckInMultipleFormats2.dec" />
+    <EmbeddedResource Include="DeckFiles\[Apprentice][MTG]NormalDeck.dec" />
+    <EmbeddedResource Include="DeckFiles\[MWS][MTG]DeckInMultipleFormats3.mwDeck" />
+    <EmbeddedResource Include="DeckFiles\[OCTGN2][MTG]DeckInMultipleFormats1.o8d" />
+    <EmbeddedResource Include="DeckFiles\[OCTGN2][MTG]DeckInMultipleFormats2.o8d" />
+    <EmbeddedResource Include="DeckFiles\[OCTGN2][MTG]NormalDeck.o8d" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="DeckFiles\[Cockatrice][MTG]NormalDeck.cod" />
+    <EmbeddedResource Include="DeckFiles\[Generic][MTG]DeckInMultipleFormats1.txt" />
+    <EmbeddedResource Include="DeckFiles\[Generic][MTG]DeckInMultipleFormats2.txt" />
+    <EmbeddedResource Include="DeckFiles\[Generic][MTG]DeckInMultipleFormats3.txt" />
+    <EmbeddedResource Include="DeckFiles\[MTGO][MTG]NormalDeck.txt" />
+    <EmbeddedResource Include="DeckFiles\[OCTGNExport][MW]NormalDeck.txt" />
+    <EmbeddedResource Include="DeckFiles\[SBB][MW]NormalDeck.txt" />
   </ItemGroup>
   <Choose>
     <When Condition="'$(VisualStudioVersion)' == '10.0' And '$(IsCodedUITest)' == 'True'">

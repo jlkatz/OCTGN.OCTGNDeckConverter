@@ -139,12 +139,15 @@ namespace OCTGNDeckConverter.Model
                 List<string> linesWithoutQuantityButMatchingName = new List<string>();
                 foreach (string incorrectlyFormattedLine in converterSection.IncorrectlyFormattedLines)
                 {
-                    ConverterMapping cm = new ConverterMapping(incorrectlyFormattedLine, string.Empty, 1);
-                    cm.PopulateWithPotentialCards(converterSets);
-                    if (cm.PotentialOCTGNCards.Count > 0)
+                    if (!string.IsNullOrWhiteSpace(incorrectlyFormattedLine))
                     {
-                        converterSection.AddConverterMapping(cm);
-                        linesWithoutQuantityButMatchingName.Add(incorrectlyFormattedLine);
+                        ConverterMapping cm = new ConverterMapping(incorrectlyFormattedLine, string.Empty, 1);
+                        cm.PopulateWithPotentialCards(converterSets);
+                        if (cm.PotentialOCTGNCards.Count > 0)
+                        {
+                            converterSection.AddConverterMapping(cm);
+                            linesWithoutQuantityButMatchingName.Add(incorrectlyFormattedLine);
+                        }
                     }
                 }
 

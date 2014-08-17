@@ -1,0 +1,58 @@
+Mage
+1x Necromancer
+1x Necromancer Stats
+
+Conjuration
+1x Idol of Pestilence
+1x Mordok's Obelisk
+1x Poison Gas Cloud
+1x Sacrificial Altar
+3x Wall of Bones
+
+Creature
+1x Deathfang
+1x Mort
+1x Ravenous Ghoul
+2x Skeletal Archer
+1x Skeletal Knight
+1x Skeletal Sentry
+
+Enchantment
+2x Agony
+1x Bear Strength
+1x Block
+2x Death Link
+2x Ghoul Rot
+3x Nullify
+2x Poisoned Blood
+1x Retaliate
+
+Equipment
+1x Cloak of Shadows
+1x Death Ring
+1x Dragonscale Hauberk
+1x Elemental Cloak
+1x Elemental Wand
+1x Leather Gloves
+1x Mage Staff
+1x Meditation Amulet
+1x Regrowth Belt
+
+Incantation
+3x Dispel
+3x Dissolve
+1x Drain Life
+1x Drain Soul
+1x Force Push
+1x Reassemble
+2x Seeking Dispel
+2x Teleport
+
+Attack
+1x Acid Ball
+1x Fireball
+1x Hurl Boulder
+
+Mage Wars
+Shamed and Forgotten
+

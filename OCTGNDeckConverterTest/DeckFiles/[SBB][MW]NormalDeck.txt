@@ -1,0 +1,40 @@
+Name: 
+Mage: Wizard (Fire)
+Total Cost: 96
+ Acid Ball	Attack	1	2
+ Fireball	Attack	3	2
+ Flameblast	Attack	2	1
+ Geyser	Attack	1	2
+ Jet Stream	Attack	1	2
+ Surging Wave	Attack	1	2
+ Battle Forge	Conjuration	2	3
+ Hand of Bim-Shalla	Conjuration	1	2
+ Mana Crystal	Conjuration	2	1
+ Mordok's Obelisk	Conjuration	1	2
+ Wizard's Tower	Conjuration	1	2
+ Darkfenne Bat	Creature	1	2
+ Agony	Enchantment	1	2
+ Armor Ward	Enchantment	1	4
+ Divine Protection	Enchantment	1	2
+ Enchantment Transfusion	Enchantment	3	1
+ Essence Drain	Enchantment	1	2
+ Force Orb	Enchantment	1	2
+ Hawkeye	Enchantment	1	2
+ Magebane	Enchantment	1	2
+ Nullify	Enchantment	4	1
+ Poisoned Blood	Enchantment	2	2
+ Regrowth	Enchantment	2	2
+ Rhino Hide	Enchantment	1	2
+ Arcane Ring	Equipment	1	1
+ Dancing Scimitar	Equipment	1	4
+ Dragonscale Hauberk	Equipment	3	1
+ Elemental Wand	Equipment	1	2
+ Fireshaper Ring	Equipment	1	1
+ Leather Boots	Equipment	1	1
+ Leather Gloves	Equipment	2	1
+ Mage Wand	Equipment	2	2
+ Moonglow Amulet	Equipment	1	1
+ Suppression Cloak	Equipment	1	2
+ Veteran's Belt	Equipment	2	2
+ Wand of Healing	Equipment	1	2
+ Teleport	Incantation	2	2

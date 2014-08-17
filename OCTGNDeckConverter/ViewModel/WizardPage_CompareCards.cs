@@ -27,9 +27,12 @@ namespace OCTGNDeckConverter.ViewModel
         public WizardPage_CompareCards(ImportDeckWizardVM importDeckWizardVM)
             : base(importDeckWizardVM)
         {
-             this.ShowHiddenFeatures =
-                System.Windows.Input.Keyboard.IsKeyDown(System.Windows.Input.Key.LeftCtrl) ||
-                System.Windows.Input.Keyboard.IsKeyDown(System.Windows.Input.Key.RightCtrl);
+            if (System.Threading.Thread.CurrentThread.GetApartmentState() == System.Threading.ApartmentState.STA)
+            {
+                this.ShowHiddenFeatures =
+                   System.Windows.Input.Keyboard.IsKeyDown(System.Windows.Input.Key.LeftCtrl) ||
+                   System.Windows.Input.Keyboard.IsKeyDown(System.Windows.Input.Key.RightCtrl);
+            }
         }
 
         private GalaSoft.MvvmLight.Command.RelayCommand _ExportCardPictures;

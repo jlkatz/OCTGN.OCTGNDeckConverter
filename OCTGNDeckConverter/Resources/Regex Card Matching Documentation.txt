@@ -21,7 +21,6 @@ http://www.decklists.net/index.php?option=com_ohmydeckdb&controller=deck&view=de
 NO, multiple on a thread http://www.magic-league.com/deck/78636/standard_t2.html#GWb Midrange92434
 
 
-
 ==================================================================
 General Format (# Name): ^\s*(\d+)\s*[xX]?(?!\s+\[)\s+([a-zA-Z].+|Æ.+|æ.+)
 Group [1]: Quantity

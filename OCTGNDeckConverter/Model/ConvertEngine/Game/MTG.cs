@@ -64,20 +64,23 @@ namespace OCTGNDeckConverter.Model.ConvertEngine.Game
 
                 foreach (string line in lines)
                 {
-                    Match match_StartsWithSideboard = MTG.Regex_StartsWithSideboard.Match(line);
-                    if (match_StartsWithSideboard.Success)
+                    if (!string.IsNullOrWhiteSpace(line))
                     {
-                        sideboardStringPassed = true;
-                    }
-                    else
-                    {
-                        if (!sideboardStringPassed)
+                        Match match_StartsWithSideboard = MTG.Regex_StartsWithSideboard.Match(line);
+                        if (match_StartsWithSideboard.Success)
                         {
-                            mainDeckLines.Add(line);
+                            sideboardStringPassed = true;
                         }
                         else
                         {
-                            sideboardLines.Add(line);
+                            if (!sideboardStringPassed)
+                            {
+                                mainDeckLines.Add(line);
+                            }
+                            else
+                            {
+                                sideboardLines.Add(line);
+                            }
                         }
                     }
                 }
