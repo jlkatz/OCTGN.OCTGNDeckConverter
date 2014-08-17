@@ -55,6 +55,7 @@
                                 <TextBlock><Hyperlink NavigateUri="http://www.ccgdecks.com" RequestNavigate="Hyperlink_RequestNavigate">http://www.ccgdecks.com</Hyperlink></TextBlock>
                                 <TextBlock><Hyperlink NavigateUri="http://www.deckcheck.de" RequestNavigate="Hyperlink_RequestNavigate">http://www.deckcheck.de</Hyperlink></TextBlock>
                                 <TextBlock><Hyperlink NavigateUri="http://www.essentialmagic.com" RequestNavigate="Hyperlink_RequestNavigate">http://www.essentialmagic.com</Hyperlink></TextBlock>
+                                <TextBlock><Hyperlink NavigateUri="http://www.mtgvault.com" RequestNavigate="Hyperlink_RequestNavigate">http://www.mtgvault.com</Hyperlink></TextBlock>
                                 <TextBlock><Hyperlink NavigateUri="http://www.starcitygames.com" RequestNavigate="Hyperlink_RequestNavigate">http://www.starcitygames.com</Hyperlink></TextBlock>
                                 <TextBlock><Hyperlink NavigateUri="http://www.tcgplayer.com" RequestNavigate="Hyperlink_RequestNavigate">http://www.tcgplayer.com</Hyperlink></TextBlock>
                                 <TextBlock><Hyperlink NavigateUri="http://www.tappedout.net" RequestNavigate="Hyperlink_RequestNavigate">http://www.tappedout.net</Hyperlink></TextBlock>
