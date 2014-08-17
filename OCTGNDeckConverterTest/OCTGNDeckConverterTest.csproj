@@ -94,6 +94,7 @@
     <Compile Include="LoTRBase.cs" />
     <Compile Include="MTG.cs" />
     <Compile Include="MTGBase.cs" />
+    <Compile Include="MTGTop8_com.cs" />
     <Compile Include="MTGVault_com.cs" />
     <Compile Include="MW.cs" />
     <Compile Include="MWBase.cs" />

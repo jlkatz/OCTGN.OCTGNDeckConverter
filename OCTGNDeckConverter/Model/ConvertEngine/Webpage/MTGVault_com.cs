@@ -39,7 +39,7 @@ namespace OCTGNDeckConverter.Model.ConvertEngine.Webpage
             string viewstateValue = null;
             string eventValidationValue = null;
 
-            // Get a collection of all the input nodes inside the aspnetForm form
+            // Get a collection of all the input nodes
             IEnumerable<object> aspnetFormInputNodes = HtmlAgilityPackWrapper.HtmlNode_InvokeMethod_SelectNodes(htmlDocument_DocumentNode, "//input");
             foreach (object inputNode in aspnetFormInputNodes)
             {

@@ -150,6 +150,7 @@
     <Compile Include="Model\ConvertEngine\Webpage\DeckCheck_de.cs" />
     <Compile Include="Model\ConvertEngine\Webpage\DeckLists_net.cs" />
     <Compile Include="Model\ConvertEngine\Webpage\EssentialMagic_com.cs" />
+    <Compile Include="Model\ConvertEngine\Webpage\MTGTop8_com.cs" />
     <Compile Include="Model\ConvertEngine\Webpage\MTGVault_com.cs" />
     <Compile Include="Model\ConvertEngine\Webpage\StarCityGames_com.cs" />
     <Compile Include="Model\ConvertEngine\Webpage\TappedOut_net.cs" />

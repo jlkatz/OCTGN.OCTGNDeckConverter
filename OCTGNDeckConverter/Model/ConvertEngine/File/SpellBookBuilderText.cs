@@ -84,13 +84,20 @@ namespace OCTGNDeckConverter.Model.ConvertEngine.File
         /// </summary>
         /// <param name="fullPathName">The full path name of the Deck file to check for SpellBookBuilder Text format</param>
         /// <returns>a value indicating whether the lines from a file are in the SpellBookBuilder format or not</returns>
-        /// <remarks>SpellBookBuilder formatted files can be created at http://forum.arcanewonders.com/sbb/index.php</remarks>
+        /// <remarks>SpellBookBuilder formatted files can be created at http://forum.arcanewonders.com/sbb/index.php </remarks>
         public static bool DoesFileMatchSpellBookBuilderTextDeckFormat(IEnumerable<string> lines)
         {
-            // The deck must contain a Mage, and at least one other card
-            return
-                lines.Any(l => RegexMatch_Mage(l) != null) &&
-                lines.Any(l => RegexMatch_SBBTCard(l) != null);
+            //// The deck must contain a Mage, and at least one other card
+            bool mageExists = lines.Any(l => RegexMatch_Mage(l) != null);
+            if (mageExists)
+            {
+                bool anySBBCard = lines.Any(l => RegexMatch_SBBTCard(l) != null);
+                if (anySBBCard)
+                {
+                    return true;
+                }
+            }
+            return false;
         }
 
         #region Regex
