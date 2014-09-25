@@ -31,10 +31,10 @@ namespace OCTGNDeckConverter.Model.ConvertEngine.Webpage
             Func<IEnumerable<string>, IEnumerable<string>, ConverterDeck> convertGenericFileFunc)
         {
             return WebpageConverter.ConvertURLUsingDeckIDInURL(
-                url, 
-                "DeckID", 
-                @"http://sales.starcitygames.com//deckdatabase/download_deck.php?DeckID=", 
-                @"&Mode=app",
+                url,
+                "DeckID",
+                @"http://sales.starcitygames.com//deckdatabase/deck_files/",
+                @"-MODO.txt",
                 deckSectionNames,
                 convertGenericFileFunc);
         }
