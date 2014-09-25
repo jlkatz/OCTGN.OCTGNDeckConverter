@@ -130,9 +130,7 @@ namespace OCTGNDeckConverter.Model.ConvertEngine.Game
             this.ThrowIfConverterGameDoesntMatch(converterGame);
 
             ConverterDeck converterDeck = this.ConvertText(sectionsText, converterGame.Sets, converterGame.DeckSectionNames);
-
-            converterDeck.PopulateConverterMappings(converterGame.Sets);
-
+            
             return converterDeck;
         }
 

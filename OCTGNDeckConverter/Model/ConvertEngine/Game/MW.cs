@@ -112,6 +112,7 @@ namespace OCTGNDeckConverter.Model.ConvertEngine.Game
             {
                 File.SpellBookBuilderText spellBookBuilderTextConverter = this.CompatibleFileConverters.First() as File.SpellBookBuilderText;
                 converterDeck = spellBookBuilderTextConverter.Convert(lines, deckSectionNames);
+                converterDeck.PopulateConverterMappings(converterSets);
             }
             else
             {

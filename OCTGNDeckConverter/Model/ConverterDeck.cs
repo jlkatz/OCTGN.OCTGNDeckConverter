@@ -128,11 +128,13 @@ namespace OCTGNDeckConverter.Model
         /// <param name="converterSets">List of all ConverterSets. Only those with flag IncludeInSearches will be used.</param>
         public void PopulateConverterMappings(Dictionary<Guid, ConverterSet> converterSets)
         {
+            Dictionary<string, List<Tuple<ConverterCard, ConverterSet>>> normalizedConverterCards = ConverterMapping.NormalizeConverterCards(converterSets.Values);
+
             foreach (ConverterSection converterSection in this.ConverterSections)
             {
                 foreach (ConverterMapping converterMapping in converterSection.SectionMappings)
                 {
-                    converterMapping.PopulateWithPotentialCards(converterSets);
+                    converterMapping.PopulateWithPotentialCards(normalizedConverterCards);
                 }
 
                 // Try matching each incorrectly formatted line, and assume a quantity of 1
@@ -142,7 +144,7 @@ namespace OCTGNDeckConverter.Model
                     if (!string.IsNullOrWhiteSpace(incorrectlyFormattedLine))
                     {
                         ConverterMapping cm = new ConverterMapping(incorrectlyFormattedLine, string.Empty, 1);
-                        cm.PopulateWithPotentialCards(converterSets);
+                        cm.PopulateWithPotentialCards(normalizedConverterCards);
                         if (cm.PotentialOCTGNCards.Count > 0)
                         {
                             converterSection.AddConverterMapping(cm);
@@ -150,7 +152,7 @@ namespace OCTGNDeckConverter.Model
                         }
                     }
                 }
-
+                
                 // Incorrectly formatted lines which were found to match a card name should be removed from incorrect list.
                 foreach(string line in linesWithoutQuantityButMatchingName)
                 {

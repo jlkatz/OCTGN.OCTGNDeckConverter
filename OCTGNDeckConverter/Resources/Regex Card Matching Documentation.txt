@@ -4,7 +4,6 @@ To Check:
 http://ccgdecks.com/deck_view.php?id=614809
 http://www.deckcheck.de/deck.php?id=25366
 http://www.essentialmagic.com/Decks/View.asp?ID=950025
-NO http://www.magicdeckvortex.com/DDB/miracle_infect.htm
 NO http://www.moxdiamond.com/Magic-The-Gathering/Deck/7121/Contagion.html
 NO http://www.mtgcity.com/deck.asp?DeckId=35168
 NO http://www.mtgdeckbuilder.net/Decks/ViewDeck/292439

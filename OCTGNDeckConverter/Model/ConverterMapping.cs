@@ -186,115 +186,116 @@ namespace OCTGNDeckConverter.Model
         /// Searches through all converterSets for Cards which potentially match this CardName/CardSet.
         /// Each potential card is added as a potential Card.
         /// </summary>
-        /// <param name="converterSets">The list of ConverterSets to search in for potential matches</param>
-        public void PopulateWithPotentialCards(Dictionary<Guid, ConverterSet> converterSets)
+        /// <param name="converterCardDictionary">
+        /// A Dictionary of ConverterCards which are potential matches, where the Key is the normalized first name 
+        /// of the card and the value is a collection of all corresponding ConverterCards-ConverterSet tuples.  Only sets which are
+        /// included in searches should be in this.</param>
+        public void PopulateWithPotentialCards(Dictionary<string, List<Tuple<ConverterCard, ConverterSet>>> converterCardDictionary)//(Dictionary<Guid, ConverterSet> converterSets)
         {
-            // Names and sets may or may not contain certain characters, like punctuation.  
-            // Replace/remove them for comparison purposes
-            List<dynamic> replacementChars = new List<dynamic>()
-            {
-                new { Actual = "Æ", Normalized = "Ae" },
-                new { Actual = "æ", Normalized = "ae" },
-
-                new { Actual = '’', Normalized = '\'' },
-                new { Actual = ":", Normalized = string.Empty },
-                new { Actual = "-", Normalized = string.Empty },
-                new { Actual = "'", Normalized = string.Empty },
-            };
-
             // Some cards have 2+ names, so create an array of all the names in order
-            string[] converterMappingNames = this.CardName.Split(new char[] { '/' }, StringSplitOptions.RemoveEmptyEntries);
+            List<string> converterMappingNames =
+                (from string mappingName in this.CardName.Split(new char[] { '/' }, StringSplitOptions.RemoveEmptyEntries)
+                 select ConverterMapping.NormalizeName(mappingName)).ToList();
 
-            foreach (ConverterSet converterSet in converterSets.Values)
+            if (converterCardDictionary.ContainsKey(converterMappingNames.First()))
+            {
+                foreach (Tuple<ConverterCard, ConverterSet> converterCardAndSet in converterCardDictionary[converterMappingNames.First()])
+                {
+                    ConverterCard converterCard = converterCardAndSet.Item1;
+
+                    List<string> converterCardNames =
+                        (from string cardName in converterCard.Name.Split(new char[] { '/' }, StringSplitOptions.RemoveEmptyEntries)
+                         select ConverterMapping.NormalizeName(cardName)).ToList();
+                    int numIndexToCompare = Math.Min(converterMappingNames.Count, converterCardNames.Count);
+
+                    // Compare all names.  If one card has less names than the other, then just compare indexes where 
+                    // both names are present because sometimes another format only includes the first name
+                    bool isNameMatch = true;
+                    for (int i = 0; i < numIndexToCompare; i++)
+                    {
+                        if (!converterCardNames[i].Equals(converterMappingNames[i]))
+                        {
+                            isNameMatch = false;
+                            break;
+                        }
+                    }
+
+                    bool isSetMatch = true;
+                    if (isNameMatch && !string.IsNullOrWhiteSpace(this.CardSet))
+                    {
+                        ConverterSet converterSet = converterCardAndSet.Item2;
+
+                        // LoTR - Pay attention to Set
+                        if (converterSet.OctgnSet.GameId == ConvertEngine.Game.LoTR.GameGuidStatic)
+                        {
+                            string converterCardSet = converterCard.Set;
+                            string converterMappingSet = this.CardSet;
+
+                            // Some sources omit 'The Hobbit - ' in the set name, so remove it from the comparison
+                            if (converterCardSet.StartsWith("The Hobbit", StringComparison.InvariantCultureIgnoreCase))
+                            {
+                                converterCardSet = converterCardSet.Substring(13);
+                            }
+                            if (converterMappingSet.StartsWith("The Hobbit", StringComparison.InvariantCultureIgnoreCase))
+                            {
+                                converterMappingSet = converterMappingSet.Substring(13);
+                            }
+
+                            // Some sources omit 'The ' in the set name, so remove it from the comparison
+                            if (converterCardSet.StartsWith("The ", StringComparison.InvariantCultureIgnoreCase))
+                            {
+                                converterCardSet = converterCardSet.Substring(4);
+                            }
+                            if (converterMappingSet.StartsWith("The ", StringComparison.InvariantCultureIgnoreCase))
+                            {
+                                converterMappingSet = converterMappingSet.Substring(4);
+                            }
+
+                            // Remove all Diacritics from names for comparison
+                            converterCardSet = ConverterMapping.NormalizeName(converterCardSet);
+                            converterMappingSet = ConverterMapping.NormalizeName(converterMappingSet);
+
+                            if (!converterCardSet.Equals(converterMappingSet))
+                            {
+                                isSetMatch = false;
+                            }
+                        }
+                    }
+
+                    if (isNameMatch && isSetMatch)
+                    {
+                        this.AddPotentialOCTGNCard(converterCard);
+                    }
+                }
+            }
+        }
+
+        /// <summary>
+        /// Creates a Dictionary who's Keys are the normalized first name of the Card, and who's Values are all of the matching ConverterCard/ConverterSet Tuples.
+        /// </summary>
+        /// <param name="converterSets">The ConverterSets to look through to build the normalized ConverterCard Dictionary</param>
+        /// <returns>a Dictionary who's Keys are the normalized first name of the Card, and who's Values are all of the matching ConverterCard/ConverterSet Tuples.</returns>
+        public static Dictionary<string, List<Tuple<ConverterCard, ConverterSet>>> NormalizeConverterCards(IEnumerable<ConverterSet> converterSets)
+        {            
+            Dictionary<string, List<Tuple<ConverterCard, ConverterSet>>> normalizedConverterCards = new Dictionary<string,List<Tuple<ConverterCard,ConverterSet>>>();
+
+            foreach (ConverterSet converterSet in converterSets)
             {
                 if (converterSet.IncludeInSearches)
                 {
                     foreach (ConverterCard converterCard in converterSet.ConverterCards)
                     {
-                        string[] converterCardNames = converterCard.Name.Split(new char[] { '/' }, StringSplitOptions.RemoveEmptyEntries);
-                        int numIndexToCompare = Math.Min(converterMappingNames.Length, converterCardNames.Length);
-
-                        // Compare all names.  If one card has less names than the other, then just compare indexes where 
-                        // both names are present because sometimes another format only includes the first name
-                        bool isNameMatch = true;
-                        for (int i = 0; i < numIndexToCompare; i++)
+                        string normalizedFirstName = ConverterMapping.NormalizeName(converterCard.Name.Split(new char[] { '/' }, StringSplitOptions.RemoveEmptyEntries).First());
+                        if (!normalizedConverterCards.ContainsKey(normalizedFirstName))
                         {
-                            // Remove extra whitespace
-                            string converterCardName = converterCardNames[i].Trim();
-                            string converterMappingName = converterMappingNames[i].Trim();
-
-                            // Remove all Diacritics from names for comparison
-                            converterCardName = ConverterMapping.RemoveDiacritics(converterCardName);
-                            converterMappingName = ConverterMapping.RemoveDiacritics(converterMappingName);
-
-                            // Replace all characters specifically designated to aid in comparison
-                            foreach (dynamic replacementChar in replacementChars)
-                            {
-                                converterCardName = converterCardName.Replace(replacementChar.Actual, replacementChar.Normalized);
-                                converterMappingName = converterMappingName.Replace(replacementChar.Actual, replacementChar.Normalized);
-                            }
-
-                            if (!converterCardName.Equals(converterMappingName, StringComparison.InvariantCultureIgnoreCase))
-                            {
-                                isNameMatch = false;
-                                break;
-                            }
+                            normalizedConverterCards.Add(normalizedFirstName, new List<Tuple<ConverterCard, ConverterSet>>());
                         }
 
-                        bool isSetMatch = true;
-                        if (isNameMatch && !string.IsNullOrWhiteSpace(this.CardSet))
-                        {
-                            // LoTR - Pay attention to Set
-                            if (converterSet.OctgnSet.GameId == ConvertEngine.Game.LoTR.GameGuidStatic)
-                            {
-                                string converterCardSet = converterCard.Set;
-                                string converterMappingSet = this.CardSet;
-
-                                // Some sources omit 'The Hobbit - ' in the set name, so remove it from the comparison
-                                if (converterCardSet.StartsWith("The Hobbit", StringComparison.InvariantCultureIgnoreCase))
-                                {
-                                    converterCardSet = converterCardSet.Substring(13);
-                                }
-                                if (converterMappingSet.StartsWith("The Hobbit", StringComparison.InvariantCultureIgnoreCase))
-                                {
-                                    converterMappingSet = converterMappingSet.Substring(13);
-                                }
-
-                                // Some sources omit 'The ' in the set name, so remove it from the comparison
-                                if (converterCardSet.StartsWith("The ", StringComparison.InvariantCultureIgnoreCase))
-                                {
-                                    converterCardSet = converterCardSet.Substring(4);
-                                }
-                                if (converterMappingSet.StartsWith("The ", StringComparison.InvariantCultureIgnoreCase))
-                                {
-                                    converterMappingSet = converterMappingSet.Substring(4);
-                                }
-
-                                // Remove all Diacritics from names for comparison
-                                converterCardSet = ConverterMapping.RemoveDiacritics(converterCardSet);
-                                converterMappingSet = ConverterMapping.RemoveDiacritics(converterMappingSet);
-
-                                // Replace all characters specifically designated to aid in comparison
-                                foreach (dynamic replacementChar in replacementChars)
-                                {
-                                    converterCardSet = converterCardSet.Replace(replacementChar.Actual, replacementChar.Normalized);
-                                    converterMappingSet = converterMappingSet.Replace(replacementChar.Actual, replacementChar.Normalized);
-                                }
-                                
-                                if (!converterCardSet.Equals(converterMappingSet, StringComparison.InvariantCultureIgnoreCase))
-                                {
-                                    isSetMatch = false;
-                                }
-                            }
-                        }
-
-                        if (isNameMatch && isSetMatch)
-                        {
-                            this.AddPotentialOCTGNCard(converterCard);
-                        }
+                        normalizedConverterCards[normalizedFirstName].Add(new Tuple<ConverterCard, ConverterSet>(converterCard, converterSet));
                     }
                 }
             }
+            return normalizedConverterCards;
         }
 
         /// <summary>
@@ -308,6 +309,42 @@ namespace OCTGNDeckConverter.Model
         }
 
         #endregion Public Methods
+
+        // Names and sets may or may not contain certain characters, like punctuation.  
+        // Replace/remove them for comparison purposes
+        private static List<dynamic> replacementChars = new List<dynamic>()
+        {
+            new { Actual = "Æ", Normalized = "Ae" },
+            new { Actual = "æ", Normalized = "ae" },
+
+            new { Actual = '’', Normalized = '\'' },
+            new { Actual = ":", Normalized = string.Empty },
+            new { Actual = "-", Normalized = string.Empty },
+            new { Actual = "'", Normalized = string.Empty },
+        };
+
+        /// <summary>
+        /// Returns a Name that has been normalized.  This means all funny characters,
+        /// punctuation, white space, capitalization, has been removed or sanitized.
+        /// </summary>
+        /// <param name="name">The name of the Card or Set etc to normalize</param>
+        /// <returns></returns>
+        private static string NormalizeName(string name)
+        {
+            // Remove extra whitespace
+            name = name.Trim();
+
+            // Remove all Diacritics from names for comparison
+            name = ConverterMapping.RemoveDiacritics(name);
+            
+            // Replace all characters specifically designated to aid in comparison
+            foreach (dynamic replacementChar in replacementChars)
+            {
+                name = name.Replace(replacementChar.Actual, replacementChar.Normalized);
+            }
+
+            return name.ToLowerInvariant();
+        }
 
         /// <summary>
         /// Returns a string that has been stripped of diacritics
