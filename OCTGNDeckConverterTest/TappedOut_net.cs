@@ -13,11 +13,11 @@ namespace OCTGNDeckConverterTest
         public void ImportFromWebsite()
         {
             DeckFileResourceHelpers.VerifyURL(
-                "http://tappedout.net/mtg-decks/brain-hug/",
+                "http://tappedout.net/mtg-decks/dimir-killing-mill/",
                 new List<ExpectedDeckSection>()
                 {
-                    new ExpectedDeckSection("Main") { TotalCardCount = 60, UniqueCardCount = 17 },
-                    new ExpectedDeckSection("Sideboard") { TotalCardCount = 13, UniqueCardCount = 6 },
+                    new ExpectedDeckSection("Main") { TotalCardCount = 60, UniqueCardCount = 18 },
+                    new ExpectedDeckSection("Sideboard") { TotalCardCount = 15, UniqueCardCount = 6 },
                     new ExpectedDeckSection("Command Zone") { TotalCardCount = 0, UniqueCardCount = 0 },
                     new ExpectedDeckSection("Planes/Schemes") { TotalCardCount = 0, UniqueCardCount = 0 },
                 },
