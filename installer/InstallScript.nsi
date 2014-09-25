@@ -6,7 +6,7 @@
 ;--------------------------------
 
 ; The name of the installer
-  Name "OCTGN Deck Converter v3.3.7 (Development Build)"
+  Name "OCTGN Deck Converter v3.4.0"
 
 ; The file to write
   OutFile "OCTGNDeckConverterInstaller.exe"
@@ -22,7 +22,7 @@
 ;--------------------------------
 ;Pages
 
-  !define MUI_TEXT_WELCOME_INFO_TEXT "This wizard will install the OCTGN Deck Converter plugin v3.3.7 (Development Build) for OCTGN.$\n$\nClick Install to start the installation."
+  !define MUI_TEXT_WELCOME_INFO_TEXT "This wizard will install the OCTGN Deck Converter plugin v3.4.0 for OCTGN.$\n$\nClick Install to start the installation."
   !define MUI_PAGE_CUSTOMFUNCTION_SHOW WelcomeShowCallback
   
   !insertmacro MUI_PAGE_WELCOME
