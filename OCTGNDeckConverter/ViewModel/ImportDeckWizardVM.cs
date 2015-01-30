@@ -611,7 +611,7 @@ namespace OCTGNDeckConverter.ViewModel
                 bim = new BitmapImage();
                 bim.CacheOption = BitmapCacheOption.OnLoad;
                 bim.BeginInit();
-                bim.UriSource = new Uri(game.CardFront);
+                bim.UriSource = new Uri(game.CardSize.Front);
                 bim.EndInit();
             }
 
