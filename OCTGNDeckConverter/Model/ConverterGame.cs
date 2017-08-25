@@ -228,7 +228,7 @@ namespace OCTGNDeckConverter.Model
                         if (card.Properties.Count > 0)
                         {
                             KeyValuePair<string, Octgn.DataNew.Entities.CardPropertySet> firstCardPropertyKVP = card.Properties.First();
-                            object multiverseIdString = null;
+                            Octgn.DataNew.Entities.PropertyDefValue multiverseIdString = null;
                             if (firstCardPropertyKVP.Value.Properties.TryGetValue(multiverseIdPropertyDef, out multiverseIdString))
                             {
                                 int.TryParse(multiverseIdString.ToString(), out multiverseID);
