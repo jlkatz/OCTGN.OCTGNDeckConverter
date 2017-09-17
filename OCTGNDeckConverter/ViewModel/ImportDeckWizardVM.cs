@@ -21,6 +21,11 @@ namespace OCTGNDeckConverter.ViewModel
     /// </summary>
     public class ImportDeckWizardVM : Model.INotifyPropertyChangedBase
     {
+        /// <summary>
+        /// The logger instance for this class.
+        /// </summary>
+        private static readonly log4net.ILog Logger = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+
         #region Constructor
 
         /// <summary>
@@ -28,6 +33,7 @@ namespace OCTGNDeckConverter.ViewModel
         /// </summary>
         public ImportDeckWizardVM()
         {
+            Logger.Info("OCTGNDeckConverter Import Deck Wizard VM instantiated");
             // Call Start Over, since it will reset everything and set the first page
             this.StartOver();
         }
@@ -368,13 +374,17 @@ namespace OCTGNDeckConverter.ViewModel
         /// </summary>
         public void MoveToNextStep()
         {
+            Logger.Info("Moving to the next wizard page");
             if (this.IsCurrentWizardPageTheLastStep())
             {
+                Logger.Info("Current page is the last page, so close the wizard");
                 this.CloseWizard(true);
             }
             else
             {
+                Logger.Info("Determining the next wizard page...");
                 ImportDeckWizardPageVM nextPage = this.DetermineNextPage();
+                Logger.Info("The next page is " + nextPage.Title);
 
                 if (nextPage is WizardPage_CompareCards)
                 {
@@ -388,7 +398,7 @@ namespace OCTGNDeckConverter.ViewModel
         }
 
         #endregion Public Methods
-        
+
         #region Private Methods
 
         /// <summary>
@@ -399,6 +409,15 @@ namespace OCTGNDeckConverter.ViewModel
         {
             this.WasNotCancelled = wasNotCancelled;
             this.Completed = true;
+
+            if (this.WasNotCancelled)
+            {
+                Logger.Info("Closing the wizard (it was not cancelled)");
+            }
+            else
+            {
+                Logger.Info("Closing the wizard (it was cancelled)");
+            }
 
             var handler = this.Close;
             if (handler != null)
@@ -566,6 +585,7 @@ namespace OCTGNDeckConverter.ViewModel
         /// </summary>
         private void StartOver()
         {
+            Logger.Info("Starting Over");
             this.Converter = new Converter();
             this.CurrentWizardPageVM = null;
             this.SetCurrentPage(this.DetermineNextPage());
@@ -577,6 +597,7 @@ namespace OCTGNDeckConverter.ViewModel
         /// <param name="page">The page object to set the Wizard to</param>
         private void SetCurrentPage(ImportDeckWizardPageVM page)
         {
+            Logger.Info("Setting the current page to " + page.Title);
             this.CurrentWizardPageVM = page;
             this.NextStepCommandDisplayName = this.CurrentWizardPageVM is WizardPage_CompareCards ? 
                 "Load Deck in OCTGN" : 

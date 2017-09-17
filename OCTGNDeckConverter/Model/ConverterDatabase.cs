@@ -16,6 +16,11 @@ namespace OCTGNDeckConverter.Model
     /// </summary>
     public class ConverterDatabase : INotifyPropertyChangedBase
     {
+        /// <summary>
+        /// The logger instance for this class.
+        /// </summary>
+        private static readonly log4net.ILog Logger = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+
         #region Fields
 
         /// <summary>
@@ -110,12 +115,15 @@ namespace OCTGNDeckConverter.Model
                 throw new ArgumentNullException();
             }
 
+            Logger.Info("Loading all OCTGN games...");
             this._Loaded = true;
 
             foreach (Octgn.DataNew.Entities.Game octgnGame in octgnGames)
             {
                 this._ConverterGameDictionary.Add(octgnGame, null);
             }
+
+            Logger.Info("Loading all OCTGN games complete.");
         }
 
         /// <summary>

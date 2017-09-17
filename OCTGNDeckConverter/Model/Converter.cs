@@ -23,6 +23,11 @@ namespace OCTGNDeckConverter.Model
     public class Converter : INotifyPropertyChangedBase
     {
         /// <summary>
+        /// The logger instance for this class.
+        /// </summary>
+        private static readonly log4net.ILog Logger = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+
+        /// <summary>
         /// Initializes a new instance of the Converter class.
         /// Creates a new blank Converter ready to convert from anything
         /// </summary>
@@ -166,6 +171,7 @@ namespace OCTGNDeckConverter.Model
             // If OCTGN takes too long building the database, give up
             if (!this.ConverterGame.WaitForInitializationToComplete(TimeSpan.FromSeconds(30)))
             {
+                Logger.Error("Timeout while building the Card Database");
                 throw new TimeoutException("Timeout while building the Card Database");
             }
 
@@ -173,6 +179,8 @@ namespace OCTGNDeckConverter.Model
             {
                 return new Tuple<bool, string>(false, "Deck Source has not been chosen");
             }
+
+            Logger.Info("Converting the deck...");
 
             try
             {
@@ -196,10 +204,14 @@ namespace OCTGNDeckConverter.Model
             }
             catch (Exception e)
             {
+                Logger.Error("Error while converting the deck. ", e);
                 return new Tuple<bool, string>(false, e.ToString());
             }
 
+            Logger.Info("Auto-selecting potential cards");
             this.ConverterDeck.AutoSelectPotentialCards();
+
+            Logger.Info("Updating card counts");
             this.ConverterDeck.UpdateCardCounts();
 
             if (string.IsNullOrWhiteSpace(this.ConverterDeck.DeckName))
@@ -207,6 +219,7 @@ namespace OCTGNDeckConverter.Model
                 this.ConverterDeck.DeckName = this.DeckFileNameWithoutExtension;
             }
 
+            Logger.Info("Deck converted successfully");
             return new Tuple<bool, string>(true, string.Empty);
         }
 
