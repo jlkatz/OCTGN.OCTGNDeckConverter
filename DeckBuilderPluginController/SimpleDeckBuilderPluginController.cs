@@ -26,7 +26,8 @@ namespace DeckBuilderPluginController
         {
             get
             {
-                return GameManager.Get();
+                var gameManager = GameManager.Get();
+                return gameManager;
             }
         }
 

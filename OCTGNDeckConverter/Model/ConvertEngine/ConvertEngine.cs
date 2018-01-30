@@ -14,6 +14,11 @@ namespace OCTGNDeckConverter.Model.ConvertEngine
     public class ConvertEngine
     {
         /// <summary>
+        /// The logger instance for this class.
+        /// </summary>
+        private static readonly log4net.ILog Logger = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+
+        /// <summary>
         /// Private backing store for the Singleton Instance
         /// </summary>
         private static ConvertEngine singletonInstance;
@@ -70,6 +75,8 @@ namespace OCTGNDeckConverter.Model.ConvertEngine
         /// <returns>A ConverterDeck which has all ConverterMappings populated with potential OCTGN cards from the converterSets</returns>
         public ConverterDeck ConvertFile(string fullPathName, ConverterGame converterGame)
         {
+            Logger.Info("Converting the file " + fullPathName + " to the game " + converterGame.Game.Name);
+
             // Try to find a pre-defined GameConverter to handle ConvertFile
             Game.GameConverter gameConverter = this.FindMatchingGameConverter(converterGame);
 
@@ -89,6 +96,8 @@ namespace OCTGNDeckConverter.Model.ConvertEngine
         /// <returns>A ConverterDeck which has all ConverterMappings populated with potential OCTGN cards from the converterSets</returns>
         public ConverterDeck ConvertURL(string url, ConverterGame converterGame)
         {
+            Logger.Info("Converting the url " + url + " to the game " + converterGame.Game.Name);
+
             // Try to find a pre-defined GameConverter to handle ConvertFile
             Game.GameConverter gameConverter = this.FindMatchingGameConverter(converterGame);
 
@@ -108,6 +117,8 @@ namespace OCTGNDeckConverter.Model.ConvertEngine
         /// <returns>A ConverterDeck which has all ConverterMappings populated with potential OCTGN cards from the converterSets</returns>
         public ConverterDeck ConvertText(Dictionary<string, string> sectionsText, ConverterGame converterGame)
         {
+            Logger.Info("Converting text to the game " + converterGame.Game.Name);
+
             // Try to find a pre-defined GameConverter to handle ConvertText
             Game.GameConverter gameConverter = this.FindMatchingGameConverter(converterGame);
 

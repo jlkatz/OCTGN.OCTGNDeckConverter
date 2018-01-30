@@ -21,6 +21,11 @@ namespace OCTGNDeckConverter.ViewModel
     /// </summary>
     public class ImportDeckWizardVM : Model.INotifyPropertyChangedBase
     {
+        /// <summary>
+        /// The logger instance for this class.
+        /// </summary>
+        private static readonly log4net.ILog Logger = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+
         #region Constructor
 
         /// <summary>
@@ -28,6 +33,7 @@ namespace OCTGNDeckConverter.ViewModel
         /// </summary>
         public ImportDeckWizardVM()
         {
+            Logger.Info("OCTGNDeckConverter Import Deck Wizard VM instantiated");
             // Call Start Over, since it will reset everything and set the first page
             this.StartOver();
         }
@@ -237,6 +243,127 @@ namespace OCTGNDeckConverter.ViewModel
         }
         #endregion Choose Included Sets Command
 
+        private RelayCommand createPucatradeCardlistsCommand;
+        public RelayCommand CreatePucatradeCardlistsCommand
+        {
+            get
+            {
+                if (this.createPucatradeCardlistsCommand == null)
+                {
+                    this.createPucatradeCardlistsCommand = new RelayCommand(() =>
+                    {
+                        System.Windows.Forms.FolderBrowserDialog dlg = new System.Windows.Forms.FolderBrowserDialog();
+                        System.Windows.Forms.DialogResult result = dlg.ShowDialog();
+                        if (result == System.Windows.Forms.DialogResult.OK)
+                        {
+                            ConverterGame mtgConverterGame = Model.ConverterDatabase.SingletonInstance.GetConverterGame(Model.ConverterDatabase.SingletonInstance.OctgnGames.First(g => g.Id == Model.ConvertEngine.Game.MTG.GameGuidStatic));
+
+                            Dictionary<string, Octgn.DataNew.Entities.PropertyDef> extraProperties = new Dictionary<string, Octgn.DataNew.Entities.PropertyDef>();
+                            extraProperties.Add("Color", mtgConverterGame.Game.CustomProperties.FirstOrDefault(p => p.Name.Equals("Color", StringComparison.InvariantCultureIgnoreCase)));
+                            extraProperties.Add("Type", mtgConverterGame.Game.CustomProperties.FirstOrDefault(p => p.Name.Equals("Type", StringComparison.InvariantCultureIgnoreCase)));
+                            extraProperties.Add("Subtype", mtgConverterGame.Game.CustomProperties.FirstOrDefault(p => p.Name.Equals("Subtype", StringComparison.InvariantCultureIgnoreCase)));
+                            extraProperties.Add("Rarity", mtgConverterGame.Game.CustomProperties.FirstOrDefault(p => p.Name.Equals("Rarity", StringComparison.InvariantCultureIgnoreCase)));
+                            extraProperties.Add("Number", mtgConverterGame.Game.CustomProperties.FirstOrDefault(p => p.Name.Equals("Number", StringComparison.InvariantCultureIgnoreCase)));
+                            extraProperties.Add("MultiVerseId", mtgConverterGame.Game.CustomProperties.FirstOrDefault(p => p.Name.Equals("MultiVerseId", StringComparison.InvariantCultureIgnoreCase)));
+
+                            List<System.Dynamic.ExpandoObject> pucaColumns = new List<System.Dynamic.ExpandoObject>();
+                            foreach (Octgn.DataNew.Entities.Set octgnSet in mtgConverterGame.Game.Sets())
+                            {
+                                foreach (Octgn.DataNew.Entities.Card card in octgnSet.Cards)
+                                {
+                                    System.Dynamic.ExpandoObject columns = new System.Dynamic.ExpandoObject();
+                                    (columns as IDictionary<string, object>)["Name"] = card.Name;
+                                    (columns as IDictionary<string, object>)["Set"] = octgnSet.Name;                                    
+
+                                    foreach (var extraPropertyKVP in extraProperties)
+                                    {
+                                        if (card.Properties.Count > 0)
+                                        {
+                                            KeyValuePair<string, Octgn.DataNew.Entities.CardPropertySet> firstCardPropertyKVP = card.Properties.First();
+                                            object valueString = null;
+                                            if (firstCardPropertyKVP.Value.Properties.TryGetValue(extraPropertyKVP.Value, out valueString))
+                                            {
+                                                if (extraPropertyKVP.Key == "Color")
+                                                {
+                                                    (columns as IDictionary<string, object>)["Color"] = valueString.ToString();
+                                                }
+                                                else if (extraPropertyKVP.Key == "Type")
+                                                {
+                                                    (columns as IDictionary<string, object>)["Type"] = valueString.ToString();
+                                                }
+                                                else if (extraPropertyKVP.Key == "Subtype")
+                                                {
+                                                    (columns as IDictionary<string, object>)["Subtype"] = valueString.ToString();
+                                                }
+                                                else if (extraPropertyKVP.Key == "Rarity")
+                                                {
+                                                    (columns as IDictionary<string, object>)["Rarity"] = valueString.ToString();
+                                                }
+                                                else if (extraPropertyKVP.Key == "Number")
+                                                {
+                                                    (columns as IDictionary<string, object>)["Number"] = valueString.ToString();
+                                                }
+                                                else if (extraPropertyKVP.Key == "MultiVerseId")
+                                                {
+                                                    (columns as IDictionary<string, object>)["MultiVerseId"] = valueString.ToString();
+                                                }
+                                            }
+                                        }
+                                    }
+
+                                    pucaColumns.Add(columns);
+                                }
+                            }
+
+                            List<string> lines = new List<string>();
+                            lines.Add("NMCount,SPCount,MPCount,HPCount,Name,Foil,Edition,Condition,Language,Color,Type,Subtype,Rarity,Number,MultiVerseId");
+                            foreach (System.Dynamic.ExpandoObject columns in pucaColumns)
+                            {
+                                IDictionary<string, object> columnDict = columns as IDictionary<string, object>;
+
+                                StringBuilder sb = new StringBuilder();
+                                sb.Append("0,");
+                                sb.Append("0,");
+                                sb.Append("0,");
+                                sb.Append("0,\"");
+                                string name = (string)columnDict["Name"];
+                                if (name.Contains("\""))
+                                {
+
+                                }
+                                name = name.Replace("\"", "\"\"");
+                                sb.Append(name);
+                                sb.Append("\",,\"");
+                                sb.Append(columnDict["Set"]);
+                                sb.Append("\",Near Mint,English,\"");
+                                string color = (string)columnDict["Color"];
+                                color = color.Replace(System.Environment.NewLine, string.Empty);
+                                sb.Append(color);
+                                sb.Append("\",\"");
+                                string type = (string)columnDict["Type"];
+                                type = type.Replace(System.Environment.NewLine, string.Empty);
+                                sb.Append(type);
+                                sb.Append("\",\"");
+                                sb.Append(columnDict["Subtype"]);
+                                sb.Append("\",\"");
+                                sb.Append(columnDict["Rarity"]);
+                                sb.Append("\",");
+                                sb.Append(columnDict["Number"]);
+                                sb.Append(",");
+                                sb.Append(columnDict["MultiVerseId"]);
+
+                                lines.Add(sb.ToString());
+                            }
+
+                            System.IO.File.WriteAllLines(dlg.SelectedPath + "\\MTG Card Database.csv", lines);
+                        }
+                    });
+                }
+
+                return this.createPucatradeCardlistsCommand;
+            }
+        }
+
         #region Command Buttons
 
         #region Next Step Command
@@ -368,13 +495,17 @@ namespace OCTGNDeckConverter.ViewModel
         /// </summary>
         public void MoveToNextStep()
         {
+            Logger.Info("Moving to the next wizard page");
             if (this.IsCurrentWizardPageTheLastStep())
             {
+                Logger.Info("Current page is the last page, so close the wizard");
                 this.CloseWizard(true);
             }
             else
             {
+                Logger.Info("Determining the next wizard page...");
                 ImportDeckWizardPageVM nextPage = this.DetermineNextPage();
+                Logger.Info("The next page is " + nextPage.Title);
 
                 if (nextPage is WizardPage_CompareCards)
                 {
@@ -399,6 +530,15 @@ namespace OCTGNDeckConverter.ViewModel
         {
             this.WasNotCancelled = wasNotCancelled;
             this.Completed = true;
+
+            if (this.WasNotCancelled)
+            {
+                Logger.Info("Closing the wizard (it was not cancelled)");
+            }
+            else
+            {
+                Logger.Info("Closing the wizard (it was cancelled)");
+            }
 
             var handler = this.Close;
             if (handler != null)
@@ -566,6 +706,7 @@ namespace OCTGNDeckConverter.ViewModel
         /// </summary>
         private void StartOver()
         {
+            Logger.Info("Starting Over");
             this.Converter = new Converter();
             this.CurrentWizardPageVM = null;
             this.SetCurrentPage(this.DetermineNextPage());
@@ -577,6 +718,7 @@ namespace OCTGNDeckConverter.ViewModel
         /// <param name="page">The page object to set the Wizard to</param>
         private void SetCurrentPage(ImportDeckWizardPageVM page)
         {
+            Logger.Info("Setting the current page to " + page.Title);
             this.CurrentWizardPageVM = page;
             this.NextStepCommandDisplayName = this.CurrentWizardPageVM is WizardPage_CompareCards ? 
                 "Load Deck in OCTGN" : 

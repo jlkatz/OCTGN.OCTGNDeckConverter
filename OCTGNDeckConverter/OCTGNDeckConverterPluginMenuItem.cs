@@ -18,6 +18,11 @@ namespace OCTGNDeckConverter
     public class OCTGNDeckConverterPluginMenuItem : IPluginMenuItem
     {
         /// <summary>
+        /// The logger instance for this class.
+        /// </summary>
+        private static readonly log4net.ILog Logger = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+
+        /// <summary>
         /// Gets the name to display on the Plugins menu
         /// </summary>
         public string Name
@@ -36,6 +41,7 @@ namespace OCTGNDeckConverter
         /// <param name="controller">The controller which is using this plugin.  Usually it is OCTGN</param>
         public void OnClick(IDeckBuilderPluginController controller)
         {
+            Logger.Info("OCTGNDeckConverter clicked from the Plugins menu of the Deck Editor");
             if (controller.Games.Games.Count() > 0)
             {
                 // Initialize the ConverterDatabase2 with all available Games
@@ -71,6 +77,7 @@ namespace OCTGNDeckConverter
             }
             else
             {
+                Logger.Error("No Game Definitions could be found.Check that you have installed them in OCTGN.");
                 System.Windows.MessageBox.Show
                 (
                     "No Game Definitions could be found.  Check that you have installed them in OCTGN.",

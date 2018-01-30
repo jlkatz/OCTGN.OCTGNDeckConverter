@@ -21,6 +21,11 @@ namespace OCTGNDeckConverter.Model
     public class ConverterGame : INotifyPropertyChangedBase
     {
         /// <summary>
+        /// The logger instance for this class.
+        /// </summary>
+        private static readonly log4net.ILog Logger = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+
+        /// <summary>
         /// When first instantiated, an asynchronous Task is executed which accesses the OCTGN database
         /// and builds up the Dictionary of ConverterSets.  This references that Task.
         /// </summary>
@@ -142,6 +147,8 @@ namespace OCTGNDeckConverter.Model
         /// </summary>
         private void Initialize()
         {
+            Logger.Info("Initializing the OCTGN Game " + this.Game.Name);
+
             this._BuildCardDatabaseTask = new Task(() =>
             {
                 this.Sets = ConverterGame.BuildCardDatabase(this.Game);
@@ -153,6 +160,7 @@ namespace OCTGNDeckConverter.Model
             (
                 (t) =>
                 {
+                    Logger.Error("An exception occurred while building the card database. ", t.Exception);
                     this.BuildCardDatabaseExceptions = t.Exception;
                 },
                 System.Threading.Tasks.TaskContinuationOptions.OnlyOnFaulted
@@ -209,6 +217,8 @@ namespace OCTGNDeckConverter.Model
                 throw new ArgumentNullException();
             }
 
+            Logger.Info("Building the card database for game " + game.Name);
+
             // MTG has a property "MultiVerseId" which should be grabbed if it exists
             Octgn.DataNew.Entities.PropertyDef multiverseIdPropertyDef =
                 game.CustomProperties.FirstOrDefault(p => p.Name.Equals("MultiVerseId", StringComparison.InvariantCultureIgnoreCase));
@@ -217,6 +227,8 @@ namespace OCTGNDeckConverter.Model
 
             foreach (Octgn.DataNew.Entities.Set octgnSet in game.Sets())
             {
+                Logger.Info("Adding cards from set " + octgnSet.Name);
+
                 sets[octgnSet.Id] = new ConverterSet(octgnSet);
                 foreach (Octgn.DataNew.Entities.Card card in octgnSet.Cards)
                 {

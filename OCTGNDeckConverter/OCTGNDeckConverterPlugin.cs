@@ -18,6 +18,11 @@ namespace OCTGNDeckConverter
     public class OCTGNDeckConverterPlugin : IDeckBuilderPlugin
     {
         /// <summary>
+        /// The logger instance for this class.
+        /// </summary>
+        private static readonly log4net.ILog Logger = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+
+        /// <summary>
         /// Gets the Menu Items to add for the plugin.
         /// </summary>
         public IEnumerable<IPluginMenuItem> MenuItems
@@ -34,7 +39,7 @@ namespace OCTGNDeckConverter
         /// <param name="gameManager">Game Manager</param>
         public void OnLoad(GameManager gameManager)
         {
-            // Nothing for now
+            Logger.Info("OCTGNDeckConverter Plugin has been loaded");
         }
 
         /// <summary>
