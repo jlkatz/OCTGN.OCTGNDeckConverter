@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 14
-VisualStudioVersion = 14.0.24720.0
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.30104.148
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OCTGNDeckConverter", "OCTGNDeckConverter\OCTGNDeckConverter.csproj", "{0D71918F-43BA-4B4A-B491-ADD7A372467A}"
 EndProject
@@ -33,8 +33,8 @@ Global
 		{0D71918F-43BA-4B4A-B491-ADD7A372467A}.Debug|x86.Build.0 = Debug|x86
 		{0D71918F-43BA-4B4A-B491-ADD7A372467A}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{0D71918F-43BA-4B4A-B491-ADD7A372467A}.Release|Any CPU.Build.0 = Release|Any CPU
-		{0D71918F-43BA-4B4A-B491-ADD7A372467A}.Release|Mixed Platforms.ActiveCfg = Release|x86
-		{0D71918F-43BA-4B4A-B491-ADD7A372467A}.Release|Mixed Platforms.Build.0 = Release|x86
+		{0D71918F-43BA-4B4A-B491-ADD7A372467A}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
+		{0D71918F-43BA-4B4A-B491-ADD7A372467A}.Release|Mixed Platforms.Build.0 = Release|Any CPU
 		{0D71918F-43BA-4B4A-B491-ADD7A372467A}.Release|x86.ActiveCfg = Release|x86
 		{0D71918F-43BA-4B4A-B491-ADD7A372467A}.Release|x86.Build.0 = Release|x86
 		{5871AA2F-EA70-44E6-BF70-C7567AC843D2}.Debug|Any CPU.ActiveCfg = Debug|x86
@@ -64,5 +64,8 @@ Global
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {9811582D-58BC-49F7-8D81-A07D956253B3}
 	EndGlobalSection
 EndGlobal

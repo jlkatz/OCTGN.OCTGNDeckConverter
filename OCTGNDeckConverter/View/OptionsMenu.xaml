@@ -28,10 +28,6 @@
                     Header="Choose Included Sets..."
                     Command="{Binding Path=ChooseIncludedSetsCommand}" 
                     />
-                <MenuItem
-                    Header="Create Pucatrade Cardlists..."
-                    Command="{Binding Path=CreatePucatradeCardlistsCommand}"
-                    />
             </MenuItem>
         </Menu>
     </Grid>
