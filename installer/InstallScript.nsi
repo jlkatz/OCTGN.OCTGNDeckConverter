@@ -52,7 +52,8 @@ RequestExecutionLevel user
 Section "" ; No components page, name is not important
 
 	ClearErrors
-	FileOpen $0 $APPDATA\..\Local\Programs\OCTGN\data.path r
+	ReadRegStr $2 HKCU "SOFTWARE\OCTGN" 'InstallPath'
+	FileOpen $0 "$2\data.path" r
 		IfErrors error
 	FileRead $0 $1
 	FileClose $0
