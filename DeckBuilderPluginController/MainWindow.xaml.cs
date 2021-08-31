@@ -8,6 +8,7 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using System.Windows;
 using System.Windows.Controls;
@@ -18,7 +19,10 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using log4net;
 using Octgn.Core.Plugin;
+using Octgn.DataNew;
+using Octgn.Library;
 using OCTGNDeckConverter;
 
 namespace DeckBuilderPluginController
@@ -28,6 +32,7 @@ namespace DeckBuilderPluginController
     /// </summary>
     public partial class MainWindow : Window
     {
+        private static ILog Log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
         /// <summary>
         /// Text to show when the test GUI is first loaded
         /// </summary>
@@ -43,6 +48,7 @@ namespace DeckBuilderPluginController
         /// </summary>
         public MainWindow()
         {
+            Config.Instance = new Config();
             this.InitializeComponent();
 
             this.infoTextBlock.Text = WELCOME_TEXT;
